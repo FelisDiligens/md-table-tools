@@ -1,4 +1,4 @@
-import { Table, TableCellMerge, TableRow } from "./table";
+import { Table, TableCellMerge, TableRow, TextAlignment } from "./table";
 import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
@@ -109,13 +109,37 @@ export class MultiMarkdownTableParser implements TableParser {
                 }
             }
             else if (state == ParsingState.Separator) {
+                let col = 0;
+                let alignment = TextAlignment.default;
+                let separator = false;
+                for (let char of line.substring(1, line.length)) {
+                    if (char == "|") {
+                        parsedTable.getColumn(col).textAlign = alignment;
 
+                        alignment = TextAlignment.default;
+                        separator = false;
+                        col++;
+                    } else if (char == ":" || char == "." || char == "+") {
+                        if (!separator) {
+                            alignment = TextAlignment.left;
+                        } else {
+                            if (alignment == TextAlignment.left)
+                                alignment = TextAlignment.center;
+                            else
+                                alignment = TextAlignment.right;
+                        }
+                    } else if (char == "-" || char == "=") {
+                        separator = true;
+                        if (alignment == TextAlignment.right)
+                            throw new ParsingError("Invalid separator");
+                    }
+                }
             }
             else if (state == ParsingState.Caption) {
                 parsedTable.caption = line.substring(1, line.length - 1).trim();
             }
             else {
-                throw new ParsingError("Not implemented ParsingState.");
+                throw new ParsingError(`Not implemented ParsingState: ${state}`);
             }
         }
 

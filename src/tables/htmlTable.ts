@@ -1,8 +1,8 @@
-import { Table, TableCellMerge } from "./table";
+import { Table, TableCellMerge, TextAlignment } from "./table";
 import { TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
-function md2html(markdown: string): string {
+function mdToHtml(markdown: string): string {
     let html = markdown;
 
     // Links:
@@ -23,6 +23,20 @@ function md2html(markdown: string): string {
     return html;
 }
 
+function textAlignCSS(textAlign: TextAlignment) {
+    switch (textAlign) {
+        case TextAlignment.left:
+            return "text-align: left;";
+        case TextAlignment.right:
+            return "text-align: right;";
+        case TextAlignment.center:
+            return "text-align: center;";
+        case TextAlignment.default:
+        default:
+            return "text-align: start;";
+    }
+}
+
 export class HTMLTableParser implements TableParser {
     parse(table: string): Table {
         throw new Error("Method not implemented.");
@@ -41,10 +55,11 @@ export class HTMLTableRenderer implements TableRenderer {
                 let rowspan = cell.getRowspan();
                 if (cell.merged == TableCellMerge.none) {
                     let cellProps =
-                        (colspan > 1 ? " colspan=\"" + colspan + "\"" : "") + 
-                        (rowspan > 1 ? " rowspan=\"" + rowspan + "\"" : "");
+                        (colspan > 1 ? ` colspan="${colspan}"` : "") + 
+                        (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
+                        ` style="${textAlignCSS(cell.getTextAlignment())}"`;
                     let cellTag = cell.isHeaderCell() ? "th" : "td";
-                    result.push("<", cellTag, cellProps, ">", md2html(cell.text), "</", cellTag, ">");
+                    result.push("<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">");
                 }
             }
             result.push("</tr>");
