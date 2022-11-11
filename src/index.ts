@@ -20,10 +20,14 @@ function formatMarkdown() {
 
 function test() {
     let textAreaInput = (<HTMLInputElement>document.querySelector("#markdown-input"));
+    let divResult = document.querySelector("#html-result");
+
     let table = mdParser.parse(textAreaInput.value);
-    table.removeColumn(table.getColumn(0));
+    table.removeRow(table.getNormalRows()[0]);
     table.sanitize();
+
     textAreaInput.value = mdRenderer.render(table);
+    divResult.innerHTML = htmlRenderer.render(table);
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
