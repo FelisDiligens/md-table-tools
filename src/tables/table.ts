@@ -146,6 +146,28 @@ export class Table {
         return this.columns.indexOf(col);
     }
 
+    /** Removes the given column. Also removes all cells within the column. */
+    public removeColumn(col: TableColumn) {
+        let columnCells = this.getCellsInColumn(col);
+        this.cells = this.cells.filter(cell => !columnCells.includes(cell));
+        this.columns = this.columns.filter(c => c != col);
+    }
+
+    /** Removes the given row. Also removes all cells within the row. */
+    public removeRow(row: TableRow) {
+        let rowCells = this.getCellsInRow(row);
+        this.cells = this.cells.filter(cell => !rowCells.includes(cell));
+        this.rows = this.rows.filter(r => r != row);
+    }
+
+    public moveColumn(col: TableColumn, newIndex: number) {
+        throw new Error("Not implemented");
+    }
+
+    public moveRow(row: TableRow, newIndex: number) {
+        throw new Error("Not implemented");
+    }
+
     /** Returns a list of all rows that are headers. */
     public getHeaderRows(): Array<TableRow> {
         return this.rows.filter(r => r.isHeader);
@@ -204,6 +226,21 @@ export class Table {
 
     public columnCount(): number {
         return this.columns.length;
+    }
+
+    /** Tries to find invalid configurations and sanitize them. */
+    public sanitize() {
+        for (const cell of this.getCellsInColumn(this.columns[0]))
+            if (cell.merged == TableCellMerge.left)
+                cell.merged = TableCellMerge.none;
+
+        for (const cell of this.getCellsInRow(this.getHeaderRows()[0]))
+            if (cell.merged == TableCellMerge.above)
+                cell.merged = TableCellMerge.none;
+
+        for (const cell of this.getCellsInRow(this.getNormalRows()[0]))
+            if (cell.merged == TableCellMerge.above)
+                cell.merged = TableCellMerge.none;
     }
 }
 
