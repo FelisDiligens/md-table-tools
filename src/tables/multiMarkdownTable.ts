@@ -101,8 +101,10 @@ export class MultiMarkdownTableParser implements TableParser {
                     } else if (!pipeEscaped && char == "\\") {
                         pipeEscaped = true;
                     } else {
-                        pipeEscaped = false;
+                        if (pipeEscaped)
+                            cellContent += "\\";
                         cellContent += char;
+                        pipeEscaped = false;
                     }
                 }
             }
