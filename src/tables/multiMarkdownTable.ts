@@ -157,7 +157,7 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
     determineColumnWidth(table: Table, column: TableColumn): number {
         let width = 0;
         for (const cell of table.getCellsInColumn(column))
-            width = Math.max(cell.text.length, width);
+            width = Math.max(cell.merged == TableCellMerge.above ? 2 : cell.text.length, width);
         return width;
     }
 
@@ -193,21 +193,21 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
             let width = columnWidths[i];
             switch (col.textAlign) {
                 case TextAlignment.left:
-                    result.push(`:${"-".repeat(width - 1)}`);
+                    result.push(`:${"-".repeat(width + 1)}`);
                     break;
                 case TextAlignment.center:
-                    result.push(`:${"-".repeat(width - 2)}:`);
+                    result.push(`:${"-".repeat(width)}:`);
                     break;
                 case TextAlignment.right:
-                    result.push(`${"-".repeat(width - 1)}:`);
+                    result.push(`${"-".repeat(width + 1)}:`);
                     break;
                 case TextAlignment.default:
                 default:
-                    result.push("-".repeat(width));
+                    result.push("-".repeat(width + 2));
                     break;
             }
         });
-        return `| ${result.join(" | ")} |`;
+        return `|${result.join("|")}|`;
     }
 
     renderRow(table: Table, row: TableRow, columnWidths: number[]): string {
@@ -218,7 +218,7 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
             if (colspan > 1) {
                 for (let col = i + 1; col < i + colspan; col++)
                     cellWidth += columnWidths[col];
-                cellWidth += colspan;
+                cellWidth += colspan + Math.floor((colspan - 1) / 2);
             }
             result.push(this.renderCell(cell, cellWidth));
         });
@@ -233,13 +233,13 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
 
         switch (cell.getTextAlignment()) {
             case TextAlignment.center:
-                return `${" ".repeat(Math.floor((cellWidth - text.length) / 2))} ${text} ${" ".repeat(Math.ceil((cellWidth - text.length) / 2))}`;
+                return `${" ".repeat(Math.max(0, Math.floor((cellWidth - text.length) / 2)))} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - text.length) / 2)))}`;
             case TextAlignment.right:
-                return `${" ".repeat(cellWidth - text.length)} ${text} `;
+                return `${" ".repeat(Math.max(0, cellWidth - text.length))} ${text} `;
             case TextAlignment.left:
             case TextAlignment.default:
             default:
-                return ` ${text} ${" ".repeat(cellWidth - text.length)}`;
+                return ` ${text} ${" ".repeat(Math.max(0, cellWidth - text.length))}`;
         }
     }
 }
