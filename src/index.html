@@ -41,24 +41,15 @@
 <body>
     <div id="working-area">
         <div id="md-area">
-            <textarea id="markdown-input">| Punkte |          Note          |||
-|:------:|:---- | -- | ------------ |
-|   15   | 1+   | 1  | sehr gut     |
-|   14   | 1    | ^^ | ^^           |
-|   13   | 1-   | ^^ | ^^           |
-|   12   | 2+   | 2  | gut          |
-|   11   | 2    | ^^ | ^^           |
-|   10   | 2-   | ^^ | ^^           |
-|   9    | 3+   | 3  | befriedigend |
-|   8    | 3    | ^^ | ^^           |
-|   7    | 3-   | ^^ | ^^           |
-|   6    | 4+   | 4  | ausreichend  |
-|   5    | 4    | ^^ | ^^           |
-|   4    | 4-   | ^^ | ^^           |
-|   3    | 5+   | 5  | mangelhaft   |
-|   2    | 5    | ^^ | ^^           |
-|   1    | 5-   | ^^ | ^^           |
-|   0    | 6    | 6  | ungenügend   |</textarea>
+            <textarea id="markdown-input">|               |          Grouping           ||
+| First Header  | Second Header | Third Header |
+|  ------------ | :-----------: | -----------: |
+| Content       |          *Long Cell*        ||
+| Content       |   **Cell**    |         Cell |
+
+| New section   |     More      |         Data |
+| And more      | With an escaped '\|'        ||  
+[Prototype table]</textarea>
         </div>
         <div id="html-result"></div>
     </div>

@@ -50,6 +50,10 @@ export class HTMLTableRenderer implements TableRenderer {
             result.push("</tr>");
         }
 
+        if (table.caption && table.caption.length > 0) {
+            result.push(`<caption style="caption-side: bottom;">${table.caption.trim()}</caption>`)
+        }
+
         result.push("</table>");
         return result.join("");
     }

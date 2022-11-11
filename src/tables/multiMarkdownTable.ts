@@ -112,7 +112,7 @@ export class MultiMarkdownTableParser implements TableParser {
 
             }
             else if (state == ParsingState.Caption) {
-
+                parsedTable.caption = line.substring(1, line.length - 1).trim();
             }
             else {
                 throw new ParsingError("Not implemented ParsingState.");
