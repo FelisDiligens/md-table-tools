@@ -1,4 +1,4 @@
-import { Table, TableCellMerge, TableRow, TextAlignment } from "./table";
+import { Table, TableCell, TableCellMerge, TableColumn, TableRow, TextAlignment } from "./table";
 import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
@@ -101,7 +101,7 @@ export class MultiMarkdownTableParser implements TableParser {
                     } else if (!pipeEscaped && char == "\\") {
                         pipeEscaped = true;
                     } else {
-                        if (pipeEscaped && char != "|")
+                        if (pipeEscaped)
                             cellContent += "\\";
                         cellContent += char;
                         pipeEscaped = false;
@@ -148,7 +148,98 @@ export class MultiMarkdownTableParser implements TableParser {
 }
 
 export class MultiMarkdownTableRenderer implements TableRenderer {
+    /*public prettify: boolean;
+
+    public constructor(prettify: boolean = true) {
+        this.prettify = prettify;
+    }*/
+
+    determineColumnWidth(table: Table, column: TableColumn): number {
+        let width = 0;
+        for (const cell of table.getCellsInColumn(column))
+            width = Math.max(cell.text.length, width);
+        return width;
+    }
+
+    determineColumnWidths(table: Table): number[] {
+        return table.getColumns().map(column => this.determineColumnWidth(table, column));
+    }
+
     render(table: Table): string {
-        throw new Error("Method not implemented.");
+        const headerRows = table.getHeaderRows();
+        const normalRows = table.getNormalRows();
+        const columnWidths = this.determineColumnWidths(table);
+
+        let result: string[] = [];
+
+        if (headerRows.length > 0)
+            for (const row of headerRows)
+                result.push(this.renderRow(table, row, columnWidths));
+
+        result.push(this.renderSeparator(table, columnWidths));
+
+        for (const row of normalRows)
+            result.push(this.renderRow(table, row, columnWidths));
+            
+        if (table.caption && table.caption.length > 0)
+            result.push(`[${table.caption}]`)
+
+        return result.join("\n");
+    }
+
+    renderSeparator(table: Table, columnWidths: number[]): string {
+        let result: string[] = [];
+        table.getColumns().forEach((col, i) => {
+            let width = columnWidths[i];
+            switch (col.textAlign) {
+                case TextAlignment.left:
+                    result.push(`:${"-".repeat(width - 1)}`);
+                    break;
+                case TextAlignment.center:
+                    result.push(`:${"-".repeat(width - 2)}:`);
+                    break;
+                case TextAlignment.right:
+                    result.push(`${"-".repeat(width - 1)}:`);
+                    break;
+                case TextAlignment.default:
+                default:
+                    result.push("-".repeat(width));
+                    break;
+            }
+        });
+        return `| ${result.join(" | ")} |`;
+    }
+
+    renderRow(table: Table, row: TableRow, columnWidths: number[]): string {
+        let result: string[] = [];
+        table.getCellsInRow(row).forEach((cell, i) => {
+            let cellWidth = columnWidths[i];
+            let colspan = cell.getColspan();
+            if (colspan > 1) {
+                for (let col = i + 1; col < i + colspan; col++)
+                    cellWidth += columnWidths[col];
+                cellWidth += colspan;
+            }
+            result.push(this.renderCell(cell, cellWidth));
+        });
+        return `|${result.join("|")}|`;
+    }
+
+    renderCell(cell: TableCell, cellWidth: number): string {
+        if (cell.merged == TableCellMerge.left)
+            return "";
+
+        let text = cell.merged == TableCellMerge.above ? "^^" : cell.text;
+
+        switch (cell.getTextAlignment()) {
+            case TextAlignment.center:
+                return `${" ".repeat(Math.floor((cellWidth - text.length) / 2))} ${text} ${" ".repeat(Math.ceil((cellWidth - text.length) / 2))}`;
+            case TextAlignment.right:
+                return `${" ".repeat(cellWidth - text.length)} ${text} `;
+            case TextAlignment.left:
+            case TextAlignment.default:
+            default:
+                return ` ${text} ${" ".repeat(cellWidth - text.length)}`;
+        }
     }
 }

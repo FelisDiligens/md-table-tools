@@ -160,6 +160,10 @@ export class Table {
         return this.rows;
     }
 
+    public getColumns(): Array<TableColumn> {
+        return this.columns;
+    }
+
     public getCells(): Array<TableCell> {
         return this.cells;
     }

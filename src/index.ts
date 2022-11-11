@@ -1,17 +1,26 @@
 import { HTMLTableRenderer } from "./tables/htmlTable";
-import { MultiMarkdownTableParser } from "./tables/multiMarkdownTable";
+import { MultiMarkdownTableParser, MultiMarkdownTableRenderer } from "./tables/multiMarkdownTable";
 
-const parser = new MultiMarkdownTableParser();
-const renderer = new HTMLTableRenderer();
+const mdParser = new MultiMarkdownTableParser();
+const mdRenderer = new MultiMarkdownTableRenderer();
+const htmlRenderer = new HTMLTableRenderer();
 
 function updateHTMLTable() {
     let textAreaInput = (<HTMLInputElement>document.querySelector("#markdown-input"));
     let divResult = document.querySelector("#html-result");
-    let table = parser.parse(textAreaInput.value);
-    divResult.innerHTML = renderer.render(table);
+    let table = mdParser.parse(textAreaInput.value);
+    divResult.innerHTML = htmlRenderer.render(table);
+}
+
+function formatMarkdown() {
+    let textAreaInput = (<HTMLInputElement>document.querySelector("#markdown-input"));
+    let table = mdParser.parse(textAreaInput.value);
+    textAreaInput.value = mdRenderer.render(table);
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector("#markdown-input").addEventListener("change", updateHTMLTable);
+    document.querySelector("button#render-md").addEventListener("click", updateHTMLTable);
+    document.querySelector("button#format-md").addEventListener("click", formatMarkdown);
     updateHTMLTable();
 });
