@@ -1,4 +1,4 @@
-import { Table, TableCellMerge, TextAlignment } from "./table";
+import { Table, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table";
 import { TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
@@ -47,29 +47,48 @@ export class HTMLTableRenderer implements TableRenderer {
     public render(table: Table): string {
         let result: string[] = ["<table>"];
 
-        for (const row of table.getRows()) {
-            result.push("<tr>");
-            for (let columnIndex = 0; columnIndex < table.columnCount(); columnIndex++) {
-                let cell = table.getCellByObjs(row, table.getColumn(columnIndex));
-                let colspan = cell.getColspan();
-                let rowspan = cell.getRowspan();
-                if (cell.merged == TableCellMerge.none) {
-                    let cellProps =
-                        (colspan > 1 ? ` colspan="${colspan}"` : "") + 
-                        (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
-                        ` style="${textAlignCSS(cell.getTextAlignment())}"`;
-                    let cellTag = cell.isHeaderCell() ? "th" : "td";
-                    result.push("<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">");
-                }
-            }
-            result.push("</tr>");
+        let headerRows = table.getHeaderRows();
+        let normalRows = table.getNormalRows();
+
+        if (headerRows.length > 0) {
+            result.push("<thead>");
+            for (const row of headerRows)
+                result.push(...this.renderRow(table, row));
+            result.push("</thead>");
         }
 
-        if (table.caption && table.caption.length > 0) {
+        result.push("<tbody>");
+        for (const row of normalRows)
+            result.push(...this.renderRow(table, row));
+        result.push("</tbody>");
+
+        if (table.caption && table.caption.length > 0)
             result.push(`<caption style="caption-side: bottom;">${table.caption.trim()}</caption>`)
-        }
 
         result.push("</table>");
         return result.join("");
+    }
+
+    renderRow(table: Table, row: TableRow): string[] {
+        let result: string[] = [];
+        result.push("<tr>");
+        for (let cell of table.getCellsInRow(row))
+            result.push(...this.renderCell(cell));
+        result.push("</tr>");
+        return result;
+    }
+
+    renderCell(cell: TableCell): string[] {
+        let colspan = cell.getColspan();
+        let rowspan = cell.getRowspan();
+        if (cell.merged == TableCellMerge.none) {
+            let cellProps =
+                (colspan > 1 ? ` colspan="${colspan}"` : "") + 
+                (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
+                ` style="${textAlignCSS(cell.getTextAlignment())}"`;
+            let cellTag = cell.isHeaderCell() ? "th" : "td";
+            return ["<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">"];
+        }
+        return [];
     }
 }
