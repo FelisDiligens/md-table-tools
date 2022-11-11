@@ -84,8 +84,9 @@ export class MultiMarkdownTableParser implements TableParser {
                 // Parse each character:
                 let cellContent = "";
                 let col = 0;
+                let pipeEscaped = false;
                 for (let char of line.substring(1, line.length)) {
-                    if (char == "|") {
+                    if (!pipeEscaped && char == "|") {
                         let cell = parsedTable.getCellByObjs(tableRow, parsedTable.getColumn(col));
                         if (cellContent.trim() == "^^") {
                             cell.merged = TableCellMerge.above;
@@ -97,7 +98,10 @@ export class MultiMarkdownTableParser implements TableParser {
 
                         cellContent = "";
                         col++;
+                    } else if (!pipeEscaped && char == "\\") {
+                        pipeEscaped = true;
                     } else {
+                        pipeEscaped = false;
                         cellContent += char;
                     }
                 }
