@@ -2,11 +2,29 @@ import { Table, TableCell, TableCellMerge, TableRow, TextAlignment } from "./tab
 import { TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
+function escape(htmlStr: string): string {
+    return htmlStr
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+ }
+
 function mdToHtml(markdown: string): string {
-    let html = markdown;
+    let html = escape(markdown);
+
+    // Image:
+    html = html.replace(/!\[([^\[\]]+)\]\(([^\(\)]+)\)/, "<img src=\"$2\" alt=\"$1\">");
 
     // Links:
     html = html.replace(/\[([^\[\]]+)\]\(([^\(\)]+)\)/, "<a href=\"$2\">$1</a>");
+
+    // Inline code:
+    html = html.replace(/`(.*?)`/, "<code>$1</code>");
+
+    // Strikethrough:
+    html = html.replace(/~~(.*?)~~/, "<del>$1</del>");
 
     // Oblique:
     html = html.replace(/___(.*?)___/, "<em><strong>$1</strong></em>");
