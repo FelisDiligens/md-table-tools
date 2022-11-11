@@ -1,3 +1,5 @@
+## Gotchas that need fixing:
+
 - [ ] Can't parse single column md tables
 - [ ] Can't parse md table, if row doesn't start with | and end with |
 - [ ] Can't parse captions above md table
@@ -6,4 +8,4 @@
     - See:
         - https://bywordapp.com/markdown/guide.html#section-mmd
         - https://bywordapp.com/markdown/guide.html#section-mmd-tables-table1
-- [ ] Can't parse and render mmd table sections (multiple <tbody> tags)
+- [ ] Can't parse and render mmd table sections (multiple `<tbody>` tags)
