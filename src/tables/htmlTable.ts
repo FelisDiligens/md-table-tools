@@ -12,7 +12,7 @@ function escape(htmlStr: string): string {
  }
 
 function mdToHtml(markdown: string): string {
-    let html = escape(markdown);
+    let html = markdown; // escape(markdown);
 
     // Image:
     html = html.replace(/!\[([^\[\]]+)\]\(([^\(\)]+)\)/, "<img src=\"$2\" alt=\"$1\">");
