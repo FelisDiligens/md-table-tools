@@ -11,7 +11,7 @@ More to come.
 ```
 $ git clone https://github.com/FelisDiligens/md-table-tools.git
 $ cd md-table-tools
-$ npm init
+$ npm install
 $ npm run build
 ```
 
