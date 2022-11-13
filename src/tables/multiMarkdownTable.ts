@@ -2,9 +2,7 @@ import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, T
 import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
-// const rowRegex = /^\|([^\|]*\|[^\|]*)+\|$/;
 const rowRegex = /^\|(.+)\|$/
-// const separatorRegex = /^\|([\-=:\.\+\s]+\|[\-=:\.\+\s]+)+\|$/; // Matches: | -- | -- |
 const separatorRegex = /^\|([\s\.]*:?[\-=\.]+[:\+]?[\s\.]*\|)+$/;
 const captionRegex = /^(\[.+\]){1,2}$/;
 
@@ -160,6 +158,7 @@ export class MultiMarkdownTableParser implements TableParser {
                 }
             }
             else if (state == ParsingState.TopCaption || state == ParsingState.BottomCaption) {
+                // "If you have a caption before and after the table, only the first match will be used."
                 if (parsedTable.caption != null)
                     continue;
 
