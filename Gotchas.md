@@ -1,6 +1,6 @@
 ## Gotchas that need fixing:
 
-- [ ] Can't parse single column md tables
+- [x] ~~Can't parse single column md tables~~
 - [x] ~~Can't parse md table, if row doesn't start with | and end with |~~
 - [x] ~~Can't parse captions above md table~~
 - [x] ~~Can't parse table section label~~: `[Table caption, works as a reference][section-mmd-tables-table1]`

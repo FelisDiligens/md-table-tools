@@ -2,9 +2,10 @@ import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, T
 import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
-const cellRegex = /\|[^|]*\|/;
-const rowRegex = /^\|([^\|]*\|[^\|]*)+\|$/;
-const separatorRegex = /^\|([\-=:\.\+\s]+\|[\-=:\.\+\s]+)+\|$/; // Matches: | -- | -- |
+// const rowRegex = /^\|([^\|]*\|[^\|]*)+\|$/;
+const rowRegex = /^\|(.+)\|$/
+// const separatorRegex = /^\|([\-=:\.\+\s]+\|[\-=:\.\+\s]+)+\|$/; // Matches: | -- | -- |
+const separatorRegex = /^\|(\s*[\-=:\.\+]+\s*\|)+$/;
 const captionRegex = /^(\[.+\]){1,2}$/;
 
 enum ParsingState {
@@ -70,13 +71,14 @@ export class MultiMarkdownTableParser implements TableParser {
 
                 continue;
             }
-            // Is header?
-            if (state == ParsingState.TopCaption && line.match(rowRegex)) {
-                state = ParsingState.Header;
-            }
+
             // Is separator?
-            else if ((state == ParsingState.TopCaption || state == ParsingState.Header) && line.match(separatorRegex)) {
+            if ((state == ParsingState.TopCaption || state == ParsingState.Header) && line.match(separatorRegex)) {
                 state = ParsingState.Separator;
+            }
+            // Is header?
+            else if (state == ParsingState.TopCaption && line.match(rowRegex)) {
+                state = ParsingState.Header;
             }
             // Is bottom caption?
             else if ((state == ParsingState.Separator || state == ParsingState.Row) && line.match(captionRegex)) {
