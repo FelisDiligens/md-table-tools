@@ -180,14 +180,103 @@ export class MultiMarkdownTableParser implements TableParser {
     }
 }
 
-export class MultiMarkdownTableRenderer implements TableRenderer {
-    /** If true, table cells and content are aligned. If false, table will be minified. */
-    public prettify: boolean;
+export class MinifiedMultiMarkdownTableRenderer implements TableRenderer {
+    public render(table: Table): string {
+        const headerRows = table.getHeaderRows();
+        const normalRows = table.getNormalRows();
 
-    public constructor(prettify: boolean = true) {
-        this.prettify = prettify;
+        let result: string[] = [];
+            
+        // Caption (if position is top):
+        if (table.caption && table.caption.position == TableCaptionPosition.top) {
+            result.push(this.renderCaption(table.caption));
+        }
+
+        // Header:
+        if (headerRows.length > 0)
+            for (const row of headerRows)
+                result.push(this.renderRow(table, row));
+
+        // Separator:
+        result.push(this.renderSeparator(table));
+
+        // Rows:
+        for (const row of normalRows) {
+            if (row.startsNewSection)
+                result.push("");
+            result.push(this.renderRow(table, row));
+        }
+            
+        // Caption (if position is bottom):
+        if (table.caption && table.caption.position == TableCaptionPosition.bottom) {
+            result.push(this.renderCaption(table.caption));
+        }
+
+        return result.join("\n");
     }
 
+    private renderCaption(caption: TableCaption): string {
+        let result: string[] = [];
+        if (caption.text.length > 0) {
+            result.push(`[${caption.text}]`);
+            if (caption.label.length > 0) {
+                result.push(`[${caption.label}]`);
+            }
+        }
+        return result.join("");
+    }
+
+    private renderSeparator(table: Table): string {
+        let result: string[] = [];
+
+        table.getColumns().forEach((col, i) => {
+            switch (col.textAlign) {
+                case TextAlignment.left:
+                    result.push(":-");
+                    break;
+                case TextAlignment.center:
+                    result.push(":-:");
+                    break;
+                case TextAlignment.right:
+                    result.push("-:");
+                    break;
+                case TextAlignment.default:
+                default:
+                    result.push("-");
+                    break;
+            }
+        });
+
+        return result.join("|");
+    }
+
+    private renderRow(table: Table, row: TableRow): string {
+        let result: string = "";
+        let cells = table.getCellsInRow(row);
+
+        cells.forEach((cell, i) => {
+            if (cell.merged == TableCellMerge.left) {
+                result += "|";
+            } else if (cell.merged == TableCellMerge.above) {
+                result += "^^|";
+            } else if (i == 0 && cell.text.trim() === "") {
+                result += "| |";
+            } else if (cell.text.trim() === "") {
+                result += " |";
+            } else {
+                result += `${cell.text.trim()}|`;
+            }
+
+            // Last cell:
+            if (i == cells.length - 1 && cell.merged != TableCellMerge.left)
+                result = result.substring(0, result.length - 1); // Omit last '|' if possible
+        });
+
+        return result;
+    }
+}
+
+export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
     public render(table: Table): string {
         const headerRows = table.getHeaderRows();
         const normalRows = table.getNormalRows();
@@ -236,56 +325,51 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
 
     private renderSeparator(table: Table, columnWidths: number[]): string {
         let result: string[] = [];
+
         table.getColumns().forEach((col, i) => {
             let width = columnWidths[i];
             switch (col.textAlign) {
                 case TextAlignment.left:
-                    result.push(this.prettify ? `:${"-".repeat(width + 1)}` : ":-");
+                    result.push(`:${"-".repeat(width + 1)}`);
                     break;
                 case TextAlignment.center:
-                    result.push(this.prettify ? `:${"-".repeat(width)}:` : ":-:");
+                    result.push(`:${"-".repeat(width)}:`);
                     break;
                 case TextAlignment.right:
-                    result.push(this.prettify ? `${"-".repeat(width + 1)}:` : "-:");
+                    result.push(`${"-".repeat(width + 1)}:`);
                     break;
                 case TextAlignment.default:
                 default:
-                    result.push(this.prettify ? "-".repeat(width + 2) : "-");
+                    result.push("-".repeat(width + 2));
                     break;
             }
         });
+
         return `|${result.join("|")}|`;
     }
 
     private renderRow(table: Table, row: TableRow, columnWidths: number[]): string {
         let result: string[] = [];
+
         table.getCellsInRow(row).forEach((cell, i) => {
-            let cellWidth = 1;
-            if (this.prettify) {
-                cellWidth = columnWidths[i];
-                let colspan = cell.getColspan();
-                if (colspan > 1) {
-                    for (let col = i + 1; col < i + colspan; col++)
-                        cellWidth += columnWidths[col];
-                    cellWidth += colspan + Math.floor((colspan - 1) / 2);
-                }
+            let colspan = cell.getColspan();
+            let cellWidth = columnWidths[i];
+            if (colspan > 1) {
+                for (let col = i + 1; col < i + colspan; col++)
+                    cellWidth += columnWidths[col];
+                cellWidth += colspan + Math.floor((colspan - 1) / 2);
             }
             result.push(this.renderCell(cell, cellWidth));
         });
+
         return `|${result.join("|")}|`;
     }
 
-    private renderCell(cell: TableCell, cellWidth: number): string {
+    private renderCell(cell: TableCell, cellWidth: number = -1): string {
         if (cell.merged == TableCellMerge.left)
             return "";
 
         let text = cell.merged == TableCellMerge.above ? "^^" : cell.text;
-
-        if (!this.prettify)
-            if (text.trim() === "")
-                return " ";
-            else
-                return text.trim();
 
         switch (cell.getTextAlignment()) {
             case TextAlignment.center:
@@ -300,9 +384,6 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
     }
     
     private determineColumnWidth(table: Table, column: TableColumn): number {
-        if (!this.prettify)
-            return 1;
-        
         let width = 0;
         for (const cell of table.getCellsInColumn(column))
             width = Math.max(cell.merged == TableCellMerge.above ? 2 : cell.text.length, width);

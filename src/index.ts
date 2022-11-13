@@ -1,9 +1,9 @@
 import { HTMLTableRenderer } from "./tables/htmlTable";
-import { MultiMarkdownTableParser, MultiMarkdownTableRenderer } from "./tables/multiMarkdownTable";
+import { MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer, MinifiedMultiMarkdownTableRenderer } from "./tables/multiMarkdownTable";
 
 const mdParser = new MultiMarkdownTableParser();
-const mdPrettyRenderer = new MultiMarkdownTableRenderer();
-const mdMinifyRenderer = new MultiMarkdownTableRenderer(false);
+const mdPrettyRenderer = new PrettyMultiMarkdownTableRenderer();
+const mdMinifyRenderer = new MinifiedMultiMarkdownTableRenderer();
 const htmlRenderer = new HTMLTableRenderer();
 
 function updateHTMLTable() {
