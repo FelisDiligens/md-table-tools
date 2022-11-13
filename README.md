@@ -7,6 +7,12 @@ You can also manipulate parsed tables before rendering them, e.g. by adding or r
 
 More to come.
 
+## Syntax
+
+This module mostly follows the MultiMarkdown specs: https://fletcher.github.io/MultiMarkdown-6/syntax/tables.html
+
+With one exception: You can merge cells vertically by writing `^^` into a cell;
+
 ## Building
 
 ```
