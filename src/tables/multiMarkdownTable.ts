@@ -5,7 +5,7 @@ import { TableRenderer } from "./tableRenderer";
 // const rowRegex = /^\|([^\|]*\|[^\|]*)+\|$/;
 const rowRegex = /^\|(.+)\|$/
 // const separatorRegex = /^\|([\-=:\.\+\s]+\|[\-=:\.\+\s]+)+\|$/; // Matches: | -- | -- |
-const separatorRegex = /^\|(\s*[\-=:\.\+]+\s*\|)+$/;
+const separatorRegex = /^\|([\s\.]*:?[\-=\.]+[:\+]?[\s\.]*\|)+$/;
 const captionRegex = /^(\[.+\]){1,2}$/;
 
 enum ParsingState {
@@ -141,7 +141,7 @@ export class MultiMarkdownTableParser implements TableParser {
                         alignment = TextAlignment.default;
                         separator = false;
                         col++;
-                    } else if (char == ":" || char == "." || char == "+") {
+                    } else if (char == ":") {
                         if (!separator) {
                             alignment = TextAlignment.left;
                         } else {
@@ -155,6 +155,8 @@ export class MultiMarkdownTableParser implements TableParser {
                         if (alignment == TextAlignment.right)
                             throw new ParsingError("Invalid separator");
                     }
+                    // char == "." => idk ???
+                    // char == "+" => "If the separator line ends with +, then cells in that column will be wrapped when exporting to LaTeX if they are long enough."
                 }
             }
             else if (state == ParsingState.TopCaption || state == ParsingState.BottomCaption) {
