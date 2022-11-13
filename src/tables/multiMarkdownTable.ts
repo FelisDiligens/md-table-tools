@@ -1,17 +1,18 @@
-import { Table, TableCell, TableCellMerge, TableColumn, TableRow, TextAlignment } from "./table";
+import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableColumn, TableRow, TextAlignment } from "./table";
 import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
 const cellRegex = /\|[^|]*\|/;
 const rowRegex = /^\|([^\|]*\|[^\|]*)+\|$/;
 const separatorRegex = /^\|([\-=:\.\+\s]+\|[\-=:\.\+\s]+)+\|$/; // Matches: | -- | -- |
-const captionRegex = /^\[.*\]$/;
+const captionRegex = /^(\[.+\]){1,2}$/;
 
 enum ParsingState {
+    TopCaption,
     Header,
     Separator,
     Row,
-    Caption
+    BottomCaption,
 }
 
 export class MultiMarkdownTableParser implements TableParser {
@@ -47,7 +48,7 @@ export class MultiMarkdownTableParser implements TableParser {
         
         // Initalize table with 0 rows and the determined amount of columns:
         let parsedTable = new Table(0, columnCount);
-        let state = ParsingState.Header;
+        let state = ParsingState.TopCaption;
         let startNewSection = false;
 
         // Now parse line by line:
@@ -62,17 +63,21 @@ export class MultiMarkdownTableParser implements TableParser {
                     startNewSection = true;
                 continue;
             }
+            // Is header?
+            if (state == ParsingState.TopCaption && line.match(rowRegex)) {
+                state = ParsingState.Header;
+            }
             // Is separator?
-            if (state == ParsingState.Header && line.match(separatorRegex)) {
+            else if ((state == ParsingState.TopCaption || state == ParsingState.Header) && line.match(separatorRegex)) {
                 state = ParsingState.Separator;
+            }
+            // Is bottom caption?
+            else if ((state == ParsingState.Separator || state == ParsingState.Row) && line.match(captionRegex)) {
+                state = ParsingState.BottomCaption;
             }
             // If separator has been parsed last iteration:
             else if (state == ParsingState.Separator) {
                 state = ParsingState.Row;
-            }
-            // Is caption?
-            else if (state == ParsingState.Row && line.match(captionRegex)) {
-                state = ParsingState.Caption;
             }
 
             /*
@@ -143,8 +148,14 @@ export class MultiMarkdownTableParser implements TableParser {
                     }
                 }
             }
-            else if (state == ParsingState.Caption) {
-                parsedTable.caption = line.substring(1, line.length - 1).trim();
+            else if (state == ParsingState.TopCaption || state == ParsingState.BottomCaption) {
+                let caption = new TableCaption();
+                caption.position = state == ParsingState.TopCaption ? TableCaptionPosition.top : TableCaptionPosition.bottom;
+                let split = line.split(/[\[\]]+/).filter(s => s.trim() !== "");
+                caption.text = split[0].trim();
+                if (split.length > 1)
+                    caption.label = split[1].trim();
+                parsedTable.caption = caption;
             }
             else {
                 throw new ParsingError(`Not implemented ParsingState: ${state}`);
@@ -179,23 +190,44 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
         const columnWidths = this.determineColumnWidths(table);
 
         let result: string[] = [];
+            
+        // Caption (if position is top):
+        if (table.caption && table.caption.position == TableCaptionPosition.top) {
+            result.push(this.renderCaption(table.caption));
+        }
 
+        // Header:
         if (headerRows.length > 0)
             for (const row of headerRows)
                 result.push(this.renderRow(table, row, columnWidths));
 
+        // Separator:
         result.push(this.renderSeparator(table, columnWidths));
 
+        // Rows:
         for (const row of normalRows) {
             if (row.startsNewSection)
                 result.push("");
             result.push(this.renderRow(table, row, columnWidths));
         }
             
-        if (table.caption && table.caption.length > 0)
-            result.push(`[${table.caption}]`)
+        // Caption (if position is bottom):
+        if (table.caption && table.caption.position == TableCaptionPosition.bottom) {
+            result.push(this.renderCaption(table.caption));
+        }
 
         return result.join("\n");
+    }
+
+    renderCaption(caption: TableCaption): string {
+        let result: string[] = [];
+        if (caption.text.length > 0) {
+            result.push(`[${caption.text}]`);
+            if (caption.label.length > 0) {
+                result.push(`[${caption.label}]`);
+            }
+        }
+        return result.join("");
     }
 
     renderSeparator(table: Table, columnWidths: number[]): string {

@@ -83,8 +83,8 @@ export class HTMLTableRenderer implements TableRenderer {
         }
         result.push("</tbody>");
 
-        if (table.caption && table.caption.length > 0)
-            result.push(`<caption style="caption-side: bottom;">${table.caption.trim()}</caption>`)
+        if (table.caption && table.caption.text.length > 0)
+            result.push(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position};">${table.caption.text.trim()}</caption>`);
 
         result.push("</table>");
         return result.join("");

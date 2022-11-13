@@ -11,6 +11,29 @@ export enum TableCellMerge {
     none
 }
 
+export enum TableCaptionPosition {
+    top = "top",
+    bottom = "bottom"
+}
+
+export class TableCaption {
+    public text: string;
+    public label: string;
+    public position: TableCaptionPosition;
+
+    public constructor() {
+        this.text = "";
+        this.label = "";
+        this.position = TableCaptionPosition.bottom;
+    }
+
+    public getLabel(): string {
+        if (this.label.trim() === "")
+            return this.text.trim().toLowerCase().replace(/\s/g, "-");
+        return this.label.trim().replace(/\s/g, "-");
+    }
+}
+
 export class TableCell {
     public text: string;
     public table: Table;
@@ -99,13 +122,13 @@ export class Table {
     private cells: Array<TableCell>;
     private rows: Array<TableRow>;
     private columns: Array<TableColumn>;
-    public caption: string;
+    public caption: TableCaption;
 
     public constructor(rowNum: number = 0, colNum: number = 0) {
         this.cells = [];
         this.rows = [...Array(rowNum)].map((_, i) => new TableRow());
         this.columns = [...Array(colNum)].map((_, i) => new TableColumn());
-        this.caption = "";
+        this.caption = null;
     }
 
     /**
