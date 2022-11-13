@@ -59,7 +59,7 @@ function textAlignCSS(textAlign: TextAlignment) {
 }
 
 export class HTMLTableParser implements TableParser {
-    parse(table: string): Table {
+    public parse(table: string): Table {
         throw new Error("Method not implemented.");
     }
 }
@@ -93,7 +93,7 @@ export class HTMLTableRenderer implements TableRenderer {
         return result.join("");
     }
 
-    renderRow(table: Table, row: TableRow): string[] {
+    private renderRow(table: Table, row: TableRow): string[] {
         let result: string[] = [];
         result.push("<tr>");
         for (let cell of table.getCellsInRow(row))
@@ -102,7 +102,7 @@ export class HTMLTableRenderer implements TableRenderer {
         return result;
     }
 
-    renderCell(cell: TableCell): string[] {
+    private renderCell(cell: TableCell): string[] {
         let colspan = cell.getColspan();
         let rowspan = cell.getRowspan();
         if (cell.merged == TableCellMerge.none) {

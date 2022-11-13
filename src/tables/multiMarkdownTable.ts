@@ -17,7 +17,7 @@ enum ParsingState {
 }
 
 export class MultiMarkdownTableParser implements TableParser {
-    parse(table: string): Table {
+    public parse(table: string): Table {
         // Prepare/format all lines:
         let lines = table.split("\n").map(line => {
             // Remove spaces from start and end:
@@ -181,24 +181,7 @@ export class MultiMarkdownTableParser implements TableParser {
 }
 
 export class MultiMarkdownTableRenderer implements TableRenderer {
-    /*public prettify: boolean;
-
-    public constructor(prettify: boolean = true) {
-        this.prettify = prettify;
-    }*/
-
-    determineColumnWidth(table: Table, column: TableColumn): number {
-        let width = 0;
-        for (const cell of table.getCellsInColumn(column))
-            width = Math.max(cell.merged == TableCellMerge.above ? 2 : cell.text.length, width);
-        return width;
-    }
-
-    determineColumnWidths(table: Table): number[] {
-        return table.getColumns().map(column => this.determineColumnWidth(table, column));
-    }
-
-    render(table: Table): string {
+    public render(table: Table): string {
         const headerRows = table.getHeaderRows();
         const normalRows = table.getNormalRows();
         const columnWidths = this.determineColumnWidths(table);
@@ -233,7 +216,7 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
         return result.join("\n");
     }
 
-    renderCaption(caption: TableCaption): string {
+    private renderCaption(caption: TableCaption): string {
         let result: string[] = [];
         if (caption.text.length > 0) {
             result.push(`[${caption.text}]`);
@@ -244,7 +227,7 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
         return result.join("");
     }
 
-    renderSeparator(table: Table, columnWidths: number[]): string {
+    private renderSeparator(table: Table, columnWidths: number[]): string {
         let result: string[] = [];
         table.getColumns().forEach((col, i) => {
             let width = columnWidths[i];
@@ -267,7 +250,7 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
         return `|${result.join("|")}|`;
     }
 
-    renderRow(table: Table, row: TableRow, columnWidths: number[]): string {
+    private renderRow(table: Table, row: TableRow, columnWidths: number[]): string {
         let result: string[] = [];
         table.getCellsInRow(row).forEach((cell, i) => {
             let cellWidth = columnWidths[i];
@@ -282,7 +265,7 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
         return `|${result.join("|")}|`;
     }
 
-    renderCell(cell: TableCell, cellWidth: number): string {
+    private renderCell(cell: TableCell, cellWidth: number): string {
         if (cell.merged == TableCellMerge.left)
             return "";
 
@@ -298,5 +281,16 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
             default:
                 return ` ${text} ${" ".repeat(Math.max(0, cellWidth - text.length))}`;
         }
+    }
+    
+    private determineColumnWidth(table: Table, column: TableColumn): number {
+        let width = 0;
+        for (const cell of table.getCellsInColumn(column))
+            width = Math.max(cell.merged == TableCellMerge.above ? 2 : cell.text.length, width);
+        return width;
+    }
+
+    private determineColumnWidths(table: Table): number[] {
+        return table.getColumns().map(column => this.determineColumnWidth(table, column));
     }
 }
