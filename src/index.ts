@@ -2,7 +2,8 @@ import { HTMLTableRenderer } from "./tables/htmlTable";
 import { MultiMarkdownTableParser, MultiMarkdownTableRenderer } from "./tables/multiMarkdownTable";
 
 const mdParser = new MultiMarkdownTableParser();
-const mdRenderer = new MultiMarkdownTableRenderer();
+const mdPrettyRenderer = new MultiMarkdownTableRenderer();
+const mdMinifyRenderer = new MultiMarkdownTableRenderer(false);
 const htmlRenderer = new HTMLTableRenderer();
 
 function updateHTMLTable() {
@@ -15,7 +16,13 @@ function updateHTMLTable() {
 function formatMarkdown() {
     let textAreaInput = (<HTMLInputElement>document.querySelector("#markdown-input"));
     let table = mdParser.parse(textAreaInput.value);
-    textAreaInput.value = mdRenderer.render(table);
+    textAreaInput.value = mdPrettyRenderer.render(table);
+}
+
+function minifyMarkdown() {
+    let textAreaInput = (<HTMLInputElement>document.querySelector("#markdown-input"));
+    let table = mdParser.parse(textAreaInput.value);
+    textAreaInput.value = mdMinifyRenderer.render(table);
 }
 
 function test() {
@@ -26,7 +33,7 @@ function test() {
     table.removeRow(table.getNormalRows()[0]);
     table.sanitize();
 
-    textAreaInput.value = mdRenderer.render(table);
+    textAreaInput.value = mdPrettyRenderer.render(table);
     divResult.innerHTML = htmlRenderer.render(table);
 }
 
@@ -34,6 +41,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector("#markdown-input").addEventListener("change", updateHTMLTable);
     document.querySelector("button#render-md").addEventListener("click", updateHTMLTable);
     document.querySelector("button#format-md").addEventListener("click", formatMarkdown);
+    document.querySelector("button#minify-md").addEventListener("click", minifyMarkdown);
     document.querySelector("button#test").addEventListener("click", test);
     updateHTMLTable();
 });

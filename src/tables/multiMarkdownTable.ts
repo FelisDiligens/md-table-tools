@@ -181,6 +181,13 @@ export class MultiMarkdownTableParser implements TableParser {
 }
 
 export class MultiMarkdownTableRenderer implements TableRenderer {
+    /** If true, table cells and content are aligned. If false, table will be minified. */
+    public prettify: boolean;
+
+    public constructor(prettify: boolean = true) {
+        this.prettify = prettify;
+    }
+
     public render(table: Table): string {
         const headerRows = table.getHeaderRows();
         const normalRows = table.getNormalRows();
@@ -233,17 +240,17 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
             let width = columnWidths[i];
             switch (col.textAlign) {
                 case TextAlignment.left:
-                    result.push(`:${"-".repeat(width + 1)}`);
+                    result.push(this.prettify ? `:${"-".repeat(width + 1)}` : ":-");
                     break;
                 case TextAlignment.center:
-                    result.push(`:${"-".repeat(width)}:`);
+                    result.push(this.prettify ? `:${"-".repeat(width)}:` : ":-:");
                     break;
                 case TextAlignment.right:
-                    result.push(`${"-".repeat(width + 1)}:`);
+                    result.push(this.prettify ? `${"-".repeat(width + 1)}:` : "-:");
                     break;
                 case TextAlignment.default:
                 default:
-                    result.push("-".repeat(width + 2));
+                    result.push(this.prettify ? "-".repeat(width + 2) : "-");
                     break;
             }
         });
@@ -253,12 +260,15 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
     private renderRow(table: Table, row: TableRow, columnWidths: number[]): string {
         let result: string[] = [];
         table.getCellsInRow(row).forEach((cell, i) => {
-            let cellWidth = columnWidths[i];
-            let colspan = cell.getColspan();
-            if (colspan > 1) {
-                for (let col = i + 1; col < i + colspan; col++)
-                    cellWidth += columnWidths[col];
-                cellWidth += colspan + Math.floor((colspan - 1) / 2);
+            let cellWidth = 1;
+            if (this.prettify) {
+                cellWidth = columnWidths[i];
+                let colspan = cell.getColspan();
+                if (colspan > 1) {
+                    for (let col = i + 1; col < i + colspan; col++)
+                        cellWidth += columnWidths[col];
+                    cellWidth += colspan + Math.floor((colspan - 1) / 2);
+                }
             }
             result.push(this.renderCell(cell, cellWidth));
         });
@@ -270,6 +280,12 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
             return "";
 
         let text = cell.merged == TableCellMerge.above ? "^^" : cell.text;
+
+        if (!this.prettify)
+            if (text.trim() === "")
+                return " ";
+            else
+                return text.trim();
 
         switch (cell.getTextAlignment()) {
             case TextAlignment.center:
@@ -284,6 +300,9 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
     }
     
     private determineColumnWidth(table: Table, column: TableColumn): number {
+        if (!this.prettify)
+            return 1;
+        
         let width = 0;
         for (const cell of table.getCellsInColumn(column))
             width = Math.max(cell.merged == TableCellMerge.above ? 2 : cell.text.length, width);
