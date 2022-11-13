@@ -48,17 +48,20 @@ export class MultiMarkdownTableParser implements TableParser {
         // Initalize table with 0 rows and the determined amount of columns:
         let parsedTable = new Table(0, columnCount);
         let state = ParsingState.Header;
+        let startNewSection = false;
 
         // Now parse line by line:
         for (let line of lines) {
-            // Ignore empty lines:
-            if (line === "")
-                continue;
-
             /*
                 Determine parsing state:
             */
 
+            // Is empty line?
+            if (line === "") {
+                if (state == ParsingState.Row)
+                    startNewSection = true;
+                continue;
+            }
             // Is separator?
             if (state == ParsingState.Header && line.match(separatorRegex)) {
                 state = ParsingState.Separator;
@@ -78,7 +81,12 @@ export class MultiMarkdownTableParser implements TableParser {
             
             if (state == ParsingState.Header || state == ParsingState.Row) {
                 let tableRow = new TableRow();
-                tableRow.isHeader = state == ParsingState.Header;
+                if (state == ParsingState.Header) {
+                    tableRow.isHeader = true;
+                } else {
+                    tableRow.startsNewSection = startNewSection;
+                    startNewSection = false;
+                }
                 parsedTable.addRow(-1, tableRow);
 
                 // Parse each character:
@@ -178,8 +186,11 @@ export class MultiMarkdownTableRenderer implements TableRenderer {
 
         result.push(this.renderSeparator(table, columnWidths));
 
-        for (const row of normalRows)
+        for (const row of normalRows) {
+            if (row.startsNewSection)
+                result.push("");
             result.push(this.renderRow(table, row, columnWidths));
+        }
             
         if (table.caption && table.caption.length > 0)
             result.push(`[${table.caption}]`)

@@ -8,4 +8,4 @@
     - See:
         - https://bywordapp.com/markdown/guide.html#section-mmd
         - https://bywordapp.com/markdown/guide.html#section-mmd-tables-table1
-- [ ] Can't parse and render mmd table sections (multiple `<tbody>` tags)
+- [x] ~~Can't parse and render mmd table sections (multiple `<tbody>` tags)~~

@@ -76,8 +76,11 @@ export class HTMLTableRenderer implements TableRenderer {
         }
 
         result.push("<tbody>");
-        for (const row of normalRows)
+        for (const row of normalRows) {
+            if (row.startsNewSection)
+                result.push("</tbody><tbody>");
             result.push(...this.renderRow(table, row));
+        }
         result.push("</tbody>");
 
         if (table.caption && table.caption.length > 0)

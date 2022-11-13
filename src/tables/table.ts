@@ -79,10 +79,20 @@ export class TableCell {
 
 export class TableRow {
     public isHeader: boolean;
+    public startsNewSection: boolean;
+
+    public constructor() {
+        this.isHeader = false;
+        this.startsNewSection = false;
+    }
 }
 
 export class TableColumn {
     public textAlign: TextAlignment;
+
+    public constructor() {
+        this.textAlign = TextAlignment.default;
+    }
 }
 
 export class Table {
