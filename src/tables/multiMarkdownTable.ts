@@ -149,12 +149,17 @@ export class MultiMarkdownTableParser implements TableParser {
                 }
             }
             else if (state == ParsingState.TopCaption || state == ParsingState.BottomCaption) {
+                if (parsedTable.caption != null)
+                    continue;
+
                 let caption = new TableCaption();
                 caption.position = state == ParsingState.TopCaption ? TableCaptionPosition.top : TableCaptionPosition.bottom;
+
                 let split = line.split(/[\[\]]+/).filter(s => s.trim() !== "");
                 caption.text = split[0].trim();
                 if (split.length > 1)
                     caption.label = split[1].trim();
+
                 parsedTable.caption = caption;
             }
             else {
