@@ -102,21 +102,14 @@ export class TableCell {
 }
 
 export class TableRow {
-    public isHeader: boolean;
-    public startsNewSection: boolean;
-
-    public constructor() {
-        this.isHeader = false;
-        this.startsNewSection = false;
-    }
+    public constructor(
+        public isHeader: boolean = false,
+        public startsNewSection: boolean = false) { }
 }
 
 export class TableColumn {
-    public textAlign: TextAlignment;
-
-    public constructor() {
-        this.textAlign = TextAlignment.default;
-    }
+    public constructor(
+        public textAlign: TextAlignment = TextAlignment.default) { }
 }
 
 export class Table {
@@ -127,8 +120,8 @@ export class Table {
 
     public constructor(rowNum: number = 0, colNum: number = 0) {
         this.cells = [];
-        this.rows = [...Array(rowNum)].map((_, i) => new TableRow());
-        this.columns = [...Array(colNum)].map((_, i) => new TableColumn());
+        this.rows = Array.from({length: rowNum}, () => new TableRow());
+        this.columns = Array.from({length: colNum}, () => new TableColumn());
         this.caption = null;
     }
 
