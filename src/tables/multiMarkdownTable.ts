@@ -28,8 +28,11 @@ export class MultiMarkdownTableParser implements TableParser {
 
             // Add '|' to the start and end of the line if necessary (and not if it's a caption):
             if (!line.match(captionRegex)) {
-                if (!line.startsWith("|") && !line.endsWith("|"))
-                    line = `|${line}|`;
+                if (!line.startsWith("|"))
+                    line = "|" + line;
+
+                if (!line.endsWith("|"))
+                    line = line + "|";
 
                 if (!line.match(rowRegex))
                     throw new ParsingError(`Invalid row: ${line}`);
@@ -59,8 +62,12 @@ export class MultiMarkdownTableParser implements TableParser {
 
             // Is empty line?
             if (line === "") {
+                if (startNewSection)
+                    throw new ParsingError("Invalid table: No more than one empty line allowed.");
+
                 if (state == ParsingState.Row)
                     startNewSection = true;
+
                 continue;
             }
             // Is header?
