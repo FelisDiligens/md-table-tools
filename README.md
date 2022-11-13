@@ -11,7 +11,18 @@ More to come.
 
 This module mostly follows the MultiMarkdown specs: https://fletcher.github.io/MultiMarkdown-6/syntax/tables.html
 
-With one exception: You can merge cells vertically by writing `^^` into a cell;
+With one exception: You can merge cells vertically by writing `^^` into a cell.
+
+### Differences to tables in GitHub-flavored Markdown (and similar variants)
+
+GitHub-flavored Markdown tables (and similar variants) are fully supported, with these additional features:
+
+- You can merge cells horizontally by adding additional pipes (`|`) at the end of the cell.
+- You can merge cells vertically by writing `^^` into a cell;
+- You can add a caption above or below to the table. Captions can optionally have labels.
+- You can have a header with multiple rows.
+- You can omit the header.
+- You can divide the table into multiple sections by adding a single empty line in-between rows.
 
 ## Building
 
