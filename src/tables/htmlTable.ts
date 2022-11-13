@@ -39,7 +39,10 @@ function mdToHtml(markdown: string): string {
     html = html.replace(/\*(.*?)\*/, "<em>$1</em>");
 
     // Escaped characters:
-    html = html.replace(/\\([#\.\|\*_\s`])/g, "$1")
+    html = html.replace(/\\([#\.\|\*_\s`])/g, "$1");
+
+    // Newlines:
+    html = html.replace(/\r?\n/g, "<br>");
 
     return html;
 }

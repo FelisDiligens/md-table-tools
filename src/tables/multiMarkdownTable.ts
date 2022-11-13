@@ -113,7 +113,11 @@ export class MultiMarkdownTableParser implements TableParser {
                         } else if (cellContent === "") {
                             cell.merged = TableCellMerge.left;
                         } else {
-                            cell.setText(cellContent.trim());
+                            cell.setText(
+                                cellContent
+                                .trim()
+                                .replace(/(<[bB][rR]\s*\/?>)/g, "\n")
+                            );
                         }
 
                         cellContent = "";
@@ -265,11 +269,12 @@ export class MinifiedMultiMarkdownTableRenderer implements TableRenderer {
             } else if (cell.text.trim() === "") {
                 result += " |";
             } else {
-                result += `${cell.text.trim()}|`;
+                let text = cell.text.trim().replace(/\r?\n/g, "<br>");
+                result += `${text}|`;
             }
 
             // Last cell:
-            if (i == cells.length - 1 && cell.merged != TableCellMerge.left)
+            if (i == cells.length - 1 && cell.text.trim() != "" && cell.merged != TableCellMerge.left)
                 result = result.substring(0, result.length - 1); // Omit last '|' if possible
         });
 
@@ -370,7 +375,7 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
         if (cell.merged == TableCellMerge.left)
             return "";
 
-        let text = cell.merged == TableCellMerge.above ? "^^" : cell.text;
+        let text = cell.merged == TableCellMerge.above ? "^^" : cell.text.replace(/\r?\n/g, "<br>");
 
         switch (cell.getTextAlignment()) {
             case TextAlignment.center:

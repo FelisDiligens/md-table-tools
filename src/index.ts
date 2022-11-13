@@ -1,3 +1,4 @@
+import { CSVTableRenderer } from "./tables/csvTable";
 import { HTMLTableRenderer } from "./tables/htmlTable";
 import { MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer, MinifiedMultiMarkdownTableRenderer } from "./tables/multiMarkdownTable";
 
@@ -5,12 +6,20 @@ const mdParser = new MultiMarkdownTableParser();
 const mdPrettyRenderer = new PrettyMultiMarkdownTableRenderer();
 const mdMinifyRenderer = new MinifiedMultiMarkdownTableRenderer();
 const htmlRenderer = new HTMLTableRenderer();
+const csvRenderer = new CSVTableRenderer();
 
 function updateHTMLTable() {
     let textAreaInput = (<HTMLInputElement>document.querySelector("#markdown-input"));
     let divResult = document.querySelector("#html-result");
     let table = mdParser.parse(textAreaInput.value);
     divResult.innerHTML = htmlRenderer.render(table);
+}
+
+function renderCSVTable() {
+    let textAreaInput = (<HTMLInputElement>document.querySelector("#markdown-input"));
+    let divResult = document.querySelector("#html-result");
+    let table = mdParser.parse(textAreaInput.value);
+    divResult.innerHTML = `<pre>${csvRenderer.render(table)}</pre>`;
 }
 
 function formatMarkdown() {
@@ -39,9 +48,10 @@ function test() {
 
 window.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector("#markdown-input").addEventListener("change", updateHTMLTable);
-    document.querySelector("button#render-md").addEventListener("click", updateHTMLTable);
+    document.querySelector("button#render-html").addEventListener("click", updateHTMLTable);
+    document.querySelector("button#render-csv").addEventListener("click", renderCSVTable);
     document.querySelector("button#format-md").addEventListener("click", formatMarkdown);
     document.querySelector("button#minify-md").addEventListener("click", minifyMarkdown);
-    document.querySelector("button#test").addEventListener("click", test);
+    //document.querySelector("button#test").addEventListener("click", test);
     updateHTMLTable();
 });
