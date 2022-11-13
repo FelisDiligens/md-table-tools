@@ -62,7 +62,7 @@ export class TableCell {
     }
 
     public getColspan(): number {
-        if (this.merged == TableCellMerge.none) {
+        if (this.merged != TableCellMerge.left) {
             let col = this.table.indexOfColumn(this.column) + 1;
             if (col > this.table.columnCount())
                 return 1;
@@ -81,7 +81,7 @@ export class TableCell {
     }
 
     public getRowspan(): number {
-        if (this.merged == TableCellMerge.none) {
+        if (this.merged != TableCellMerge.above) {
             let row = this.table.indexOfRow(this.row) + 1;
             if (row > this.table.rowCount())
                 return 1;
