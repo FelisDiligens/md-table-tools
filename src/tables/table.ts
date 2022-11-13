@@ -240,17 +240,25 @@ export class Table {
 
     /** Tries to find invalid configurations and sanitize them. */
     public sanitize() {
-        for (const cell of this.getCellsInColumn(this.columns[0]))
+        for (const cell of this.getCellsInColumn(this.columns[0])) {
             if (cell.merged == TableCellMerge.left)
                 cell.merged = TableCellMerge.none;
+        }
 
-        for (const cell of this.getCellsInRow(this.getHeaderRows()[0]))
+        for (const cell of this.getCellsInRow(this.getHeaderRows()[0])) {
             if (cell.merged == TableCellMerge.above)
                 cell.merged = TableCellMerge.none;
+        }
 
-        for (const cell of this.getCellsInRow(this.getNormalRows()[0]))
+        if (this.getNormalRows().length == 0)
+            return;
+
+        for (const cell of this.getCellsInRow(this.getNormalRows()[0])) {
             if (cell.merged == TableCellMerge.above)
                 cell.merged = TableCellMerge.none;
+        }
+
+        this.getNormalRows()[0].startsNewSection = false;
     }
 }
 
