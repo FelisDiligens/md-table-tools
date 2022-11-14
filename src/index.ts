@@ -21,7 +21,8 @@ function getParser(key: string): TableParser {
 
 const mdPrettyRenderer = new PrettyMultiMarkdownTableRenderer();
 const mdMinifyRenderer = new MinifiedMultiMarkdownTableRenderer();
-const htmlRenderer = new HTMLTableRenderer();
+const htmlPrettyRenderer = new HTMLTableRenderer();
+const htmlRenderer = new HTMLTableRenderer(false);
 const csvRenderer = new CSVTableRenderer();
 
 function getRenderer(key: string): TableRenderer {
@@ -35,8 +36,9 @@ function getRenderer(key: string): TableRenderer {
         case "csv":
             return csvRenderer;
         case "html":
-        case "html-code":
             return htmlRenderer;
+        case "html-code":
+            return htmlPrettyRenderer;
         default:
             throw new Error(`Unknown key in getRenderer: ${key}`);
     }
