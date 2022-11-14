@@ -112,7 +112,7 @@ export class HTMLTableRenderer implements TableRenderer {
             let cellProps =
                 (colspan > 1 ? ` colspan="${colspan}"` : "") + 
                 (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
-                ` style="${textAlignCSS(cell.getTextAlignment())}"`;
+                (cell.getTextAlignment() != TextAlignment.default ? ` style="${textAlignCSS(cell.getTextAlignment())}"`: "");
             let cellTag = cell.isHeaderCell() ? "th" : "td";
             return ["<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">"];
         }
