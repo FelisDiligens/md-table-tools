@@ -107,7 +107,9 @@ export class MultiMarkdownTableParser implements TableParser {
                 let pipeEscaped = false;
                 for (let char of line.substring(1, line.length)) {
                     if (!pipeEscaped && char == "|") {
-                        let cell = parsedTable.getCellByObjs(tableRow, parsedTable.getColumn(col));
+                        let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(col));
+                        parsedTable.addCell(cell);
+                        //let cell = parsedTable.getCellByObjs(tableRow, parsedTable.getColumn(col));
                         if (cellContent.trim() == "^^") {
                             cell.merged = TableCellMerge.above;
                         } else if (cellContent === "") {
