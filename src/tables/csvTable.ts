@@ -47,7 +47,10 @@ export class CSVTableParser implements TableParser {
                     tableColumn = parsedTable.getColumn(colIndex);
 
                 // Set table cell content:
-                parsedTable.getCellByObjs(tableRow, tableColumn).setText(cellContent);
+                let tableCell = new TableCell(parsedTable, tableRow, tableColumn);
+                tableCell.setText(cellContent);
+                parsedTable.addCell(tableCell);
+                //parsedTable.getCellByObjs(tableRow, tableColumn).setText(cellContent);
 
                 cellContent = "";
                 colIndex++;

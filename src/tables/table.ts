@@ -97,14 +97,36 @@ export class TableCell {
 }
 
 export class TableRow {
+    public cells: Array<TableCell>;
+
     public constructor(
+        public index: number = 0,
         public isHeader: boolean = false,
-        public startsNewSection: boolean = false) { }
+        public startsNewSection: boolean = false) {
+        this.cells = [];
+    }
+
+    public updateCells(table: Table) {
+        if (table.columnCount() != this.cells.length)
+            this.cells = table.getCells().filter(cell => cell.row == this);
+        this.cells = this.cells.sort((a, b) => a.column.index - b.column.index);
+    }
 }
 
 export class TableColumn {
+    public cells: Array<TableCell>;
+
     public constructor(
-        public textAlign: TextAlignment = TextAlignment.default) { }
+        public index: number = 0,
+        public textAlign: TextAlignment = TextAlignment.default) {
+        this.cells = [];
+    }
+
+    public updateCells(table: Table) {
+        if (table.rowCount() != this.cells.length)
+            this.cells = table.getCells().filter(cell => cell.column == this);
+        this.cells = this.cells.sort((a, b) => a.row.index - b.row.index);
+    }
 }
 
 export class Table {
@@ -115,8 +137,8 @@ export class Table {
 
     public constructor(rowNum: number = 0, colNum: number = 0) {
         this.cells = [];
-        this.rows = Array.from({length: rowNum}, () => new TableRow());
-        this.columns = Array.from({length: colNum}, () => new TableColumn());
+        this.rows = Array.from({length: rowNum}, (i: number) => new TableRow(i));
+        this.columns = Array.from({length: colNum}, (i: number) => new TableColumn(i));
         this.caption = null;
     }
 
@@ -127,10 +149,14 @@ export class Table {
      * @returns The added row.
      */
     public addRow(index: number = -1, row: TableRow = new TableRow()): TableRow {
-        if (index < 0)
-            this.rows.push(row);
-        else
+        if (index < 0) {
+            row.index = this.rows.push(row) - 1;
+        } else {
+            row.index = index;
             this.rows.splice(index, 0, row);
+            // TODO !! Update the index of each row below.
+            // TODO ?? this.update();
+        }
         return row;
     }
 
@@ -141,10 +167,14 @@ export class Table {
      * @returns The added column.
      */
     public addColumn(index: number = -1, col: TableColumn = new TableColumn()): TableColumn {
-        if (index < 0)
-            this.columns.push(col);
-        else
+        if (index < 0) {
+            col.index = this.columns.push(col);
+        } else {
+            col.index = index;
             this.columns.splice(index, 0, col);
+            // TODO !! Update the index of each column after.
+            // TODO ?? this.update();
+        }
         return col;
     }
 
@@ -173,6 +203,7 @@ export class Table {
         let columnCells = this.getCellsInColumn(col);
         this.cells = this.cells.filter(cell => !columnCells.includes(cell));
         this.columns = this.columns.filter(c => c != col);
+        // TODO ?? this.update();
     }
 
     /** Removes the given row. Also removes all cells within the row. */
@@ -180,14 +211,17 @@ export class Table {
         let rowCells = this.getCellsInRow(row);
         this.cells = this.cells.filter(cell => !rowCells.includes(cell));
         this.rows = this.rows.filter(r => r != row);
+        // TODO ?? this.update();
     }
 
     public moveColumn(col: TableColumn, newIndex: number) {
         throw new Error("Not implemented");
+        // TODO ?? this.update();
     }
 
     public moveRow(row: TableRow, newIndex: number) {
         throw new Error("Not implemented");
+        // TODO ?? this.update();
     }
 
     /** Returns a list of all rows that are headers. */
@@ -214,23 +248,24 @@ export class Table {
 
     /** Returns all cells within the given row. */
     public getCellsInRow(rowObj: TableRow) {
-        return this.cells.filter(cell => cell.row == rowObj);
+        return rowObj.cells;
     }
 
     /** Returns all cells within the given column. */
     public getCellsInColumn(columnObj: TableColumn) {
-        return this.cells.filter(cell => cell.column == columnObj);
+        return columnObj.cells;
     }
 
     /** Return the cell at row and column. */
     public getCellByObjs(rowObj: TableRow, columnObj: TableColumn): TableCell {
-        for (const cell of this.cells) {
-            if (cell.row == rowObj && cell.column == columnObj)
+        // Intersection of row / column:
+        for (const cell of rowObj.cells) {
+            if (columnObj.cells.includes(cell))
                 return cell;
         }
 
         let newCell = new TableCell(this, rowObj, columnObj);
-        this.cells.push(newCell);
+        this.addCell(newCell);
         return newCell;
     }
 
@@ -242,12 +277,34 @@ export class Table {
         );
     }
 
+    /** Be careful not to add a cell with row/column that already exist. Otherwise, the added cell will be overshadowed and not be used. */
+    public addCell(cell: TableCell) {
+        this.cells.push(cell);
+        cell.row.cells.push(cell);
+        cell.column.cells.push(cell);
+    }
+
     public rowCount(): number {
         return this.rows.length;
     }
 
     public columnCount(): number {
         return this.columns.length;
+    }
+
+    /** Updates indices and sorts the cells within rows and columns. Use when altering the table. */
+    public update() {
+        for (let index = 0; index < this.columns.length; index++)
+            this.columns[index].index = index;
+
+        for (let index = 0; index < this.rows.length; index++)
+            this.rows[index].index = index;
+
+        for (const column of this.columns)
+            column.updateCells(this);
+
+        for (const row of this.rows)
+            row.updateCells(this);
     }
 
     /** Tries to find invalid configurations and sanitize them. */

@@ -86,11 +86,18 @@ function render() {
     let parser = getParser(getInputFormat());
     let renderer = getRenderer(getOutputFormat());
 
+    console.time("parse");
     let table = parser.parse(textAreaInput.value);
+    console.timeEnd("parse");
+    console.time("update");
+    table.update();
+    console.timeEnd("update");
+    console.time("render");
     if (usePreTags(getOutputFormat()))
         divResult.innerHTML = `<pre>${escape(renderer.render(table))}</pre>`;
     else
         divResult.innerHTML = renderer.render(table);
+    console.timeEnd("render");
 }
 
 function formatMarkdown() {
