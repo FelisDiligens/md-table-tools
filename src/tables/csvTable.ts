@@ -17,38 +17,50 @@ export class CSVTableParser implements TableParser {
         public assumeFirstLineIsHeader = true) { }
 
     public parse(table: string): Table {
+        /*
+            Prepare csv string:
+        */
         let csv = table.replace(/\r?\n/g, "\n");
         if (!csv.endsWith("\n"))
             csv += "\n";
 
+        /*
+            Parse csv string:
+        */
         let parsedTable = new Table();
-        let tableRow = new TableRow();
-        let cellContent = "";
+        let tableRow = parsedTable.addRow();
+        tableRow.isHeader = this.assumeFirstLineIsHeader;
+        let cellContent: string = "";
         let rowIndex = 0;
         let colIndex = 0;
         let isQuoted = false;
         let lastChar = null;
+
         for (const char of csv) {
+            // Comma or newline:
             if ((char == this.separator || char == "\n") && !isQuoted) {
+                // Get column:
                 let tableColumn;
                 if (rowIndex == 0)
                     tableColumn = parsedTable.addColumn();
                 else
                     tableColumn = parsedTable.getColumn(colIndex);
+
+                // Set table cell content:
                 parsedTable.getCellByObjs(tableRow, tableColumn).setText(cellContent);
+
                 cellContent = "";
                 colIndex++;
 
+                // If it's a newline:
                 if (char == "\n") {
-                    if (rowIndex == 0)
-                        tableRow.isHeader = this.assumeFirstLineIsHeader;
-                    parsedTable.addRow(-1, tableRow);
-                    tableRow = new TableRow();
+                    // Add a new row to the table:
+                    tableRow = parsedTable.addRow();
                     rowIndex++;
                     colIndex = 0;
                 }
             } else if (char == this.quote) {
-                if (lastChar == this.quote) {
+                if (!isQuoted && lastChar == this.quote) {
                     cellContent += this.quote;
                 }
                 isQuoted = !isQuoted;
@@ -57,6 +69,9 @@ export class CSVTableParser implements TableParser {
             }
             lastChar = char;
         }
+
+        // Remove unused row:
+        parsedTable.removeRow(tableRow);
 
         return parsedTable;
     }
@@ -76,7 +91,8 @@ export class CSVTableRenderer implements TableRenderer {
         public mode = CSVTableRendererMode.EscapeWithQuotes) { }
 
     public render(table: Table): string {
-        let specialCharactersRegex = new RegExp(`([${this.separator}${this.quote}]|\r\n|\n)`, "g");
+        let specialCharactersRegex = new RegExp(`([${this.separator}${this.quote}]|\r\n|\n)`);
+        let specialCharactersRegexGlobal = new RegExp(`([${this.separator}${this.quote}]|\r\n|\n)`, "g");
         let quoteRegex = new RegExp(this.quote, "g");
         let csv: string[] = [];
         for (const row of table.getRows()) {
@@ -84,17 +100,17 @@ export class CSVTableRenderer implements TableRenderer {
             for (const cell of table.getCellsInRow(row)) {
                 switch (this.mode) {
                     case CSVTableRendererMode.AlwaysUseQuotes:
-                        renderedRow.push(`"${cell.text.replace(quoteRegex, this.quote.repeat(2))}"`);
+                        renderedRow.push(`${this.quote}${cell.text.replace(quoteRegex, this.quote.repeat(2))}${this.quote}`);
                         break;
                     case CSVTableRendererMode.EscapeWithQuotes:
                         if (specialCharactersRegex.test(cell.text)) {
-                            renderedRow.push(`"${cell.text.replace(quoteRegex, this.quote.repeat(2))}"`);
+                            renderedRow.push(`${this.quote}${cell.text.replace(quoteRegex, this.quote.repeat(2))}${this.quote}`);
                         } else {
                             renderedRow.push(cell.text);
                         }
                         break;
                     case CSVTableRendererMode.OmitSpecialCharacters:
-                        renderedRow.push(cell.text.replace(specialCharactersRegex, ""));
+                        renderedRow.push(cell.text.replace(specialCharactersRegexGlobal, ""));
                         break;
                 }
             }
