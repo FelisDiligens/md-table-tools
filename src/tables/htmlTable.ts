@@ -15,28 +15,28 @@ function mdToHtml(markdown: string): string {
     let html = markdown; // escape(markdown);
 
     // Image:
-    html = html.replace(/!\[([^\[\]]+)\]\(([^\(\)]+)\)/, "<img src=\"$2\" alt=\"$1\">");
+    html = html.replace(/!\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "<img src=\"$2\" alt=\"$1\">");
 
     // Links:
-    html = html.replace(/\[([^\[\]]+)\]\(([^\(\)]+)\)/, "<a href=\"$2\">$1</a>");
+    html = html.replace(/\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "<a href=\"$2\">$1</a>");
 
     // Inline code:
-    html = html.replace(/`(.*?)`/, "<code>$1</code>");
+    html = html.replace(/`(.*?)`/g, "<code>$1</code>");
 
     // Strikethrough:
-    html = html.replace(/~~(.*?)~~/, "<del>$1</del>");
+    html = html.replace(/~~(.*?)~~/g, "<del>$1</del>");
 
     // Oblique:
-    html = html.replace(/___(.*?)___/, "<em><strong>$1</strong></em>");
-    html = html.replace(/\*\*\*(.*?)\*\*\*/, "<em><strong>$1</strong></em>");
+    html = html.replace(/___(.*?)___/g, "<em><strong>$1</strong></em>");
+    html = html.replace(/\*\*\*(.*?)\*\*\*/g, "<em><strong>$1</strong></em>");
 
     // Bold:
-    html = html.replace(/__(.*?)__/, "<strong>$1</strong>");
-    html = html.replace(/\*\*(.*?)\*\*/, "<strong>$1</strong>");
+    html = html.replace(/__(.*?)__/g, "<strong>$1</strong>");
+    html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
     // Italic:
-    html = html.replace(/_(.*?)_/, "<em>$1</em>");
-    html = html.replace(/\*(.*?)\*/, "<em>$1</em>");
+    html = html.replace(/_(.*?)_/g, "<em>$1</em>");
+    html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
 
     // Escaped characters:
     html = html.replace(/\\([#\.\|\*_\s`])/g, "$1");
@@ -68,6 +68,10 @@ export class HTMLTableParser implements TableParser {
 }
 
 export class HTMLTableRenderer implements TableRenderer {
+    public constructor(
+        public prettify = true,
+        public indent = "  ") { }
+
     public render(table: Table): string {
         let result: string[] = ["<table>"];
 
@@ -75,37 +79,40 @@ export class HTMLTableRenderer implements TableRenderer {
         let normalRows = table.getNormalRows();
 
         if (headerRows.length > 0) {
-            result.push("<thead>");
+            result.push(this.indentString("<thead>", 1));
             for (const row of headerRows)
                 result.push(...this.renderRow(table, row));
-            result.push("</thead>");
+            result.push(this.indentString("</thead>", 1));
         }
 
-        result.push("<tbody>");
+        result.push(this.indentString("<tbody>", 1));
         for (const row of normalRows) {
             if (row.startsNewSection)
-                result.push("</tbody><tbody>");
+                result.push(this.indentString("</tbody>", 1), this.indentString("<tbody>", 1));
             result.push(...this.renderRow(table, row));
         }
-        result.push("</tbody>");
+        result.push(this.indentString("</tbody>", 1));
 
         if (table.caption && table.caption.text.length > 0)
-            result.push(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position};">${table.caption.text.trim()}</caption>`);
+            result.push(this.indentString(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position};">${table.caption.text.trim()}</caption>`, 1));
 
         result.push("</table>");
-        return result.join("");
+        return result.join(this.prettify ? "\n" : "");
     }
 
     private renderRow(table: Table, row: TableRow): string[] {
         let result: string[] = [];
-        result.push("<tr>");
-        for (let cell of table.getCellsInRow(row))
-            result.push(...this.renderCell(cell));
-        result.push("</tr>");
+        result.push(this.indentString("<tr>", 2));
+        for (let cell of table.getCellsInRow(row)) {
+            let renderedCell = this.indentString(this.renderCell(cell), 3);
+            if (renderedCell.trim() !== "")
+                result.push(renderedCell);
+        }
+        result.push(this.indentString("</tr>", 2));
         return result;
     }
 
-    private renderCell(cell: TableCell): string[] {
+    private renderCell(cell: TableCell): string {
         let colspan = cell.getColspan();
         let rowspan = cell.getRowspan();
         if (cell.merged == TableCellMerge.none) {
@@ -114,8 +121,15 @@ export class HTMLTableRenderer implements TableRenderer {
                 (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
                 (cell.getTextAlignment() != TextAlignment.default ? ` style="${textAlignCSS(cell.getTextAlignment())}"`: "");
             let cellTag = cell.isHeaderCell() ? "th" : "td";
-            return ["<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">"];
+            return ["<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">"].join("");
         }
-        return [];
+        return "";
+    }
+
+    private indentString(str: string, indentLevel: number = 0): string {
+        if (this.prettify)
+            return this.indent.repeat(indentLevel) + str;
+        else
+            return str;
     }
 }

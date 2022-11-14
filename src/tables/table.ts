@@ -17,15 +17,10 @@ export enum TableCaptionPosition {
 }
 
 export class TableCaption {
-    public text: string;
-    public label: string;
-    public position: TableCaptionPosition;
-
-    public constructor() {
-        this.text = "";
-        this.label = "";
-        this.position = TableCaptionPosition.bottom;
-    }
+    public constructor(
+        public text = "",
+        public label = "",
+        public position = TableCaptionPosition.bottom) { }
 
     public getLabel(): string {
         // "If you have a caption, you can also have a label, allowing you to create anchors pointing to the table. If there is no label, then the caption acts as the label"
