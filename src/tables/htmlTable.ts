@@ -9,7 +9,7 @@ function escape(htmlStr: string): string {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#39;");
- }
+}
 
 function mdToHtml(markdown: string): string {
     let html = markdown; // escape(markdown);

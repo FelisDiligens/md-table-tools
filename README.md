@@ -2,10 +2,21 @@
 
 > ⚠️ Work-In-Progress
 
-This module currently allows parsing MultiMarkdown tables, formatting or minifying them, and rendering them into HTML.  
-You can also manipulate parsed tables before rendering them, e.g. by adding or removing rows.
+This module currently has the following features:
+
+- Parsing MultiMarkdown and CSV tables
+- Converting tables to MultiMarkdown, HTML, or CSV
+- Formatting or minifying MultiMarkdown tables
+- Manipulating parsed tables, e.g.
+  - by adding or removing rows
+  - by adding or removing columns
+  - by changing the content of table cells
+  - by merging table cells
+  - ...
 
 More to come.
+
+![Screenshot](screenshots/firefox_jsmBWfquN2.png)
 
 ## Syntax
 

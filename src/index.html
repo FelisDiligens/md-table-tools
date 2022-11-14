@@ -20,12 +20,6 @@
             padding: 10px;
         }
 
-        textarea {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-        }
-
         #working-area {
             width: 100%;
             height: 100%;
@@ -34,16 +28,36 @@
             align-content: stretch;
         }
 
-        #md-area, #html-result {
+        #input-area {
+            margin-right: 20px;
+        }
+
+        textarea#input {
+            width: 400px;
+            height: 200px;
+        }
+
+        #rendered-result {
             flex-grow: 1;
-            padding: 0 20px;
         }
     </style>
 </head>
 <body>
     <div id="working-area">
-        <div id="md-area">
-            <textarea id="markdown-input">|             |          Grouping           ||
+        <div id="input-area">
+            <div>
+                <span>Input:</span>
+                <select name="input-format" id="input-format">
+                    <option value="mmd" selected>MultiMarkdown</option>
+                    <option value="csv">CSV</option>
+                </select>
+            </div>
+            <div>
+                <span>Actions:</span>
+                <button id="format-md">Format Markdown</button>
+                <button id="minify-md">Minify Markdown</button>
+            </div>
+            <textarea id="input">|             |          Grouping           ||
 First Header  | Second Header | Third Header |
  ------------ | :-----------: | -----------: |
 Content       |          *Long Cell*        ||
@@ -53,11 +67,23 @@ New section   |     More      |         Data |
 And more      | With an escaped '\|'         ||  
 [Prototype table]</textarea>
         </div>
-        <div id="html-result"></div>
+        <div id="output-area">
+            <div>
+                <span>Output:</span>
+                <select name="output-format" id="output-format">
+                    <option value="mmd">MultiMarkdown (pretty)</option>
+                    <option value="mmd-mini">MultiMarkdown (minified)</option>
+                    <option value="csv">CSV</option>
+                    <option value="html" selected>HTML (Preview)</option>
+                    <option value="html-code">HTML (Code)</option>
+                </select>
+            </div>
+            <div>
+                <span>Actions:</span>
+                <button id="render">Render</button>
+            </div>
+            <div id="rendered-result"></div>
+        </div>
     </div>
-    <button id="format-md">Format Markdown</button>
-    <button id="minify-md">Minify Markdown</button>
-    <button id="render-html">Render to HTML</button>
-    <button id="render-csv">Render to CSV</button>
 </body>
 </html>

@@ -1,4 +1,4 @@
-import { Table } from "./table";
+import { Table, TableCell, TableColumn, TableRow } from "./table";
 import { TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
@@ -13,10 +13,52 @@ import { TableRenderer } from "./tableRenderer";
 export class CSVTableParser implements TableParser {
     public constructor(
         public separator = ",",
-        public quote = "\"") { }
+        public quote = "\"",
+        public assumeFirstLineIsHeader = true) { }
 
     public parse(table: string): Table {
-        throw new Error("Method not implemented.");
+        let csv = table.replace(/\r?\n/g, "\n");
+        if (!csv.endsWith("\n"))
+            csv += "\n";
+
+        let parsedTable = new Table();
+        let tableRow = new TableRow();
+        let cellContent = "";
+        let rowIndex = 0;
+        let colIndex = 0;
+        let isQuoted = false;
+        let lastChar = null;
+        for (const char of csv) {
+            if ((char == this.separator || char == "\n") && !isQuoted) {
+                let tableColumn;
+                if (rowIndex == 0)
+                    tableColumn = parsedTable.addColumn();
+                else
+                    tableColumn = parsedTable.getColumn(colIndex);
+                parsedTable.getCellByObjs(tableRow, tableColumn).setText(cellContent);
+                cellContent = "";
+                colIndex++;
+
+                if (char == "\n") {
+                    if (rowIndex == 0)
+                        tableRow.isHeader = this.assumeFirstLineIsHeader;
+                    parsedTable.addRow(-1, tableRow);
+                    tableRow = new TableRow();
+                    rowIndex++;
+                    colIndex = 0;
+                }
+            } else if (char == this.quote) {
+                if (lastChar == this.quote) {
+                    cellContent += this.quote;
+                }
+                isQuoted = !isQuoted;
+            } else {
+                cellContent += char;
+            }
+            lastChar = char;
+        }
+
+        return parsedTable;
     }
 }
 
