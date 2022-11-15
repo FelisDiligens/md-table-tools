@@ -3,6 +3,7 @@ import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 import TurndownService from 'turndown';
 import MarkdownIt from 'markdown-it';
+import { removeInvisibleCharacters } from "./common";
 
 const turndown = new TurndownService();
 const mdIt = new MarkdownIt();
@@ -256,12 +257,12 @@ export class HTMLTableParser implements TableParser {
     private parseCell(domCell: HTMLTableCellElement): string {
         switch (this.mode) {
             case HTMLTableParserMode.PreserveHTMLElements:
-                return escapeMarkdown(domCell.innerHTML);
+                return removeInvisibleCharacters(escapeMarkdown(domCell.innerHTML));
             case HTMLTableParserMode.StripHTMLElements:
-                return escapeMarkdown(domCell.innerText);
+                return removeInvisibleCharacters(escapeMarkdown(domCell.innerText));
             case HTMLTableParserMode.ConvertHTMLElements:
             default:
-                return escapeMarkdown(turndown.turndown(domCell.innerHTML));
+                return removeInvisibleCharacters(escapeMarkdown(turndown.turndown(domCell.innerHTML)));
         }
     }
 }
