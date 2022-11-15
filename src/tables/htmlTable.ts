@@ -1,4 +1,4 @@
-import { Table, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table";
+import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table";
 import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
@@ -101,12 +101,14 @@ export class HTMLTableParser implements TableParser {
         let parsedTable = new Table();
         let hasSections = false;
 
+        // Parse <thead> tag in <table>:
         let domTHead = domTable.querySelector("thead");
         if (domTHead != null) {
             this.parseSection(parsedTable, domTHead, true);
             hasSections = true;
         }
 
+        // Parse <tbody> tags in <table>:
         let domTBodies = domTable.querySelectorAll("tbody");
         if (domTBodies.length > 0) {
             domTBodies.forEach((domTBody, i) => {
@@ -115,11 +117,27 @@ export class HTMLTableParser implements TableParser {
             hasSections = true;
         }
 
+        // No <thead> or <tbody> tags?
         if (!hasSections) {
             // TODO: Parse table that doesn't have thead or tbody tags!
         }
 
-        // TODO: Parse caption!
+        // Parse <caption> tag in <table>:
+        let domCaption = domTable.querySelector("caption");
+        if (domCaption != null) {
+            let caption = new TableCaption();
+            caption.text = domCaption.innerText;
+            caption.label = domCaption.id;
+            switch (domCaption.style.captionSide.toLowerCase()) {
+                case "top":
+                    caption.position = TableCaptionPosition.top;
+                    break;
+                case "bottom":
+                default:
+                    caption.position = TableCaptionPosition.bottom;
+            }
+            parsedTable.caption = caption;
+        }
 
         return parsedTable;
     }
