@@ -125,27 +125,54 @@ export class HTMLTableParser implements TableParser {
     }
 
     private parseSection(table: Table, domSection: HTMLTableSectionElement, isHeader: boolean = false) {
+        // HTML skips "ghost" cells that are overshadowed by other cells that have a rowspan > 1.
+        // We'll memorize them:
+        let rowspanGhostCells: { row: number; col: number; }[] = [];
+
+        // Iterate over each row (<tr>) of the HTML table:
         for (let domRowIndex = 0; domRowIndex < domSection.rows.length; domRowIndex++) {
             let row = table.addRow();
             row.isHeader = isHeader;
+
+            // Memorize an offset (colspan):
             let colOffset = 0;
 
+            // Iterate over each cell (<td> or <th>) of the HTML table row:
             let domRow = domSection.rows[domRowIndex];
             let domCells = domRow.querySelectorAll("td, th");
             domCells.forEach((domCell, domColIndex) => {
-                let colIndex = domColIndex + colOffset;
-                console.log(`domRowIndex: ${domRowIndex}, domColIndex: ${domColIndex}, colOffset: ${colOffset}, colIndex: ${colIndex}`);
-                let column = table.getColumn(colIndex);
-                if (!column)
-                    column = table.addColumn();
+                // Get the TableColumn of our Table object, taking the memorized rowspans and colOffset into account:
+                let colIndex: number;
+                let column;
+                let isGhostCell = false;
+                do {
+                    colIndex = domColIndex + colOffset;
+                    column = table.getColumn(colIndex);
+                    if (!column)
+                        column = table.addColumn();
+                    
+                    isGhostCell = rowspanGhostCells.filter(ghost => ghost.row == domRowIndex && ghost.col == colIndex).length > 0;
+                    console.log(rowspanGhostCells);
+                    console.log({"row": domColIndex, "col": colIndex});
+                    console.log(isGhostCell);
+                    if (isGhostCell) {
+                        let mergedCell = new TableCell(table, row, column);
+                        mergedCell.merged = TableCellMerge.above;
+                        table.addCell(mergedCell);
+                        colOffset++;
+                    }
+                } while (isGhostCell);
 
+                // Add cell to our Table object:
                 let cellContent = this.parseCell(domCell as HTMLTableCellElement);
                 let cell = new TableCell(table, row, column);
                 cell.setText(cellContent);
                 table.addCell(cell);
 
+                // Take "colspan" into account:
                 let colspan = (domCell as HTMLTableCellElement).colSpan;
                 if (colspan > 1) {
+                    // Add empty cells to our Table object:
                     for (let i = 1; i < colspan; i++) {
                         let nextColumn = table.getColumn(colIndex + i);
                         if (!nextColumn)
@@ -153,7 +180,20 @@ export class HTMLTableParser implements TableParser {
                         let mergedCell = table.getCellByObjs(row, nextColumn);
                         mergedCell.merged = TableCellMerge.left;
                     }
+
+                    // Add colspan to colOffset:
                     colOffset += colspan - 1;
+                }
+
+                // Take "rowspan" into account:
+                let rowspan = (domCell as HTMLTableCellElement).rowSpan;
+                if (rowspan > 1) {
+                    for (let i = 1; i < rowspan; i++) {
+                        rowspanGhostCells.push({
+                            "row": domRowIndex + i,
+                            "col": colIndex
+                        });
+                    }
                 }
             });
         }
