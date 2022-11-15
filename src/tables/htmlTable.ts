@@ -129,9 +129,15 @@ export class HTMLTableParser implements TableParser {
         // We'll memorize them:
         let rowspanGhostCells: { row: number; col: number; }[] = [];
 
+        // Remember how many rows we already have:
+        let rowOffset = table.rowCount();
+
         // Iterate over each row (<tr>) of the HTML table:
         for (let domRowIndex = 0; domRowIndex < domSection.rows.length; domRowIndex++) {
-            let row = table.addRow();
+            let rowIndex = domRowIndex + rowOffset;
+            let row = table.getRow(rowIndex);
+            if (!row)
+                row = table.addRow();
             row.isHeader = isHeader;
 
             // Memorize an offset (colspan):
@@ -142,26 +148,13 @@ export class HTMLTableParser implements TableParser {
             let domCells = domRow.querySelectorAll("td, th");
             domCells.forEach((domCell, domColIndex) => {
                 // Get the TableColumn of our Table object, taking the memorized rowspans and colOffset into account:
-                let colIndex: number;
-                let column;
-                let isGhostCell = false;
-                do {
-                    colIndex = domColIndex + colOffset;
-                    column = table.getColumn(colIndex);
-                    if (!column)
-                        column = table.addColumn();
-                    
-                    isGhostCell = rowspanGhostCells.filter(ghost => ghost.row == domRowIndex && ghost.col == colIndex).length > 0;
-                    console.log(rowspanGhostCells);
-                    console.log({"row": domColIndex, "col": colIndex});
-                    console.log(isGhostCell);
-                    if (isGhostCell) {
-                        let mergedCell = new TableCell(table, row, column);
-                        mergedCell.merged = TableCellMerge.above;
-                        table.addCell(mergedCell);
-                        colOffset++;
-                    }
-                } while (isGhostCell);
+                let colIndex = domColIndex + colOffset;
+                while (rowspanGhostCells.filter(ghost => ghost.row == rowIndex && ghost.col == colIndex).length > 0) {
+                    colIndex = domColIndex + ++colOffset;
+                }
+                let column = table.getColumn(colIndex);
+                if (!column)
+                    column = table.addColumn();
 
                 // Add cell to our Table object:
                 let cellContent = this.parseCell(domCell as HTMLTableCellElement);
@@ -189,8 +182,15 @@ export class HTMLTableParser implements TableParser {
                 let rowspan = (domCell as HTMLTableCellElement).rowSpan;
                 if (rowspan > 1) {
                     for (let i = 1; i < rowspan; i++) {
+                        let nextRow = table.getRow(rowIndex + i);
+                        if (!nextRow)
+                            nextRow = table.addRow();
+                        nextRow.isHeader = isHeader;
+                        let mergedCell = table.getCellByObjs(nextRow, column);
+                        mergedCell.merged = TableCellMerge.above;
+
                         rowspanGhostCells.push({
-                            "row": domRowIndex + i,
+                            "row": rowIndex + i,
                             "col": colIndex
                         });
                     }
