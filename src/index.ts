@@ -5,7 +5,7 @@ import { TableParser } from "./tables/tableParser";
 import { TableRenderer } from "./tables/tableRenderer";
 
 const mdParser = new MultiMarkdownTableParser();
-const htmlParser = new HTMLTableParser(HTMLTableParserMode.StripHTMLElements);
+const htmlParser = new HTMLTableParser();
 const csvParser = new CSVTableParser();
 
 function getParser(key: string): TableParser {

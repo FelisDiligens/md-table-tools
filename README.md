@@ -1,20 +1,18 @@
 # MultiMarkdown table tools
 
-> ⚠️ Work-In-Progress
+> ⚠️ Work-In-Progress, probably buggy!
 
 This module currently has the following features:
 
-- Parsing MultiMarkdown, HTML, or CSV tables
-- Converting tables to MultiMarkdown, HTML, or CSV
+- Parsing MultiMarkdown, HTML, or CSV tables into intermediary
+- Converting intermediary back to MultiMarkdown, HTML, or CSV tables
 - Formatting or minifying MultiMarkdown tables
-- Manipulating parsed tables, e.g.
+- Manipulating parsed tables (intermediary), e.g.
   - by adding or removing rows
   - by adding or removing columns
   - by changing the content of table cells
   - by merging table cells
-  - ...
-
-More to come.
+  - etc.
 
 ![Screenshot](screenshots/firefox_jsmBWfquN2.png)
 
@@ -47,3 +45,51 @@ $ npm run build
 ## Usage
 
 Build the project and open `./dist/index.html` for a demo.
+
+### Example code
+
+```typescript
+import { MultiMarkdownTableParser } from "./tables/multiMarkdownTable";
+import { HTMLTableRenderer } from "./tables/htmlTable";
+
+const mdParser = new MultiMarkdownTableParser();
+const htmlRenderer = new HTMLTableRenderer();
+
+var mdTable = `
+| Example | table  |
+|---------|--------|
+| Hello   | world! |
+`;
+
+// Parse markdown to intermediary:
+var intermediaryTable = mdParser.parse(mdTable);
+
+// Make some changes:
+intermediaryTable.getCellByIndices(1, 1).setText("everyone!");
+
+// Render as HTML:
+var htmlTable = htmlRenderer.render(intermediaryTable);
+
+/* Output:
+<table>
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>table</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Hello</td>
+      <td>everyone!</td>       <--- Changed!
+    </tr>
+  </tbody>
+</table>
+*/
+```
+
+## Build with...
+
+- [Markdown-it](https://markdown-it.github.io/) - for inline Markdown to HTML conversion
+- [Turndown](https://mixmark-io.github.io/turndown/) - for inline HTML to Markdown conversion
+- TypeScript, npm, webpack
