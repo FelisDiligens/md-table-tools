@@ -1,5 +1,5 @@
 import { Table, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table";
-import { TableParser } from "./tableParser";
+import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
 function escape(htmlStr: string): string {
@@ -9,6 +9,15 @@ function escape(htmlStr: string): string {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#39;");
+}
+
+function unescape(htmlStr: string): string {
+    return htmlStr
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, "\"")
+        .replace(/&#39;/g, "'");
 }
 
 function mdToHtml(markdown: string): string {
@@ -47,6 +56,11 @@ function mdToHtml(markdown: string): string {
     return html;
 }
 
+function htmlToMd(html: string): string {
+    // TODO: Implement!
+    return html;
+}
+
 function textAlignCSS(textAlign: TextAlignment) {
     switch (textAlign) {
         case TextAlignment.left:
@@ -61,9 +75,96 @@ function textAlignCSS(textAlign: TextAlignment) {
     }
 }
 
+export enum HTMLTableParserMode {
+    StripHTMLElements,   // uses innerText
+    ConvertHTMLElements, // uses innerHTML and converts to Markdown if possible (default)
+    PreserveHTMLElements // uses innerHTML without any converting
+}
+
 export class HTMLTableParser implements TableParser {
+    public constructor(
+        public mode: HTMLTableParserMode = HTMLTableParserMode.ConvertHTMLElements) {}
+
     public parse(table: string): Table {
-        throw new Error("Method not implemented.");
+        /*
+            Using DOMParser to parse the string and find our <table> tag to start:
+        */
+        let domParser = new DOMParser();
+        let dom = domParser.parseFromString(table, "text/html");
+        let domTable = dom.querySelector("table");
+        if (domTable == null)
+            throw new ParsingError("Couldn't find <table> tag in DOM.");
+
+        /*
+            Converting table to Markdown:
+        */
+        let parsedTable = new Table();
+        let hasSections = false;
+
+        let domTHead = domTable.querySelector("thead");
+        if (domTHead != null) {
+            this.parseSection(parsedTable, domTHead, true);
+            hasSections = true;
+        }
+
+        let domTBodies = domTable.querySelectorAll("tbody");
+        if (domTBodies.length > 0) {
+            domTBodies.forEach(domTBody => {
+                this.parseSection(parsedTable, domTBody);
+            });
+            hasSections = true;
+        }
+
+        if (!hasSections) {
+            // TODO: Parse table that doesn't have thead or tbody tags!
+        }
+
+        // TODO: Parse caption!
+
+        return parsedTable;
+    }
+
+    private parseSection(table: Table, domSection: HTMLTableSectionElement, isHeader: boolean = false) {
+        for (let rowIndex = 0; rowIndex < domSection.rows.length; rowIndex++) {
+            let row = table.addRow();
+            row.isHeader = isHeader;
+
+            let domRow = domSection.rows[rowIndex];
+            let domCells = domRow.querySelectorAll("td, th");
+            domCells.forEach((domCell, colIndex) => {
+                let column = table.getColumn(colIndex);
+                if (!column)
+                    column = table.addColumn();
+
+                let cellContent = this.parseCell(domCell as HTMLTableCellElement);
+                let cell = new TableCell(table, row, column);
+                cell.setText(cellContent);
+                table.addCell(cell);
+
+                let colspan = (domCell as HTMLTableCellElement).colSpan;
+                if (colspan > 1) {
+                    for (let i = 1; i < colspan; i++) {
+                        let nextColumn = table.getColumn(colIndex + 1);
+                        if (!nextColumn)
+                            nextColumn = table.addColumn();
+                        let mergedCell = table.getCellByObjs(row, nextColumn);
+                        mergedCell.merged = TableCellMerge.left;
+                    }
+                }
+            });
+        }
+    }
+
+    private parseCell(domCell: HTMLTableCellElement): string {
+        switch (this.mode) {
+            case HTMLTableParserMode.PreserveHTMLElements:
+                return domCell.innerHTML;
+            case HTMLTableParserMode.StripHTMLElements:
+                return domCell.innerText;
+            case HTMLTableParserMode.ConvertHTMLElements:
+            default:
+                return htmlToMd(domCell.innerHTML);
+        }
     }
 }
 

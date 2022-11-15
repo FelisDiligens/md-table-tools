@@ -178,22 +178,22 @@ export class Table {
         return col;
     }
 
-    /** Get the row at index. Negative index counts back from the end. */
+    /** Get the row at index. Negative index counts back from the end. Returns undefined if out-of-bounds. */
     public getRow(index: number): TableRow {
         return this.rows.at(index);
     }
 
-    /** Get the index of the row. */
+    /** Get the index of the row. -1 if it hasn't been found. */
     public indexOfRow(row: TableRow): number {
         return this.rows.indexOf(row);
     }
 
-    /** Get the column at index. Negative index counts back from the end. */
+    /** Get the column at index. Negative index counts back from the end. Returns undefined if out-of-bounds. */
     public getColumn(index: number): TableColumn {
         return this.columns.at(index);
     }
 
-    /** Get the index of the column. */
+    /** Get the index of the column. -1 if it hasn't been found. */
     public indexOfColumn(col: TableColumn): number {
         return this.columns.indexOf(col);
     }

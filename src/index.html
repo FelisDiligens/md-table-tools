@@ -49,6 +49,7 @@
                 <span>Input:</span>
                 <select name="input-format" id="input-format">
                     <option value="mmd" selected>MultiMarkdown</option>
+                    <option value="html">HTML</option>
                     <option value="csv">CSV</option>
                 </select>
             </div>
@@ -56,6 +57,7 @@
                 <span>Actions:</span>
                 <button id="format-md">Format Markdown</button>
                 <button id="minify-md">Minify Markdown</button>
+                <button id="test">Test</button>
             </div>
             <textarea id="input">|             |          Grouping           ||
 First Header  | Second Header | Third Header |
@@ -73,9 +75,10 @@ And more      | With an escaped '\|'         ||
                 <select name="output-format" id="output-format">
                     <option value="mmd">MultiMarkdown (pretty)</option>
                     <option value="mmd-mini">MultiMarkdown (minified)</option>
-                    <option value="csv">CSV</option>
                     <option value="html" selected>HTML (Preview)</option>
                     <option value="html-code">HTML (Code)</option>
+                    <option value="csv">CSV</option>
+                    <option value="csv-semicolon">CSV (separator: ";")</option>
                 </select>
             </div>
             <div>
