@@ -100,11 +100,17 @@ export class HTMLTableParser implements TableParser {
         */
         let parsedTable = new Table();
         let hasSections = false;
+        let tableTextAlign = cssToTextAlign(domTable);
 
         // Parse <thead> tag in <table>:
         let domTHead = domTable.querySelector("thead");
         if (domTHead != null) {
-            this.parseSection(parsedTable, domTHead.rows, true);
+            let sectionTextAlign = cssToTextAlign(domTHead);
+            this.parseSection(
+                parsedTable,
+                domTHead.rows,
+                (sectionTextAlign != TextAlignment.default ? sectionTextAlign : tableTextAlign),
+                true);
             hasSections = true;
         }
 
@@ -112,7 +118,14 @@ export class HTMLTableParser implements TableParser {
         let domTBodies = domTable.querySelectorAll("tbody");
         if (domTBodies.length > 0) {
             domTBodies.forEach((domTBody, i) => {
-                this.parseSection(parsedTable, domTBody.rows, false, domTHead == null, i > 0);
+                let sectionTextAlign = cssToTextAlign(domTBody);
+                this.parseSection(
+                    parsedTable,
+                    domTBody.rows,
+                    (sectionTextAlign != TextAlignment.default ? sectionTextAlign : tableTextAlign),
+                    false,
+                    domTHead == null,
+                    i > 0);
             });
             hasSections = true;
         }
@@ -120,7 +133,13 @@ export class HTMLTableParser implements TableParser {
         // No <thead> or <tbody> tags?
         if (!hasSections) {
             // Parse table that doesn't have thead or tbody tags as one section with no header:
-            this.parseSection(parsedTable, domTable.rows, false, true, false);
+            this.parseSection(
+                parsedTable,
+                domTable.rows,
+                tableTextAlign,
+                false,
+                true,
+                false);
         }
 
         // Parse <caption> tag in <table>:
@@ -144,7 +163,7 @@ export class HTMLTableParser implements TableParser {
         return parsedTable;
     }
 
-    private parseSection(table: Table, domRows: HTMLCollectionOf<HTMLTableRowElement>, isHeader: boolean = false, allowHeaderDetection: boolean = false, firstRowStartsNewSection: boolean = false) {
+    private parseSection(table: Table, domRows: HTMLCollectionOf<HTMLTableRowElement>, defaultTextAlign: TextAlignment, isHeader: boolean = false, allowHeaderDetection: boolean = false, firstRowStartsNewSection: boolean = false) {
         // HTML skips "ghost" cells that are overshadowed by other cells that have a rowspan > 1.
         // We'll memorize them:
         let rowspanGhostCells: { row: number; col: number; }[] = [];
@@ -182,6 +201,7 @@ export class HTMLTableParser implements TableParser {
                 // Add cell to our Table object:
                 let cellContent = this.parseCell(domCell as HTMLTableCellElement);
                 let textAlign = cssToTextAlign(domCell as HTMLElement);
+                textAlign = textAlign != TextAlignment.default ? textAlign : defaultTextAlign;
                 allCellsAreTH = allCellsAreTH && domCell.tagName.toLowerCase() == "th";
 
                 let cell = new TableCell(table, row, column);
