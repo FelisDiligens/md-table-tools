@@ -61,7 +61,7 @@ function htmlToMd(html: string): string {
     return html;
 }
 
-function textAlignCSS(textAlign: TextAlignment) {
+function textAlignToCSS(textAlign: TextAlignment) {
     switch (textAlign) {
         case TextAlignment.left:
             return "text-align: left;";
@@ -72,6 +72,19 @@ function textAlignCSS(textAlign: TextAlignment) {
         case TextAlignment.default:
         default:
             return "text-align: start;";
+    }
+}
+
+function cssToTextAlign(element: HTMLElement): TextAlignment {
+    switch (element.style.textAlign.toLowerCase()) {
+        case "left":
+            return TextAlignment.left;
+        case "center":
+            return TextAlignment.center;
+        case "right":
+            return TextAlignment.right;
+        default:
+            return TextAlignment.default;
     }
 }
 
@@ -104,7 +117,7 @@ export class HTMLTableParser implements TableParser {
         // Parse <thead> tag in <table>:
         let domTHead = domTable.querySelector("thead");
         if (domTHead != null) {
-            this.parseSection(parsedTable, domTHead, true);
+            this.parseSection(parsedTable, domTHead.rows, true);
             hasSections = true;
         }
 
@@ -112,14 +125,15 @@ export class HTMLTableParser implements TableParser {
         let domTBodies = domTable.querySelectorAll("tbody");
         if (domTBodies.length > 0) {
             domTBodies.forEach((domTBody, i) => {
-                this.parseSection(parsedTable, domTBody, false, i > 0);
+                this.parseSection(parsedTable, domTBody.rows, false, i > 0);
             });
             hasSections = true;
         }
 
         // No <thead> or <tbody> tags?
         if (!hasSections) {
-            // TODO: Parse table that doesn't have thead or tbody tags!
+            // Parse table that doesn't have thead or tbody tags as one section with no header:
+            this.parseSection(parsedTable, domTable.rows, false, false);
         }
 
         // Parse <caption> tag in <table>:
@@ -142,7 +156,7 @@ export class HTMLTableParser implements TableParser {
         return parsedTable;
     }
 
-    private parseSection(table: Table, domSection: HTMLTableSectionElement, isHeader: boolean = false, firstRowStartsNewSection: boolean = false) {
+    private parseSection(table: Table, domRows: HTMLCollectionOf<HTMLTableRowElement>, isHeader: boolean = false, firstRowStartsNewSection: boolean = false) {
         // HTML skips "ghost" cells that are overshadowed by other cells that have a rowspan > 1.
         // We'll memorize them:
         let rowspanGhostCells: { row: number; col: number; }[] = [];
@@ -151,7 +165,7 @@ export class HTMLTableParser implements TableParser {
         let rowOffset = table.rowCount();
 
         // Iterate over each row (<tr>) of the HTML table:
-        for (let domRowIndex = 0; domRowIndex < domSection.rows.length; domRowIndex++) {
+        for (let domRowIndex = 0; domRowIndex < domRows.length; domRowIndex++) {
             let rowIndex = domRowIndex + rowOffset;
             let row = table.getRow(rowIndex);
             if (!row)
@@ -164,7 +178,7 @@ export class HTMLTableParser implements TableParser {
             let colOffset = 0;
 
             // Iterate over each cell (<td> or <th>) of the HTML table row:
-            let domRow = domSection.rows[domRowIndex];
+            let domRow = domRows[domRowIndex];
             let domCells = domRow.querySelectorAll("td, th");
             domCells.forEach((domCell, domColIndex) => {
                 // Get the TableColumn of our Table object, taking the memorized rowspans and colOffset into account:
@@ -178,8 +192,11 @@ export class HTMLTableParser implements TableParser {
 
                 // Add cell to our Table object:
                 let cellContent = this.parseCell(domCell as HTMLTableCellElement);
+                let textAlign = cssToTextAlign(domCell as HTMLElement);
+                
                 let cell = new TableCell(table, row, column);
                 cell.setText(cellContent);
+                column.textAlign = textAlign;
                 table.addCell(cell);
 
                 // Take "colspan" into account:
@@ -201,6 +218,7 @@ export class HTMLTableParser implements TableParser {
                 // Take "rowspan" into account:
                 let rowspan = (domCell as HTMLTableCellElement).rowSpan;
                 if (rowspan > 1) {
+                    // Add empty cells to our Table object:
                     for (let i = 1; i < rowspan; i++) {
                         let nextRow = table.getRow(rowIndex + i);
                         if (!nextRow)
@@ -209,6 +227,7 @@ export class HTMLTableParser implements TableParser {
                         let mergedCell = table.getCellByObjs(nextRow, column);
                         mergedCell.merged = TableCellMerge.above;
 
+                        // Memorize "ghost" cells:
                         rowspanGhostCells.push({
                             "row": rowIndex + i,
                             "col": colIndex
@@ -284,7 +303,7 @@ export class HTMLTableRenderer implements TableRenderer {
             let cellProps =
                 (colspan > 1 ? ` colspan="${colspan}"` : "") + 
                 (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
-                (cell.getTextAlignment() != TextAlignment.default ? ` style="${textAlignCSS(cell.getTextAlignment())}"`: "");
+                (cell.getTextAlignment() != TextAlignment.default ? ` style="${textAlignToCSS(cell.getTextAlignment())}"`: "");
             let cellTag = cell.isHeaderCell() ? "th" : "td";
             return ["<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">"].join("");
         }
