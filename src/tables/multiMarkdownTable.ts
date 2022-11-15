@@ -365,7 +365,7 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
             if (colspan > 1) {
                 for (let col = i + 1; col < i + colspan; col++)
                     cellWidth += columnWidths[col];
-                cellWidth += colspan + Math.floor((colspan - 1) / 2);
+                cellWidth += (colspan * 2) - 2; // + Math.floor((colspan - 1) / 2);
             }
             result.push(this.renderCell(cell, cellWidth));
         });

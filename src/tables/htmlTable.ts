@@ -125,13 +125,16 @@ export class HTMLTableParser implements TableParser {
     }
 
     private parseSection(table: Table, domSection: HTMLTableSectionElement, isHeader: boolean = false) {
-        for (let rowIndex = 0; rowIndex < domSection.rows.length; rowIndex++) {
+        for (let domRowIndex = 0; domRowIndex < domSection.rows.length; domRowIndex++) {
             let row = table.addRow();
             row.isHeader = isHeader;
+            let colOffset = 0;
 
-            let domRow = domSection.rows[rowIndex];
+            let domRow = domSection.rows[domRowIndex];
             let domCells = domRow.querySelectorAll("td, th");
-            domCells.forEach((domCell, colIndex) => {
+            domCells.forEach((domCell, domColIndex) => {
+                let colIndex = domColIndex + colOffset;
+                console.log(`domRowIndex: ${domRowIndex}, domColIndex: ${domColIndex}, colOffset: ${colOffset}, colIndex: ${colIndex}`);
                 let column = table.getColumn(colIndex);
                 if (!column)
                     column = table.addColumn();
@@ -144,12 +147,13 @@ export class HTMLTableParser implements TableParser {
                 let colspan = (domCell as HTMLTableCellElement).colSpan;
                 if (colspan > 1) {
                     for (let i = 1; i < colspan; i++) {
-                        let nextColumn = table.getColumn(colIndex + 1);
+                        let nextColumn = table.getColumn(colIndex + i);
                         if (!nextColumn)
                             nextColumn = table.addColumn();
                         let mergedCell = table.getCellByObjs(row, nextColumn);
                         mergedCell.merged = TableCellMerge.left;
                     }
+                    colOffset += colspan - 1;
                 }
             });
         }

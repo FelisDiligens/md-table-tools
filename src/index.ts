@@ -1,11 +1,11 @@
 import { CSVTableParser, CSVTableRenderer } from "./tables/csvTable";
-import { HTMLTableParser, HTMLTableRenderer } from "./tables/htmlTable";
+import { HTMLTableParser, HTMLTableParserMode, HTMLTableRenderer } from "./tables/htmlTable";
 import { MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer, MinifiedMultiMarkdownTableRenderer } from "./tables/multiMarkdownTable";
 import { TableParser } from "./tables/tableParser";
 import { TableRenderer } from "./tables/tableRenderer";
 
 const mdParser = new MultiMarkdownTableParser();
-const htmlParser = new HTMLTableParser();
+const htmlParser = new HTMLTableParser(HTMLTableParserMode.StripHTMLElements);
 const csvParser = new CSVTableParser();
 
 function getParser(key: string): TableParser {
