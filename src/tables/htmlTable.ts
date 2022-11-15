@@ -112,7 +112,7 @@ export class HTMLTableParser implements TableParser {
         let domTBodies = domTable.querySelectorAll("tbody");
         if (domTBodies.length > 0) {
             domTBodies.forEach((domTBody, i) => {
-                this.parseSection(parsedTable, domTBody.rows, false, i > 0);
+                this.parseSection(parsedTable, domTBody.rows, false, domTHead == null, i > 0);
             });
             hasSections = true;
         }
@@ -120,7 +120,7 @@ export class HTMLTableParser implements TableParser {
         // No <thead> or <tbody> tags?
         if (!hasSections) {
             // Parse table that doesn't have thead or tbody tags as one section with no header:
-            this.parseSection(parsedTable, domTable.rows, false, false);
+            this.parseSection(parsedTable, domTable.rows, false, true, false);
         }
 
         // Parse <caption> tag in <table>:
@@ -144,7 +144,7 @@ export class HTMLTableParser implements TableParser {
         return parsedTable;
     }
 
-    private parseSection(table: Table, domRows: HTMLCollectionOf<HTMLTableRowElement>, isHeader: boolean = false, firstRowStartsNewSection: boolean = false) {
+    private parseSection(table: Table, domRows: HTMLCollectionOf<HTMLTableRowElement>, isHeader: boolean = false, allowHeaderDetection: boolean = false, firstRowStartsNewSection: boolean = false) {
         // HTML skips "ghost" cells that are overshadowed by other cells that have a rowspan > 1.
         // We'll memorize them:
         let rowspanGhostCells: { row: number; col: number; }[] = [];
@@ -168,6 +168,7 @@ export class HTMLTableParser implements TableParser {
             // Iterate over each cell (<td> or <th>) of the HTML table row:
             let domRow = domRows[domRowIndex];
             let domCells = domRow.querySelectorAll("td, th");
+            let allCellsAreTH = true;
             domCells.forEach((domCell, domColIndex) => {
                 // Get the TableColumn of our Table object, taking the memorized rowspans and colOffset into account:
                 let colIndex = domColIndex + colOffset;
@@ -181,6 +182,7 @@ export class HTMLTableParser implements TableParser {
                 // Add cell to our Table object:
                 let cellContent = this.parseCell(domCell as HTMLTableCellElement);
                 let textAlign = cssToTextAlign(domCell as HTMLElement);
+                allCellsAreTH = allCellsAreTH && domCell.tagName.toLowerCase() == "th";
 
                 let cell = new TableCell(table, row, column);
                 cell.setText(cellContent);
@@ -223,6 +225,11 @@ export class HTMLTableParser implements TableParser {
                     }
                 }
             });
+
+            // Detect headers:
+            if (allowHeaderDetection && !isHeader) {
+                row.isHeader = allCellsAreTH;
+            }
         }
     }
 
