@@ -109,8 +109,8 @@ export class HTMLTableParser implements TableParser {
 
         let domTBodies = domTable.querySelectorAll("tbody");
         if (domTBodies.length > 0) {
-            domTBodies.forEach(domTBody => {
-                this.parseSection(parsedTable, domTBody);
+            domTBodies.forEach((domTBody, i) => {
+                this.parseSection(parsedTable, domTBody, false, i > 0);
             });
             hasSections = true;
         }
@@ -124,7 +124,7 @@ export class HTMLTableParser implements TableParser {
         return parsedTable;
     }
 
-    private parseSection(table: Table, domSection: HTMLTableSectionElement, isHeader: boolean = false) {
+    private parseSection(table: Table, domSection: HTMLTableSectionElement, isHeader: boolean = false, firstRowStartsNewSection: boolean = false) {
         // HTML skips "ghost" cells that are overshadowed by other cells that have a rowspan > 1.
         // We'll memorize them:
         let rowspanGhostCells: { row: number; col: number; }[] = [];
@@ -139,6 +139,8 @@ export class HTMLTableParser implements TableParser {
             if (!row)
                 row = table.addRow();
             row.isHeader = isHeader;
+            if (domRowIndex == 0)
+                row.startsNewSection = firstRowStartsNewSection;
 
             // Memorize an offset (colspan):
             let colOffset = 0;
