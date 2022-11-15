@@ -146,16 +146,16 @@ export class HTMLTableParser implements TableParser {
         let domCaption = domTable.querySelector("caption");
         if (domCaption != null) {
             let caption = new TableCaption();
-            caption.text = domCaption.innerText;
+            caption.text = domCaption.innerText.replace(/(\r?\n|\[|\])/g, "").trim();
             if (caption.getLabel() != domCaption.id)
-                caption.label = domCaption.id;
+                caption.label = domCaption.id.replace(/(\r?\n|\[|\])/g, "").trim();
             switch (domCaption.style.captionSide.toLowerCase()) {
-                case "top":
-                    caption.position = TableCaptionPosition.top;
-                    break;
                 case "bottom":
-                default:
                     caption.position = TableCaptionPosition.bottom;
+                    break;
+                case "top":
+                default:
+                    caption.position = TableCaptionPosition.top;
             }
             parsedTable.caption = caption;
         }

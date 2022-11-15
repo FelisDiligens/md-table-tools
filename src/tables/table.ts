@@ -20,7 +20,7 @@ export class TableCaption {
     public constructor(
         public text = "",
         public label = "",
-        public position = TableCaptionPosition.bottom) { }
+        public position = TableCaptionPosition.top) { }
 
     public getLabel(): string {
         // "If you have a caption, you can also have a label, allowing you to create anchors pointing to the table. If there is no label, then the caption acts as the label"
