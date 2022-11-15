@@ -4,7 +4,7 @@
 
 This module currently has the following features:
 
-- Parsing MultiMarkdown and CSV tables
+- Parsing MultiMarkdown, HTML, or CSV tables
 - Converting tables to MultiMarkdown, HTML, or CSV
 - Formatting or minifying MultiMarkdown tables
 - Manipulating parsed tables, e.g.
