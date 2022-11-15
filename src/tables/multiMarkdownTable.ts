@@ -394,7 +394,7 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
     private determineColumnWidth(table: Table, column: TableColumn): number {
         let width = 0;
         for (const cell of table.getCellsInColumn(column))
-            width = Math.max(cell.merged == TableCellMerge.above ? 2 : cell.text.length, width);
+            width = Math.max(cell.merged == TableCellMerge.above ? 2 : cell.text.replace(/\r?\n/g, "<br>").length, width);
         return width;
     }
 
