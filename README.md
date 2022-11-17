@@ -60,6 +60,7 @@ var intermediaryTable = mdParser.parse(mdTable);
 
 // Make some changes:
 intermediaryTable.getCellByIndices(1, 1).setText("everyone!");
+intermediaryTable.update().sanitze();
 
 // Render as HTML:
 var htmlTable = htmlRenderer.render(intermediaryTable);

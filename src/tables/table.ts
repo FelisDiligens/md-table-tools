@@ -293,7 +293,7 @@ export class Table {
     }
 
     /** Updates indices and sorts the cells within rows and columns. Use when altering the table. */
-    public update() {
+    public update(): Table {
         for (let index = 0; index < this.columns.length; index++)
             this.columns[index].index = index;
 
@@ -305,10 +305,12 @@ export class Table {
 
         for (const row of this.rows)
             row.updateCells(this);
+
+        return this;
     }
 
     /** Tries to find invalid configurations and sanitize them. */
-    public sanitize() {
+    public sanitize(): Table {
         for (const cell of this.getCellsInColumn(this.columns[0])) {
             if (cell.merged == TableCellMerge.left)
                 cell.merged = TableCellMerge.none;
@@ -319,15 +321,16 @@ export class Table {
                 cell.merged = TableCellMerge.none;
         }
 
-        if (this.getNormalRows().length == 0)
-            return;
-
-        for (const cell of this.getCellsInRow(this.getNormalRows()[0])) {
-            if (cell.merged == TableCellMerge.above)
-                cell.merged = TableCellMerge.none;
+        if (this.getNormalRows().length > 0) {
+            for (const cell of this.getCellsInRow(this.getNormalRows()[0])) {
+                if (cell.merged == TableCellMerge.above)
+                    cell.merged = TableCellMerge.none;
+            }
+    
+            this.getNormalRows()[0].startsNewSection = false;
         }
-
-        this.getNormalRows()[0].startsNewSection = false;
+        
+        return this;
     }
 }
 
