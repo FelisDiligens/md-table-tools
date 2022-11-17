@@ -1,12 +1,12 @@
 # MultiMarkdown table tools
 
-> ⚠️ Work-In-Progress, probably buggy!
+> ⚠️ Work-In-Progress, possibly buggy!
 
 This module currently has the following features:
 
-- Parsing MultiMarkdown, HTML, or CSV tables into intermediary
-- Converting intermediary back to MultiMarkdown, HTML, or CSV tables
-- Formatting or minifying MultiMarkdown tables
+- Parsing MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables into intermediary
+- Converting intermediary back to MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables
+- Formatting or minifying MultiMarkdown or GFM tables
 - Manipulating parsed tables (intermediary), e.g.
   - by adding or removing rows
   - by adding or removing columns

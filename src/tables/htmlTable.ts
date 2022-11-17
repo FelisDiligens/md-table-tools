@@ -285,13 +285,15 @@ export class HTMLTableRenderer implements TableRenderer {
             result.push(this.indentString("</thead>", 1));
         }
 
-        result.push(this.indentString("<tbody>", 1));
-        for (const row of normalRows) {
-            if (row.startsNewSection)
-                result.push(this.indentString("</tbody>", 1), this.indentString("<tbody>", 1));
-            result.push(...this.renderRow(table, row));
+        if (normalRows.length > 0) {
+            result.push(this.indentString("<tbody>", 1));
+            for (const row of normalRows) {
+                if (row.startsNewSection)
+                    result.push(this.indentString("</tbody>", 1), this.indentString("<tbody>", 1));
+                result.push(...this.renderRow(table, row));
+            }
+            result.push(this.indentString("</tbody>", 1));
         }
-        result.push(this.indentString("</tbody>", 1));
 
         if (table.caption && table.caption.text.length > 0)
             result.push(this.indentString(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position};">${table.caption.text.trim()}</caption>`, 1));
@@ -319,7 +321,7 @@ export class HTMLTableRenderer implements TableRenderer {
             let cellProps =
                 (colspan > 1 ? ` colspan="${colspan}"` : "") + 
                 (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
-                (cell.getTextAlignment() != TextAlignment.default ? ` style="${textAlignToCSS(cell.getTextAlignment())}"`: "");
+                (cell.getTextAlignment() != TextAlignment.default ? ` align="${cell.getTextAlignment()}"` : ""); // ` style="${textAlignToCSS(cell.getTextAlignment())}"`
             let cellTag = cell.isHeaderCell() ? "th" : "td";
             return ["<", cellTag, cellProps, ">", mdIt.renderInline(cell.text), "</", cellTag, ">"].join("");
         }

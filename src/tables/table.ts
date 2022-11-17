@@ -1,8 +1,8 @@
 export enum TextAlignment {
-    left,
-    center,
-    right,
-    default
+    left = "left",
+    center = "center",
+    right = "right",
+    default = "start"
 }
 
 export enum TableCellMerge {

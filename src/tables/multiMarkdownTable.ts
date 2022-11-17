@@ -2,6 +2,10 @@ import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, T
 import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 
+/*
+    Specification: https://fletcher.github.io/MultiMarkdown-6/syntax/tables.html
+*/
+
 const rowRegex = /^\|(.+)\|$/
 const separatorRegex = /^\|([\s\.]*:?[\-=\.]+[:\+]?[\s\.]*\|)+$/;
 const captionRegex = /^(\[.+\]){1,2}$/;
@@ -107,6 +111,9 @@ export class MultiMarkdownTableParser implements TableParser {
                 let pipeEscaped = false;
                 for (let char of line.substring(1, line.length)) {
                     if (!pipeEscaped && char == "|") {
+                        if (col >= parsedTable.columnCount()) {
+                            throw new ParsingError(`Too many cells in row ${tableRow.index + 1}.`);
+                        }
                         let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(col));
                         parsedTable.addCell(cell);
                         //let cell = parsedTable.getCellByObjs(tableRow, parsedTable.getColumn(col));
@@ -132,6 +139,10 @@ export class MultiMarkdownTableParser implements TableParser {
                         cellContent += char;
                         pipeEscaped = false;
                     }
+                }
+
+                if (col < parsedTable.columnCount()) {
+                    throw new ParsingError(`Too few cells in row ${tableRow.index + 1}.`);
                 }
             }
             else if (state == ParsingState.Separator) {
