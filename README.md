@@ -1,20 +1,18 @@
 # MultiMarkdown table tools
 
-> ⚠️ Work-In-Progress, possibly buggy!
+> ⚠️ Work-In-Progress
 
 This module currently has the following features:
 
 - Parsing MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables into intermediary
 - Converting intermediary back to MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables
 - Formatting or minifying MultiMarkdown or GFM tables
-- Manipulating parsed tables (intermediary), e.g.
+- Manipulating parsed/intermediary tables (⚠️ possibly buggy), e.g.
   - by adding or removing rows
   - by adding or removing columns
   - by changing the content of table cells
   - by merging table cells
   - etc.
-
-![Screenshot](screenshots/firefox_jsmBWfquN2.png)
 
 ## Syntax
 
@@ -44,13 +42,9 @@ $ npm run build
 
 ## Usage
 
-Build the project and open `./dist/index.html` for a demo.
-
-### Example code
-
 ```typescript
-import { MultiMarkdownTableParser } from "./tables/multiMarkdownTable";
-import { HTMLTableRenderer } from "./tables/htmlTable";
+import { MultiMarkdownTableParser } from "md-table-tools";
+import { HTMLTableRenderer } from "md-table-tools";
 
 const mdParser = new MultiMarkdownTableParser();
 const htmlRenderer = new HTMLTableRenderer();
@@ -92,4 +86,4 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
 
 - [Markdown-it](https://markdown-it.github.io/) - for inline Markdown to HTML conversion
 - [Turndown](https://mixmark-io.github.io/turndown/) - for inline HTML to Markdown conversion
-- TypeScript, npm, webpack
+- TypeScript
