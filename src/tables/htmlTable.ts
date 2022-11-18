@@ -2,52 +2,52 @@ import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, T
 import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 import TurndownService from 'turndown';
-import MarkdownIt from 'markdown-it';
+// import MarkdownIt from 'markdown-it';
 import { removeInvisibleCharacters } from "./common";
 
 const turndown = new TurndownService();
-const mdIt = new MarkdownIt();
+// const mdIt = new MarkdownIt();
 
 function escapeMarkdown(mdStr: string): string {
     return mdStr
         .replace(/\|/g, "\\|");
 }
 
-// function mdToHtml(markdown: string): string {
-//     let html = markdown; // escape(markdown);
+function mdToHtml(markdown: string): string {
+    let html = markdown; // escape(markdown);
 
-//     // Image:
-//     html = html.replace(/!\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "<img src=\"$2\" alt=\"$1\">");
+    // Image:
+    html = html.replace(/!\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "<img src=\"$2\" alt=\"$1\">");
 
-//     // Links:
-//     html = html.replace(/\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "<a href=\"$2\">$1</a>");
+    // Links:
+    html = html.replace(/\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "<a href=\"$2\">$1</a>");
 
-//     // Inline code:
-//     html = html.replace(/`(.*?)`/g, "<code>$1</code>");
+    // Inline code:
+    html = html.replace(/`(.*?)`/g, "<code>$1</code>");
 
-//     // Strikethrough:
-//     html = html.replace(/~~(.*?)~~/g, "<del>$1</del>");
+    // Strikethrough:
+    html = html.replace(/~~(.*?)~~/g, "<del>$1</del>");
 
-//     // Oblique:
-//     html = html.replace(/___(.*?)___/g, "<em><strong>$1</strong></em>");
-//     html = html.replace(/\*\*\*(.*?)\*\*\*/g, "<em><strong>$1</strong></em>");
+    // Oblique:
+    html = html.replace(/___(.*?)___/g, "<em><strong>$1</strong></em>");
+    html = html.replace(/\*\*\*(.*?)\*\*\*/g, "<em><strong>$1</strong></em>");
 
-//     // Bold:
-//     html = html.replace(/__(.*?)__/g, "<strong>$1</strong>");
-//     html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    // Bold:
+    html = html.replace(/__(.*?)__/g, "<strong>$1</strong>");
+    html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
-//     // Italic:
-//     html = html.replace(/_(.*?)_/g, "<em>$1</em>");
-//     html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+    // Italic:
+    html = html.replace(/_(.*?)_/g, "<em>$1</em>");
+    html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
 
-//     // Escaped characters:
-//     html = html.replace(/\\([#\.\|\*_\s`])/g, "$1");
+    // Escaped characters:
+    html = html.replace(/\\([#\.\|\*_\s`])/g, "$1");
 
-//     // Newlines:
-//     html = html.replace(/\r?\n/g, "<br>");
+    // Newlines:
+    html = html.replace(/\r?\n/g, "<br>");
 
-//     return html;
-// }
+    return html;
+}
 
 function textAlignToCSS(textAlign: TextAlignment) {
     switch (textAlign) {
@@ -323,7 +323,7 @@ export class HTMLTableRenderer implements TableRenderer {
                 (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
                 (cell.getTextAlignment() != TextAlignment.default ? ` align="${cell.getTextAlignment()}"` : ""); // ` style="${textAlignToCSS(cell.getTextAlignment())}"`
             let cellTag = cell.isHeaderCell() ? "th" : "td";
-            return ["<", cellTag, cellProps, ">", mdIt.renderInline(cell.text), "</", cellTag, ">"].join("");
+            return ["<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">"].join(""); // mdIt.renderInline(cell.text)
         }
         return "";
     }

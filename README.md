@@ -85,6 +85,5 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
 
 ## Build with...
 
-- [Markdown-it](https://markdown-it.github.io/) - for inline Markdown to HTML conversion
 - [Turndown](https://mixmark-io.github.io/turndown/) - for inline HTML to Markdown conversion
 - TypeScript
