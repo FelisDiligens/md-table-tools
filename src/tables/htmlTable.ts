@@ -2,11 +2,7 @@ import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, T
 import { ParsingError, TableParser } from "./tableParser";
 import { TableRenderer } from "./tableRenderer";
 import TurndownService from 'turndown';
-// import MarkdownIt from 'markdown-it';
-import { removeInvisibleCharacters } from "./common";
-
-const turndown = new TurndownService();
-// const mdIt = new MarkdownIt();
+import { getTurndownService, removeInvisibleCharacters } from "./common";
 
 function escapeMarkdown(mdStr: string): string {
     return mdStr
@@ -84,7 +80,8 @@ export enum HTMLTableParserMode {
 
 export class HTMLTableParser implements TableParser {
     public constructor(
-        public mode: HTMLTableParserMode = HTMLTableParserMode.ConvertHTMLElements) {}
+        public mode: HTMLTableParserMode = HTMLTableParserMode.ConvertHTMLElements,
+        public turndownService: TurndownService = getTurndownService()) {}
 
     public parse(table: string): Table {
         /*
@@ -262,7 +259,7 @@ export class HTMLTableParser implements TableParser {
                 return removeInvisibleCharacters(escapeMarkdown(domCell.innerText));
             case HTMLTableParserMode.ConvertHTMLElements:
             default:
-                return removeInvisibleCharacters(escapeMarkdown(turndown.turndown(domCell.innerHTML)));
+                return removeInvisibleCharacters(escapeMarkdown(this.turndownService.turndown(domCell.innerHTML)));
         }
     }
 }
@@ -323,7 +320,7 @@ export class HTMLTableRenderer implements TableRenderer {
                 (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
                 (cell.getTextAlignment() != TextAlignment.default ? ` align="${cell.getTextAlignment()}"` : ""); // ` style="${textAlignToCSS(cell.getTextAlignment())}"`
             let cellTag = cell.isHeaderCell() ? "th" : "td";
-            return ["<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">"].join(""); // mdIt.renderInline(cell.text)
+            return ["<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">"].join(""); // (markdown-it) mdIt.renderInline(cell.text)
         }
         return "";
     }
