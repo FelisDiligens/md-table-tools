@@ -1,6 +1,6 @@
-import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableColumn, TableRow, TextAlignment } from "./table";
-import { ParsingError, TableParser } from "./tableParser";
-import { TableRenderer } from "./tableRenderer";
+import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableColumn, TableRow, TextAlignment } from "./table.js";
+import { ParsingError, TableParser } from "./tableParser.js";
+import { TableRenderer } from "./tableRenderer.js";
 
 /*
     Specification: https://github.github.com/gfm/#tables-extension-

@@ -1,4 +1,4 @@
-import { Table } from "./table";
+import { Table } from "./table.js";
 
 export class ParsingError extends Error {
     constructor(msg: string) {

@@ -5,7 +5,11 @@
       "module": "es6",
       "target": "es5",
       "allowJs": true,
-      "moduleResolution": "node",
+      /*
+       * https://stackoverflow.com/a/72215487
+       * https://stackoverflow.com/questions/72841589/relative-import-paths-need-explicit-file-extensions-in-ecmascript-imports-when
+       */
+      "moduleResolution": "NodeNext",
       "esModuleInterop": true,
       "declaration": true
     }

@@ -1,8 +1,8 @@
-import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table";
-import { ParsingError, TableParser } from "./tableParser";
-import { TableRenderer } from "./tableRenderer";
+import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table.js";
+import { ParsingError, TableParser } from "./tableParser.js";
+import { TableRenderer } from "./tableRenderer.js";
 import TurndownService from 'turndown';
-import { getTurndownService, removeInvisibleCharacters } from "./common";
+import { getTurndownService, removeInvisibleCharacters } from "./common.js";
 
 function escapeMarkdown(mdStr: string): string {
     return mdStr

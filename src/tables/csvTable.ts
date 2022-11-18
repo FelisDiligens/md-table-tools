@@ -1,6 +1,6 @@
-import { Table, TableCell, TableColumn, TableRow } from "./table";
-import { TableParser } from "./tableParser";
-import { TableRenderer } from "./tableRenderer";
+import { Table, TableCell, TableColumn, TableRow } from "./table.js";
+import { TableParser } from "./tableParser.js";
+import { TableRenderer } from "./tableRenderer.js";
 
 /*
  * Due to the nature of CSV tables, some data will be lost when converting MMD (or HTML) to CSV.
