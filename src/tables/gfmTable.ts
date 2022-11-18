@@ -90,6 +90,9 @@ export class GitHubFlavoredMarkdownTableParser implements TableParser {
                                 .trim()
                                 .replace(/(<[bB][rR]\s*\/?>)/g, "\n")
                             );
+                        // except when in the header row:
+                        } else if (state == ParsingState.HeaderRow) {
+                            throw new ParsingError("Header row doesn't match the delimiter row in the number of cells.");
                         }
 
                         cellContent = "";

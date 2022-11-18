@@ -23,8 +23,26 @@ describe("MultiMarkdownTableParser", () => {
                     Content       |   **Cell**    |         Cell |
                     
                     New section   |     More      |         Data |
-                    And more      | With an escaped '\|'         ||
+                    And more      | With an escaped '\\|'         ||
                     [Prototype table]
+                    `);
+                }).to.not.throw();
+            });
+
+            it("should parse a table without header", () =>{
+                expect(() => {
+                    mmdParser.parse(dedent`
+                    |-----|-----|-----|
+                    | jkl | mno | pqr |
+                    `);
+                }).to.not.throw();
+            });
+
+            it("should parse a header-only table", () =>{
+                expect(() => {
+                    mmdParser.parse(dedent`
+                    | abc | def | ghi |
+                    |-----|-----|-----|
                     `);
                 }).to.not.throw();
             });
@@ -47,6 +65,15 @@ describe("MultiMarkdownTableParser", () => {
                     | abc    | def  | ghi   |
                     |--------|------|-------|
                     | excess | cell | right | here! |
+                    `);
+                }).to.throw();
+            });
+
+            it("should throw an error on missing delimiter row", () =>{
+                expect(() => {
+                    mmdParser.parse(dedent`
+                    | abc | def | ghi |
+                    | jkl | mno | pqr |
                     `);
                 }).to.throw();
             });

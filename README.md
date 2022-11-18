@@ -5,7 +5,7 @@ This module currently has the following features:
 - Parsing MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables into intermediary
 - Converting intermediary back to MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables
 - Formatting or minifying MultiMarkdown or GFM tables
-- Manipulating parsed/intermediary tables *(⚠️ possibly buggy, please run `Table.update()` and `Table.sanitze()` after making any changes)*, e.g.
+- Manipulating parsed/intermediary tables *(⚠️ possibly buggy, please run `Table.update()` and `Table.sanitize()` after making any changes)*, e.g.
   - by adding or removing rows
   - by adding or removing columns
   - by changing the content of table cells
@@ -58,7 +58,7 @@ var intermediaryTable = mdParser.parse(mdTable);
 
 // Make some changes:
 intermediaryTable.getCellByIndices(1, 1).setText("everyone!");
-intermediaryTable.update().sanitze();
+intermediaryTable.update().sanitize();
 
 // Render as HTML:
 var htmlTable = htmlRenderer.render(intermediaryTable);

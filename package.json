@@ -9,7 +9,7 @@
         "prepublish": "npm run build",
         "build": "tsc",
         "test": "ts-mocha -n loader=ts-node/esm -p tsconfig.json src/**/*.spec.ts",
-        "test2": "tsc && mocha dist/**/*.spec.js"
+        "demo": "ts-node --esm --transpileOnly --project tsconfig.json src/demo.ts"
     },
     "keywords": [],
     "author": "FelisDiligens",
