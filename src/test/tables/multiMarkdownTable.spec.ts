@@ -5,19 +5,6 @@ import { MinifiedMultiMarkdownTableRenderer, MultiMarkdownTableParser, PrettyMul
 import { Table, TableCaption, TableCaptionPosition, TableCellMerge, TextAlignment } from "../../tables/table.js";
 
 `
-Stage | Direct Products | ATP Yields
-----: | --------------: | ---------:
-Glycolysis | 2 ATP ||
-^^ | 2 NADH | 3--5 ATP |
-Pyruvaye oxidation | 2 NADH | 5 ATP |
-Citric acid cycle | 2 ATP ||
-^^ | 6 NADH | 15 ATP |
-^^ | 2 FADH2 | 3 ATP |
-**30--32** ATP |||
-[Net ATP yields per hexose]
-`;
-
-`
 |--|--|--|--|--|--|--|--|
 |♜|  |♝|♛|♚|♝|♞|♜|
 |  |♟|♟|♟|  |♟|♟|♟|
@@ -27,15 +14,6 @@ Citric acid cycle | 2 ATP ||
 |  |  |  |  |  |♘|  |  |
 |♙|♙|♙|♙|  |♙|♙|♙|
 |♖|♘|♗|♕|♔|  |  |♖|
-`;
-
-`
-|  one  | two, and a half | three and a quarter |       |       |
-| ----: | :-------------: | :-----------------: | :---: | :---- |
-|  four |      five       |                     |       | six   |
-|||||
-|  hell                  ||       hath no       | fury  |       |
-[Title]
 `;
 
 describe("MultiMarkdownTableParser", () => {
@@ -74,6 +52,41 @@ describe("MultiMarkdownTableParser", () => {
                 expect(table.getCell(5, 2).merged).to.equal(TableCellMerge.left);
                 expect(table.getRow(4).startsNewSection).to.be.true;
                 expect(table.caption.text).to.equal("Prototype table");
+                expect(table.caption.position).to.equal(TableCaptionPosition.bottom);
+            });
+
+            it("should parse a more complex table just fine", () =>{
+                let table: Table;
+                expect(() => {
+                    table = mmdParser.parse(dedent`
+                                 Stage | Direct Products | ATP Yields |
+                    -----------------: | --------------: | ---------: |
+                            Glycolysis |                       2 ATP ||
+                                    ^^ |            2 NADH | 3--5 ATP |
+                    Pyruvaye oxidation |            2 NADH |    5 ATP |
+                     Citric acid cycle |                       2 ATP ||
+                                    ^^ |            6 NADH |   15 ATP |
+                                    ^^ |           2 FADH2 |    3 ATP |
+                                                     **30--32** ATP |||
+                    [Net ATP yields per hexose]
+                    `);
+                }).to.not.throw();
+                
+                expect(table.columnCount()).to.equal(3);
+                expect(table.rowCount()).to.equal(8);
+                expect(table.getHeaderRows()).to.be.an( "array" ).that.has.a.lengthOf(1);
+                expect(table.getNormalRows()).to.be.an( "array" ).that.has.a.lengthOf(7);
+                expect(table.getColumn(0).textAlign).to.equal(TextAlignment.right);
+                expect(table.getColumn(1).textAlign).to.equal(TextAlignment.right);
+                expect(table.getColumn(2).textAlign).to.equal(TextAlignment.right);
+                expect(table.getCell(1, 2).merged).to.equal(TableCellMerge.left);
+                expect(table.getCell(2, 0).merged).to.equal(TableCellMerge.above);
+                expect(table.getCell(4, 2).merged).to.equal(TableCellMerge.left);
+                expect(table.getCell(5, 0).merged).to.equal(TableCellMerge.above);
+                expect(table.getCell(6, 0).merged).to.equal(TableCellMerge.above);
+                expect(table.getCell(7, 1).merged).to.equal(TableCellMerge.left);
+                expect(table.getCell(7, 2).merged).to.equal(TableCellMerge.left);
+                expect(table.caption.text).to.equal("Net ATP yields per hexose");
                 expect(table.caption.position).to.equal(TableCaptionPosition.bottom);
             });
 
