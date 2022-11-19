@@ -1,7 +1,8 @@
 import "mocha";
 import { expect } from "chai";
 import dedent from 'dedent-js'; // https://stackoverflow.com/questions/25924057/multiline-strings-that-dont-break-indentation
-import { GitHubFlavoredMarkdownTableParser } from "../../tables/gfmTable.js";
+import { GitHubFlavoredMarkdownTableParser, GitHubFlavoredMarkdownTableRenderer } from "../../tables/gfmTable.js";
+import { Table, TextAlignment } from "../../tables/table.js";
 
 
 describe("GitHubFlavoredMarkdownTableParser", () => {
@@ -14,14 +15,21 @@ describe("GitHubFlavoredMarkdownTableParser", () => {
     describe(".parse()", () => {
         context("when parsing valid tables", () => {
             it("should ignore missing and excess cells", () =>{
+                let table: Table;
                 expect(() => {
-                    gfmParser.parse(dedent`
+                    table = gfmParser.parse(dedent`
                     | abc | def |
                     | --- | --- |
                     | bar |
                     | bar | baz | boo |
                     `);
                 }).to.not.throw();
+
+                // The second cell in row 2 should exist:
+                expect(table.getCellsInRow(table.getRow(1)).length).to.equal(2);
+
+                // The third cell in row 3 should be ignored:
+                expect(table.columnCount()).to.equal(2);
             });
         });
 
@@ -53,6 +61,53 @@ describe("GitHubFlavoredMarkdownTableParser", () => {
                     `);
                 }).to.throw();
             });
+        });
+    });
+});
+
+describe("GitHubFlavoredMarkdownTableRenderer", () => {
+    let gfmPrettyRenderer: GitHubFlavoredMarkdownTableRenderer;
+    let gfmMinifiedRenderer: GitHubFlavoredMarkdownTableRenderer;
+    let table: Table;
+
+    before(() => {
+        gfmPrettyRenderer = new GitHubFlavoredMarkdownTableRenderer(true);
+        gfmMinifiedRenderer = new GitHubFlavoredMarkdownTableRenderer(false);
+
+        table = new Table(2, 3);
+        table.getRow(0).isHeader = true;
+        table.getColumn(0).textAlign = TextAlignment.left;
+        table.getColumn(1).textAlign = TextAlignment.center;
+        table.getColumn(2).textAlign = TextAlignment.right;
+        table.getCellByIndices(0, 0).setText("Left");
+        table.getCellByIndices(0, 1).setText("Center");
+        table.getCellByIndices(0, 2).setText("Right");
+        table.getCellByIndices(1, 0).setText("ab");
+        table.getCellByIndices(1, 1).setText("cd");
+        table.getCellByIndices(1, 2).setText("ef");
+    });
+
+    describe(".render() - pretty", () => {
+        it("should make a pretty table and align text", () =>{
+            expect(
+                gfmPrettyRenderer.render(table)
+            ).to.equal(
+                dedent`| Left | Center | Right |
+                       |:-----|:------:|------:|
+                       | ab   |   cd   |    ef |`
+            );
+        });
+    });
+
+    describe(".render() - minified", () => {
+        it("should make a minified table and leave out unnecessary pipes and spaces", () =>{
+            expect(
+                gfmMinifiedRenderer.render(table)
+            ).to.equal(
+                dedent`Left|Center|Right
+                       :-|:-:|-:
+                       ab|cd|ef`
+            );
         });
     });
 });

@@ -2,12 +2,13 @@ import TurndownService from "turndown";
 
 export function removeInvisibleCharacters(str: string): string {
     // See: https://www.utf8-chartable.de/unicode-utf8-table.pl
+    //      https://stackoverflow.com/a/13836410
     // /[^\u0000-\u007E]/g
     // /\u00AD/g - soft hyphen
     // /[^\u0020-\u007E\u00A1-\u00AC\u00AE-\u00FF]/g
     return str
-        .replace(/[\u0000-\u001F\u007F-\u009F]/g, "") // Control characters
-        .replace(/[\u00AD\u2007\u200C\u202F\uFEFF]/g, "") // Invisible characters, such as &shy; or "Zero Width Non-Joiner"
+        .replace(/[\u0000-\u0009\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, "") // Control characters
+        .replace(/[\u00AD\u2007\u200C\u2028-\u202F\u2060-\u206F\uFEFF]/g, "") // Invisible characters, such as &shy; or "Zero Width Non-Joiner"
         .replace(/\u00A0/g, "&nbsp;")
         .replace(/\u2002/g, "&ensp;")
         .replace(/\u2003/g, "&emsp;")

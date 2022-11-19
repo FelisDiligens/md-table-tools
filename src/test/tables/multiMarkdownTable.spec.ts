@@ -1,7 +1,7 @@
 import "mocha";
 import { expect } from "chai";
 import dedent from 'dedent-js'; // https://stackoverflow.com/questions/25924057/multiline-strings-that-dont-break-indentation
-import { MultiMarkdownTableParser } from "../../tables/multiMarkdownTable.js";
+import { MinifiedMultiMarkdownTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "../../tables/multiMarkdownTable.js";
 
 
 describe("MultiMarkdownTableParser", () => {
@@ -78,5 +78,21 @@ describe("MultiMarkdownTableParser", () => {
                 }).to.throw();
             });
         });
+    });
+});
+
+describe("PrettyMultiMarkdownTableRenderer", () => {
+    let mmdRenderer: PrettyMultiMarkdownTableRenderer;
+
+    before(() => {
+        mmdRenderer = new PrettyMultiMarkdownTableRenderer();
+    });
+});
+
+describe("MinifiedMultiMarkdownTableRenderer", () => {
+    let mmdRenderer: MinifiedMultiMarkdownTableRenderer;
+
+    before(() => {
+        mmdRenderer = new MinifiedMultiMarkdownTableRenderer();
     });
 });
