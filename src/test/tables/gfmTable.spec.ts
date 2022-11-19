@@ -79,12 +79,12 @@ describe("GitHubFlavoredMarkdownTableRenderer", () => {
         table.getColumn(0).textAlign = TextAlignment.left;
         table.getColumn(1).textAlign = TextAlignment.center;
         table.getColumn(2).textAlign = TextAlignment.right;
-        table.getCellByIndices(0, 0).setText("Left");
-        table.getCellByIndices(0, 1).setText("Center");
-        table.getCellByIndices(0, 2).setText("Right");
-        table.getCellByIndices(1, 0).setText("ab");
-        table.getCellByIndices(1, 1).setText("cd");
-        table.getCellByIndices(1, 2).setText("ef");
+        table.getCell(0, 0).setText("Left");
+        table.getCell(0, 1).setText("Center");
+        table.getCell(0, 2).setText("Right");
+        table.getCell(1, 0).setText("ab");
+        table.getCell(1, 1).setText("cd");
+        table.getCell(1, 2).setText("ef");
     });
 
     describe(".render() - pretty", () => {

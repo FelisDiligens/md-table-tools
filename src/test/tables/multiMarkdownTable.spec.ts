@@ -2,8 +2,41 @@ import "mocha";
 import { expect } from "chai";
 import dedent from 'dedent-js'; // https://stackoverflow.com/questions/25924057/multiline-strings-that-dont-break-indentation
 import { MinifiedMultiMarkdownTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "../../tables/multiMarkdownTable.js";
-import { Table, TableCaptionPosition, TableCellMerge, TextAlignment } from "../../tables/table.js";
+import { Table, TableCaption, TableCaptionPosition, TableCellMerge, TextAlignment } from "../../tables/table.js";
 
+`
+Stage | Direct Products | ATP Yields
+----: | --------------: | ---------:
+Glycolysis | 2 ATP ||
+^^ | 2 NADH | 3--5 ATP |
+Pyruvaye oxidation | 2 NADH | 5 ATP |
+Citric acid cycle | 2 ATP ||
+^^ | 6 NADH | 15 ATP |
+^^ | 2 FADH2 | 3 ATP |
+**30--32** ATP |||
+[Net ATP yields per hexose]
+`;
+
+`
+|--|--|--|--|--|--|--|--|
+|♜|  |♝|♛|♚|♝|♞|♜|
+|  |♟|♟|♟|  |♟|♟|♟|
+|♟|  |♞|  |  |  |  |  |
+|  |♗|  |  |♟|  |  |  |
+|  |  |  |  |♙|  |  |  |
+|  |  |  |  |  |♘|  |  |
+|♙|♙|♙|♙|  |♙|♙|♙|
+|♖|♘|♗|♕|♔|  |  |♖|
+`;
+
+`
+|  one  | two, and a half | three and a quarter |       |       |
+| ----: | :-------------: | :-----------------: | :---: | :---- |
+|  four |      five       |                     |       | six   |
+|||||
+|  hell                  ||       hath no       | fury  |       |
+[Title]
+`;
 
 describe("MultiMarkdownTableParser", () => {
     let mmdParser: MultiMarkdownTableParser;
@@ -30,13 +63,15 @@ describe("MultiMarkdownTableParser", () => {
                     `);
                 }).to.not.throw();
 
+                expect(table.columnCount()).to.equal(3);
+                expect(table.rowCount()).to.equal(6);
                 expect(table.getHeaderRows()).to.be.an( "array" ).that.has.a.lengthOf(2);
                 expect(table.getNormalRows()).to.be.an( "array" ).that.has.a.lengthOf(4);
                 expect(table.getColumn(0).textAlign).to.equal(TextAlignment.default);
                 expect(table.getColumn(1).textAlign).to.equal(TextAlignment.center);
                 expect(table.getColumn(2).textAlign).to.equal(TextAlignment.right);
-                expect(table.getCellByIndices(2, 2).merged).to.equal(TableCellMerge.left);
-                expect(table.getCellByIndices(5, 2).merged).to.equal(TableCellMerge.left);
+                expect(table.getCell(2, 2).merged).to.equal(TableCellMerge.left);
+                expect(table.getCell(5, 2).merged).to.equal(TableCellMerge.left);
                 expect(table.getRow(4).startsNewSection).to.be.true;
                 expect(table.caption.text).to.equal("Prototype table");
                 expect(table.caption.position).to.equal(TableCaptionPosition.bottom);
@@ -102,11 +137,62 @@ describe("MultiMarkdownTableParser", () => {
     });
 });
 
+
+let exampleTable = new Table(6, 3);
+exampleTable.getColumn(1).textAlign = TextAlignment.center;
+exampleTable.getColumn(2).textAlign = TextAlignment.right;
+exampleTable.caption = new TableCaption("Prototype table", "", TableCaptionPosition.bottom);
+
+exampleTable.getRow(0).isHeader = true;
+exampleTable.getCell(0, 1).setText("Grouping");
+exampleTable.getCell(0, 2).merged = TableCellMerge.left;
+
+exampleTable.getRow(1).isHeader = true;
+exampleTable.getCell(1, 0).setText("First Header");
+exampleTable.getCell(1, 1).setText("Second Header");
+exampleTable.getCell(1, 2).setText("Third Header");
+
+exampleTable.getCell(2, 0).setText("Content");
+exampleTable.getCell(2, 1).setText("*Long Cell*");
+exampleTable.getCell(2, 2).merged = TableCellMerge.left;
+
+exampleTable.getCell(3, 0).setText("Content");
+exampleTable.getCell(3, 1).setText("**Cell**");
+exampleTable.getCell(3, 2).setText("Cell");
+
+exampleTable.getCell(4, 0).setText("New section");
+exampleTable.getCell(4, 1).setText("More");
+exampleTable.getCell(4, 2).setText("Data");
+exampleTable.getRow(4).startsNewSection = true;
+
+exampleTable.getCell(5, 0).setText("And more");
+exampleTable.getCell(5, 1).setText("With an escaped '\\|'");
+exampleTable.getCell(5, 2).merged = TableCellMerge.left;
+
+exampleTable.update();
+
 describe("PrettyMultiMarkdownTableRenderer", () => {
     let mmdRenderer: PrettyMultiMarkdownTableRenderer;
 
     before(() => {
         mmdRenderer = new PrettyMultiMarkdownTableRenderer();
+    });
+
+    describe(".render()", () => {
+        it("should pretty format the example table", () =>{
+            expect(
+                mmdRenderer.render(exampleTable)
+            ).to.equal(
+                dedent`|              |          Grouping           ||
+                       | First Header | Second Header | Third Header |
+                       |--------------|:-------------:|-------------:|
+                       | Content      |         *Long Cell*         ||
+                       | Content      |   **Cell**    |         Cell |
+                       
+                       | New section  |     More      |         Data |
+                       | And more     |    With an escaped '\\|'     ||
+                       [Prototype table]`)
+        });
     });
 });
 

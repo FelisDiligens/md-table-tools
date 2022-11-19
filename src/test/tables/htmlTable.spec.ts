@@ -47,8 +47,8 @@ describe("HTMLTableRenderer", () => {
         it("should render a given table properly", () =>{
             const table = new Table(2, 1);
             table.getRow(0).isHeader = true;
-            table.getCellByIndices(0, 0).setText("Header");
-            table.getCellByIndices(1, 0).setText("Body");
+            table.getCell(0, 0).setText("Header");
+            table.getCell(1, 0).setText("Body");
 
             expect(htmlPrettyRenderer.render(table)).to.equal(dedent`<table>
                 <thead>
@@ -66,8 +66,8 @@ describe("HTMLTableRenderer", () => {
 
         it("should not have a <thead> if there are no header rows", () =>{
             const table = new Table(2, 1);
-            table.getCellByIndices(0, 0).setText("Body");
-            table.getCellByIndices(1, 0).setText("Also body");
+            table.getCell(0, 0).setText("Body");
+            table.getCell(1, 0).setText("Also body");
 
             expect(htmlPrettyRenderer.render(table)).to.not.include("<thead>");
         });
@@ -76,8 +76,8 @@ describe("HTMLTableRenderer", () => {
             const table = new Table(2, 1);
             table.getRow(0).isHeader = true;
             table.getRow(1).isHeader = true;
-            table.getCellByIndices(0, 0).setText("Header");
-            table.getCellByIndices(1, 0).setText("Also header");
+            table.getCell(0, 0).setText("Header");
+            table.getCell(1, 0).setText("Also header");
 
             expect(htmlPrettyRenderer.render(table)).to.not.include("<tbody>");
         });

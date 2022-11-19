@@ -24,9 +24,9 @@ export class TableCaption {
 
     public getLabel(): string {
         // "If you have a caption, you can also have a label, allowing you to create anchors pointing to the table. If there is no label, then the caption acts as the label"
-        if (this.label.trim() === "")
-            return this.text.trim().toLowerCase().replace(/\s/g, "-");
-        return this.label.trim().replace(/\s/g, "-");
+        if (typeof this.label === 'string' && this.label.trim() !== "")
+            return this.label.trim().replace(/\s/g, "-");
+        return this.text.trim().toLowerCase().replace(/\s/g, "-");
     }
 }
 
@@ -256,8 +256,8 @@ export class Table {
         return columnObj.cells;
     }
 
-    /** Return the cell at row and column. */
-    public getCellByObjs(rowObj: TableRow, columnObj: TableColumn): TableCell {
+    /** Returns the cell at row and column. */
+    private getCellByObjs(rowObj: TableRow, columnObj: TableColumn): TableCell {
         // Intersection of row / column:
         for (const cell of rowObj.cells) {
             if (columnObj.cells.includes(cell))
@@ -269,11 +269,16 @@ export class Table {
         return newCell;
     }
 
-    /** Return the cell at row and column. */
-    public getCellByIndices(row: number, column: number): TableCell {
+    /**
+     * Returns the cell at row and column.
+     * @param row Either index or object reference.
+     * @param column Either index or object reference.
+     * @returns The cell at row and column.
+     */
+    public getCell(row: number | TableRow, column: number | TableColumn): TableCell {
         return this.getCellByObjs(
-            this.rows.at(row),
-            this.columns.at(column)
+            typeof row === "number" ? this.rows.at(row) : row,
+            typeof column === "number" ? this.columns.at(column) : column
         );
     }
 
@@ -292,42 +297,64 @@ export class Table {
         return this.columns.length;
     }
 
-    /** Updates indices and sorts the cells within rows and columns. Use when altering the table. */
+    /**
+     * -> Ensures that all table cells exist.
+     * -> Updates indices and sorts the cells within rows and columns.
+     * -> Tries to find invalid configurations and sanitize them.
+     * 
+     * Use when altering the table.
+     */
     public update(): Table {
-        for (let index = 0; index < this.columns.length; index++)
-            this.columns[index].index = index;
+        // Iterate over the entire table:
+        let columnObj: TableColumn;
+        let rowObj: TableRow;
+        for (let colIndex = 0; colIndex < this.columns.length; colIndex++) {
+            // Update the column's index:
+            columnObj = this.columns[colIndex];
+            columnObj.index = colIndex;
 
-        for (let index = 0; index < this.rows.length; index++)
-            this.rows[index].index = index;
+            for (let rowIndex = 0; rowIndex < this.rows.length; rowIndex++) {
+                // Update the row's index:
+                rowObj = this.rows[rowIndex];
+                rowObj.index = rowIndex;
 
+                // Use "getCellByObjs" to ensure that the cell gets created, if it doesn't exist already:
+                this.getCellByObjs(rowObj, columnObj);
+            }
+        }
+
+        // Update the column's 'cells' array:
         for (const column of this.columns)
             column.updateCells(this);
 
+        // Update the row's 'cells' array:
         for (const row of this.rows)
             row.updateCells(this);
 
+        this.sanitize();
         return this;
     }
 
     /** Tries to find invalid configurations and sanitize them. */
-    public sanitize(): Table {
-        for (const cell of this.getCellsInColumn(this.columns[0])) {
-            if (cell.merged == TableCellMerge.left)
-                cell.merged = TableCellMerge.none;
-        }
-
-        for (const cell of this.getCellsInRow(this.getHeaderRows()[0])) {
-            if (cell.merged == TableCellMerge.above)
-                cell.merged = TableCellMerge.none;
-        }
-
+    private sanitize(): Table {
         if (this.getNormalRows().length > 0) {
+            // Cannot merge cell above if in first row:
             for (const cell of this.getCellsInRow(this.getNormalRows()[0])) {
                 if (cell.merged == TableCellMerge.above)
                     cell.merged = TableCellMerge.none;
             }
     
             this.getNormalRows()[0].startsNewSection = false;
+        }
+
+        for (const cell of this.cells) {
+            // Cannot merge cell left if in first column:
+            if (cell.column == this.columns[0] && cell.merged == TableCellMerge.left)
+                cell.merged = TableCellMerge.none;
+
+            // Cannot merge cell above if in first row:
+            if ((cell.row == this.rows[0] || cell.row.startsNewSection) && cell.merged == TableCellMerge.above)
+                cell.merged = TableCellMerge.none;
         }
         
         return this;

@@ -215,7 +215,7 @@ export class HTMLTableParser implements TableParser {
                         let nextColumn = table.getColumn(colIndex + i);
                         if (!nextColumn)
                             nextColumn = table.addColumn();
-                        let mergedCell = table.getCellByObjs(row, nextColumn);
+                        let mergedCell = table.getCell(row, nextColumn);
                         mergedCell.merged = TableCellMerge.left;
                     }
 
@@ -232,7 +232,7 @@ export class HTMLTableParser implements TableParser {
                         if (!nextRow)
                             nextRow = table.addRow();
                         nextRow.isHeader = isHeader;
-                        let mergedCell = table.getCellByObjs(nextRow, column);
+                        let mergedCell = table.getCell(nextRow, column);
                         mergedCell.merged = TableCellMerge.above;
 
                         // Memorize "ghost" cells:

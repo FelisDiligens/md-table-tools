@@ -336,7 +336,7 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
         if (caption.text.length > 0) {
             result.push(`[${caption.text}]`);
             if (caption.label.length > 0) {
-                result.push(`[${caption.label}]`);
+                result.push(`[${caption.getLabel()}]`);
             }
         }
         return result.join("");
@@ -401,15 +401,27 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
                 return ` ${text} ${" ".repeat(Math.max(0, cellWidth - text.length))}`;
         }
     }
-    
-    private determineColumnWidth(table: Table, column: TableColumn): number {
-        let width = 0;
-        for (const cell of table.getCellsInColumn(column))
-            width = Math.max(cell.merged == TableCellMerge.above ? 2 : cell.text.replace(/\r?\n/g, "<br>").length, width);
-        return width;
-    }
 
     private determineColumnWidths(table: Table): number[] {
-        return table.getColumns().map(column => this.determineColumnWidth(table, column));
+        let columnWidths: number[] = Array.from({length: table.columnCount()}, () => 0);
+
+        for (let colIndex = table.columnCount() - 1; colIndex >= 0; colIndex--) {
+            const column = table.getColumn(colIndex);
+            let width = 0;
+            for (const cell of table.getCellsInColumn(column)) {
+                let colspan = cell.getColspan();
+                let textWidth = cell.merged == TableCellMerge.above ? 2 : cell.text.replace(/\r?\n/g, "<br>").length;
+                if (colspan == 1) {
+                    width = Math.max(textWidth, width);
+                } else {
+                    let leftoverWidth = columnWidths.slice(colIndex + 1, colIndex + colspan).reduce((pv, cv) => pv + cv);
+                    // let combinedWidth = width + leftoverWidth;
+                    width = Math.max(textWidth - leftoverWidth, width);
+                }
+            }
+            columnWidths.splice(colIndex, 1, width);
+        }
+
+        return columnWidths;
     }
 }
