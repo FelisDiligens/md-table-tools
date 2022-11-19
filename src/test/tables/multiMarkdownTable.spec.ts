@@ -202,4 +202,21 @@ describe("MinifiedMultiMarkdownTableRenderer", () => {
     before(() => {
         mmdRenderer = new MinifiedMultiMarkdownTableRenderer();
     });
+
+    describe(".render()", () => {
+        it("should make a minified table and leave out unnecessary pipes and spaces", () =>{
+            expect(
+                mmdRenderer.render(exampleTable)
+            ).to.equal(
+                dedent`| |Grouping||
+                       First Header|Second Header|Third Header
+                       -|:-:|-:
+                       Content|*Long Cell*||
+                       Content|**Cell**|Cell
+                       
+                       New section|More|Data
+                       And more|With an escaped '\\|'||
+                       [Prototype table]`)
+        });
+    });
 });
