@@ -9,7 +9,7 @@
         "prepublish": "npm run build",
         "build": "tsc",
         "test": "ts-mocha -n loader=ts-node/esm -p tsconfig.json src/**/*.spec.ts",
-        "demo": "ts-node --esm --transpileOnly --project tsconfig.json src/demo.ts"
+        "demo": "ts-node --esm --project tsconfig.json src/demo.ts"
     },
     "keywords": ["multimarkdown", "markdown", "html", "table", "convert"],
     "author": "FelisDiligens",
