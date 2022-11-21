@@ -1,7 +1,7 @@
 import { Table, TableCaptionPosition, TableCellMerge, TextAlignment } from "./table.js";
 import { TableRenderer } from "./tableRenderer.js";
 
-/** More of a bogus class... it generates JavaScript code that describes the given table. Could be used for testing. */
+/** More of a useless class... it generates JavaScript code that describes the given table. Only used for testing. */
 export class CodeTableRenderer implements TableRenderer {
     render(table: Table): string {
         let result = [];
