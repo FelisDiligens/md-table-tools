@@ -213,8 +213,10 @@ export class GitHubFlavoredMarkdownTableRenderer implements TableRenderer {
     private renderRow(table: Table, row: TableRow, columnWidths: number[]): string {
         let result: string[] = [];
 
-        table.getCellsInRow(row).forEach((cell, i) => {
+        row.getCells().forEach((cell, i) => {
             result.push(this.renderCell(cell, this.prettify ? columnWidths[i] : null));
+            if (!this.prettify && i == row.getCells().length - 1 && cell.text.trim() == "")
+                result.push("");
         });
 
         if (this.prettify)
@@ -227,8 +229,6 @@ export class GitHubFlavoredMarkdownTableRenderer implements TableRenderer {
         let text = cell.text.replace(/\r?\n/g, "<br>");
 
         if (!this.prettify){
-            if (text.trim() == "")
-                return "|";
             return text;
         }
 

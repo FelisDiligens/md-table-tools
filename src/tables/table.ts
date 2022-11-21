@@ -97,7 +97,7 @@ export class TableCell {
 }
 
 export class TableRow {
-    public cells: Array<TableCell>;
+    public cells: TableCell[];
 
     public constructor(
         public index: number = 0,
@@ -111,10 +111,18 @@ export class TableRow {
             this.cells = table.getCells().filter(cell => cell.row == this);
         this.cells = this.cells.sort((a, b) => a.column.index - b.column.index);
     }
+    
+    public getCell(index: number): TableCell {
+        return this.cells.at(index);
+    }
+    
+    public getCells(): TableCell[] {
+        return this.cells;
+    }
 }
 
 export class TableColumn {
-    public cells: Array<TableCell>;
+    public cells: TableCell[];
 
     public constructor(
         public index: number = 0,
@@ -127,12 +135,20 @@ export class TableColumn {
             this.cells = table.getCells().filter(cell => cell.column == this);
         this.cells = this.cells.sort((a, b) => a.row.index - b.row.index);
     }
+    
+    public getCell(index: number): TableCell {
+        return this.cells.at(index);
+    }
+    
+    public getCells(): TableCell[] {
+        return this.cells;
+    }
 }
 
 export class Table {
-    private cells: Array<TableCell>;
-    private rows: Array<TableRow>;
-    private columns: Array<TableColumn>;
+    private cells: TableCell[];
+    private rows: TableRow[];
+    private columns: TableColumn[];
     public caption: TableCaption;
 
     public constructor(rowNum: number = 0, colNum: number = 0) {
@@ -154,8 +170,6 @@ export class Table {
         } else {
             row.index = index;
             this.rows.splice(index, 0, row);
-            // TODO !! Update the index of each row below.
-            // TODO ?? this.update();
         }
         return row;
     }
@@ -172,88 +186,113 @@ export class Table {
         } else {
             col.index = index;
             this.columns.splice(index, 0, col);
-            // TODO !! Update the index of each column after.
-            // TODO ?? this.update();
         }
         return col;
     }
 
-    /** Get the row at index. Negative index counts back from the end. Returns undefined if out-of-bounds. */
+    /** Gets the row at index. Negative index counts back from the end. Returns undefined if out-of-bounds. */
     public getRow(index: number): TableRow {
         return this.rows.at(index);
     }
 
-    /** Get the index of the row. -1 if it hasn't been found. */
+    /** Gets the index of the row. -1 if it hasn't been found. */
     public indexOfRow(row: TableRow): number {
         return this.rows.indexOf(row);
     }
 
-    /** Get the column at index. Negative index counts back from the end. Returns undefined if out-of-bounds. */
+    /** Gets the column at index. Negative index counts back from the end. Returns undefined if out-of-bounds. */
     public getColumn(index: number): TableColumn {
         return this.columns.at(index);
     }
 
-    /** Get the index of the column. -1 if it hasn't been found. */
+    /** Gets the index of the column. -1 if it hasn't been found. */
     public indexOfColumn(col: TableColumn): number {
         return this.columns.indexOf(col);
     }
 
-    /** Removes the given column. Also removes all cells within the column. */
-    public removeColumn(col: TableColumn) {
-        let columnCells = this.getCellsInColumn(col);
+    /**
+     * Removes the given column. Also removes all cells within the column. 
+     * @param col Either index or object reference.
+    */
+    public removeColumn(col: number | TableColumn) {
+        let colObj = typeof col === "number" ? this.columns.at(col) : col;
+        let columnCells = this.getCellsInColumn(colObj);
         this.cells = this.cells.filter(cell => !columnCells.includes(cell));
         this.columns = this.columns.filter(c => c != col);
-        // TODO ?? this.update();
     }
 
-    /** Removes the given row. Also removes all cells within the row. */
-    public removeRow(row: TableRow) {
-        let rowCells = this.getCellsInRow(row);
+    /**
+     * Removes the given row. Also removes all cells within the row.
+     * @param row Either index or object reference.
+     */
+    public removeRow(row: number | TableRow) {
+        let rowObj = typeof row === "number" ? this.rows.at(row) : row;
+        let rowCells = this.getCellsInRow(rowObj);
         this.cells = this.cells.filter(cell => !rowCells.includes(cell));
         this.rows = this.rows.filter(r => r != row);
-        // TODO ?? this.update();
     }
 
-    public moveColumn(col: TableColumn, newIndex: number) {
+    /**
+     * Moves the given column to the new index.
+     * @throws NOT IMPLEMENTED
+     * @param col Either index or object reference.
+     * @param newIndex The new index of the given column.
+     */
+    public moveColumn(col: number | TableColumn, newIndex: number) {
         throw new Error("Not implemented");
-        // TODO ?? this.update();
     }
 
-    public moveRow(row: TableRow, newIndex: number) {
+    /**
+     * Moves the given row to the new index.
+     * @throws NOT IMPLEMENTED
+     * @param col Either index or object reference.
+     * @param newIndex The new index of the given row.
+     */
+    public moveRow(row: number | TableRow, newIndex: number) {
         throw new Error("Not implemented");
-        // TODO ?? this.update();
     }
 
     /** Returns a list of all rows that are headers. */
-    public getHeaderRows(): Array<TableRow> {
+    public getHeaderRows(): TableRow[] {
         return this.rows.filter(r => r.isHeader);
     }
 
     /** Returns a list of all rows that aren't headers. */
-    public getNormalRows(): Array<TableRow> {
+    public getNormalRows(): TableRow[] {
         return this.rows.filter(r => !r.isHeader);
     }
 
-    public getRows(): Array<TableRow> {
+    /** Retruns all rows in the table, from top to bottom, including header rows. */
+    public getRows(): TableRow[] {
         return this.rows;
     }
 
-    public getColumns(): Array<TableColumn> {
+    /** Returns all columns in the table, from left to right. */
+    public getColumns(): TableColumn[] {
         return this.columns;
     }
 
-    public getCells(): Array<TableCell> {
+    /** Returns all cells in the table. Isn't necessarily sorted! */
+    public getCells(): TableCell[] {
         return this.cells;
     }
 
-    /** Returns all cells within the given row. */
-    public getCellsInRow(rowObj: TableRow) {
-        return rowObj.cells;
+    /**
+     * Returns all cells within the given row.
+     * See also: {@link TableRow.getCells()}
+     * @param row Either index or object reference.
+     */
+    public getCellsInRow(row: number | TableRow): TableCell[] {
+        return (typeof row === "number" ? this.rows[row] : row).cells;
     }
 
-    /** Returns all cells within the given column. */
-    public getCellsInColumn(columnObj: TableColumn) {
-        return columnObj.cells;
+    /**
+     * Returns all cells within the given column.
+     * See also: {@link TableColumn.getCells()}
+     * @param column Either index or object reference.
+     */
+    public getCellsInColumn(column: number | TableColumn): TableCell[] {
+        return (typeof column === "number" ? this.columns[column] : column).cells;
     }
 
     /** Returns the cell at row and column. */
@@ -271,6 +310,7 @@ export class Table {
 
     /**
      * Returns the cell at row and column.
+     * If the cell doesn't already exist, it will be created.
      * @param row Either index or object reference.
      * @param column Either index or object reference.
      * @returns The cell at row and column.
@@ -282,17 +322,22 @@ export class Table {
         );
     }
 
-    /** Be careful not to add a cell with row/column that already exist. Otherwise, the added cell will be overshadowed and not be used. */
+    /**
+     * Adds the cell to the Table and the cell's respective TableRow and TableColumn.
+     * (Be careful not to add a cell with row/column that already exist. Otherwise, the added cell will be overshadowed and not be used.)
+     */
     public addCell(cell: TableCell) {
         this.cells.push(cell);
         cell.row.cells.push(cell);
         cell.column.cells.push(cell);
     }
 
+    /** Returns the total amount of rows in the table, including the header rows. */
     public rowCount(): number {
         return this.rows.length;
     }
 
+    /** Returns the total amount of columns in the table. */
     public columnCount(): number {
         return this.columns.length;
     }
@@ -302,7 +347,7 @@ export class Table {
      * -> Updates indices and sorts the cells within rows and columns.
      * -> Tries to find invalid configurations and sanitize them.
      * 
-     * Use when altering the table.
+     * Use this when altering the table.
      */
     public update(): Table {
         // Iterate over the entire table:

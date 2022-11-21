@@ -1,6 +1,6 @@
 {
     "name": "md-table-tools",
-    "version": "0.1",
+    "version": "1.0.0",
     "description": "MultiMarkdown table tools",
     "type": "module",
     "main": "dist/index.js",
@@ -11,7 +11,7 @@
         "test": "ts-mocha -n loader=ts-node/esm -p tsconfig.json src/**/*.spec.ts",
         "demo": "ts-node --esm --transpileOnly --project tsconfig.json src/demo.ts"
     },
-    "keywords": [],
+    "keywords": ["multimarkdown", "markdown", "html", "table", "convert"],
     "author": "FelisDiligens",
     "license": "MIT",
     "devDependencies": {

@@ -2,7 +2,7 @@ import "mocha";
 import { expect } from "chai";
 import dedent from 'dedent-js'; // https://stackoverflow.com/questions/25924057/multiline-strings-that-dont-break-indentation
 import { GitHubFlavoredMarkdownTableParser, GitHubFlavoredMarkdownTableRenderer } from "../../tables/gfmTable.js";
-import { Table, TextAlignment } from "../../tables/table.js";
+import { Table, TableCellMerge, TextAlignment } from "../../tables/table.js";
 
 
 describe("GitHubFlavoredMarkdownTableParser", () => {
@@ -14,6 +14,24 @@ describe("GitHubFlavoredMarkdownTableParser", () => {
 
     describe(".parse()", () => {
         context("when parsing valid tables", () => {
+            it("should parse a table without issues", () =>{
+                let table: Table;
+                expect(() => {
+                    table = gfmParser.parse(
+                        dedent`#|#|#|#|#|#
+                               -|-|-|-|-|-
+                               #||#|#|#|#
+                               #||#|#|#||
+                               #|#|#|#|#||
+                               #|#|#|#|#||
+                               #|#|#|#|#||
+                               #|#|#|#|#|#`);
+                }).to.not.throw();
+
+                expect(table.rowCount()).to.equal(7);
+                expect(table.columnCount()).to.equal(6);
+            });
+
             it("should ignore missing and excess cells", () =>{
                 let table: Table;
                 expect(() => {
@@ -68,45 +86,117 @@ describe("GitHubFlavoredMarkdownTableParser", () => {
 describe("GitHubFlavoredMarkdownTableRenderer", () => {
     let gfmPrettyRenderer: GitHubFlavoredMarkdownTableRenderer;
     let gfmMinifiedRenderer: GitHubFlavoredMarkdownTableRenderer;
-    let table: Table;
+    let tableOne: Table;
+    let tableTwo: Table;
 
     before(() => {
         gfmPrettyRenderer = new GitHubFlavoredMarkdownTableRenderer(true);
         gfmMinifiedRenderer = new GitHubFlavoredMarkdownTableRenderer(false);
 
-        table = new Table(2, 3);
-        table.getRow(0).isHeader = true;
-        table.getColumn(0).textAlign = TextAlignment.left;
-        table.getColumn(1).textAlign = TextAlignment.center;
-        table.getColumn(2).textAlign = TextAlignment.right;
-        table.getCell(0, 0).setText("Left");
-        table.getCell(0, 1).setText("Center");
-        table.getCell(0, 2).setText("Right");
-        table.getCell(1, 0).setText("ab");
-        table.getCell(1, 1).setText("cd");
-        table.getCell(1, 2).setText("ef");
+        tableOne = new Table(2, 3);
+        tableOne.getRow(0).isHeader = true;
+        tableOne.getColumn(0).textAlign = TextAlignment.left;
+        tableOne.getColumn(1).textAlign = TextAlignment.center;
+        tableOne.getColumn(2).textAlign = TextAlignment.right;
+        tableOne.getCell(0, 0).setText("Left");
+        tableOne.getCell(0, 1).setText("Center");
+        tableOne.getCell(0, 2).setText("Right");
+        tableOne.getCell(1, 0).setText("ab");
+        tableOne.getCell(1, 1).setText("cd");
+        tableOne.getCell(1, 2).setText("ef");
+
+        tableTwo = new Table(7, 6);
+        tableTwo.getRow(0).isHeader = true;
+        tableTwo.getCell(0, 0).setText("#");
+        tableTwo.getCell(0, 1).setText("#");
+        tableTwo.getCell(0, 2).setText("#");
+        tableTwo.getCell(0, 3).setText("#");
+        tableTwo.getCell(0, 4).setText("#");
+        tableTwo.getCell(0, 5).setText("#");
+        tableTwo.getCell(1, 0).setText("#");
+        tableTwo.getCell(1, 1).merged = TableCellMerge.left; // This should be ignored.
+        tableTwo.getCell(1, 2).setText("#");
+        tableTwo.getCell(1, 3).setText("#");
+        tableTwo.getCell(1, 4).setText("#");
+        tableTwo.getCell(1, 5).setText("#");
+        tableTwo.getCell(2, 0).setText("#");
+        tableTwo.getCell(2, 1).merged = TableCellMerge.left; // This should be ignored.
+        tableTwo.getCell(2, 2).setText("#");
+        tableTwo.getCell(2, 3).setText("#");
+        tableTwo.getCell(2, 4).setText("#");
+        tableTwo.getCell(3, 0).setText("#");
+        tableTwo.getCell(3, 1).setText("#");
+        tableTwo.getCell(3, 2).setText("#");
+        tableTwo.getCell(3, 3).setText("#");
+        tableTwo.getCell(3, 4).setText("#");
+        tableTwo.getCell(3, 5).merged = TableCellMerge.above; // This should be ignored.
+        tableTwo.getCell(4, 0).setText("#");
+        tableTwo.getCell(4, 1).setText("#");
+        tableTwo.getCell(4, 2).setText("#");
+        tableTwo.getCell(4, 3).setText("#");
+        tableTwo.getCell(4, 4).setText("#");
+        tableTwo.getCell(5, 0).setText("#");
+        tableTwo.getCell(5, 1).setText("#");
+        tableTwo.getCell(5, 2).setText("#");
+        tableTwo.getCell(5, 3).setText("#");
+        tableTwo.getCell(5, 4).setText("#");
+        tableTwo.getCell(6, 0).setText("#");
+        tableTwo.getCell(6, 1).setText("#");
+        tableTwo.getCell(6, 2).setText("#");
+        tableTwo.getCell(6, 3).setText("#");
+        tableTwo.getCell(6, 4).setText("#");
+        tableTwo.getCell(6, 5).setText("#");
+        tableTwo.update();
     });
 
     describe(".render() - pretty", () => {
-        it("should make a pretty table and align text", () =>{
+        it("should make a pretty table and align text (#1)", () =>{
             expect(
-                gfmPrettyRenderer.render(table)
+                gfmPrettyRenderer.render(tableOne)
             ).to.equal(
                 dedent`| Left | Center | Right |
                        |:-----|:------:|------:|
                        | ab   |   cd   |    ef |`
             );
         });
+        it("should make a pretty table and ignore merged cells (#2)", () =>{
+            expect(
+                gfmPrettyRenderer.render(tableTwo)
+            ).to.equal(
+                dedent`| # | # | # | # | # | # |
+                       |---|---|---|---|---|---|
+                       | # |   | # | # | # | # |
+                       | # |   | # | # | # |   |
+                       | # | # | # | # | # |   |
+                       | # | # | # | # | # |   |
+                       | # | # | # | # | # |   |
+                       | # | # | # | # | # | # |`
+            );
+        });
     });
 
     describe(".render() - minified", () => {
-        it("should make a minified table and leave out unnecessary pipes and spaces", () =>{
+        it("should make a minified table and leave out unnecessary pipes and spaces (#1)", () =>{
             expect(
-                gfmMinifiedRenderer.render(table)
+                gfmMinifiedRenderer.render(tableOne)
             ).to.equal(
                 dedent`Left|Center|Right
                        :-|:-:|-:
                        ab|cd|ef`
+            );
+        });
+        it("should make a minified table and leave out unnecessary pipes and spaces (#2)", () =>{
+            expect(
+                gfmMinifiedRenderer.render(tableTwo)
+            ).to.equal(
+                dedent`#|#|#|#|#|#
+                       -|-|-|-|-|-
+                       #||#|#|#|#
+                       #||#|#|#||
+                       #|#|#|#|#||
+                       #|#|#|#|#||
+                       #|#|#|#|#||
+                       #|#|#|#|#|#`
             );
         });
     });
