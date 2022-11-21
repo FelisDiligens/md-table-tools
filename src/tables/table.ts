@@ -16,6 +16,15 @@ export enum TableCaptionPosition {
     bottom = "bottom"
 }
 
+export class IndexOutOfBoundsError extends Error {
+    constructor(msg: string) {
+        super(msg);
+
+        // Set the prototype explicitly.
+        Object.setPrototypeOf(this, IndexOutOfBoundsError.prototype);
+    }
+}
+
 export class TableCaption {
     public constructor(
         public text = "",
@@ -234,22 +243,32 @@ export class Table {
 
     /**
      * Moves the given column to the new index.
-     * @throws NOT IMPLEMENTED
      * @param col Either index or object reference.
      * @param newIndex The new index of the given column.
+     * @throws {IndexOutOfBoundsError} Can't move column outside of table.
      */
     public moveColumn(col: number | TableColumn, newIndex: number) {
-        throw new Error("Not implemented");
+        let colObj = typeof col === "number" ? this.columns.at(col) : col;
+        if (colObj === undefined || newIndex >= this.columnCount() || newIndex < 0)
+            throw new IndexOutOfBoundsError("(IndexOutOfBoundsError) Can't move column outside of table.");
+        this.columns.splice(colObj.index, 1);
+        this.columns.splice(newIndex, 0, colObj);
+        colObj.index = newIndex;
     }
 
     /**
      * Moves the given row to the new index.
-     * @throws NOT IMPLEMENTED
      * @param col Either index or object reference.
      * @param newIndex The new index of the given row.
+     * @throws {IndexOutOfBoundsError} Can't move row outside of table.
      */
     public moveRow(row: number | TableRow, newIndex: number) {
-        throw new Error("Not implemented");
+        let rowObj = typeof row === "number" ? this.rows.at(row) : row;
+        if (rowObj === undefined || newIndex >= this.rowCount() || newIndex < 0)
+            throw new IndexOutOfBoundsError("(IndexOutOfBoundsError) Can't move row outside of table.");
+        this.rows.splice(rowObj.index, 1);
+        this.rows.splice(newIndex, 0, rowObj);
+        rowObj.index = newIndex;
     }
 
     /** Returns a list of all rows that are headers. */

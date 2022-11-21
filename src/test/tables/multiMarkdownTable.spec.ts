@@ -146,6 +146,18 @@ describe("MultiMarkdownTableParser", () => {
                     `);
                 }).to.throw();
             });
+
+            it("should throw an error on multiple delimiter rows", () =>{
+                expect(() => {
+                    mmdParser.parse(dedent`
+                    | abc | def | ghi |
+                    |-----|-----|-----|
+                    | jkl | mno | pqr |
+                    |-----|-----|-----|
+                    | stu | vwx | yz# |
+                    `);
+                }).to.throw();
+            });
         });
     });
 });
