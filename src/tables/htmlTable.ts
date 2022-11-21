@@ -144,7 +144,7 @@ export class HTMLTableParser implements TableParser {
         let domCaption = domTable.querySelector("caption");
         if (domCaption != null) {
             let caption = new TableCaption();
-            caption.text = domCaption.innerText.replace(/(\r?\n|\[|\])/g, "").trim();
+            caption.text = this.turndownService.turndown(domCaption.innerHTML).replace(/(\r?\n)/g, "").trim(); // domCaption.innerText.replace(/(\r?\n|\[|\])/g, "").trim();
             if (caption.getLabel() != domCaption.id)
                 caption.label = domCaption.id.replace(/(\r?\n|\[|\])/g, "").trim();
             switch (domCaption.style.captionSide.toLowerCase()) {
