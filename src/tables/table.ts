@@ -35,7 +35,7 @@ export class TableCaption {
         // "If you have a caption, you can also have a label, allowing you to create anchors pointing to the table. If there is no label, then the caption acts as the label"
         if (typeof this.label === 'string' && this.label.trim() !== "")
             return this.label.trim().replace(/\s/g, "-");
-        return this.text.trim().toLowerCase().replace(/\s/g, "-");
+        return this.text.trim().toLowerCase().replace(/\s/g, "-").replace(/[^a-zA-Z0-9]/g, "");
     }
 }
 
