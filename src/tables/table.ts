@@ -153,8 +153,8 @@ export class Table {
 
     public constructor(rowNum: number = 0, colNum: number = 0) {
         this.cells = [];
-        this.rows = Array.from({length: rowNum}, (i: number) => new TableRow(i));
-        this.columns = Array.from({length: colNum}, (i: number) => new TableColumn(i));
+        this.rows = Array.from({length: rowNum}, (_, i: number) => new TableRow(i));
+        this.columns = Array.from({length: colNum}, (_, i: number) => new TableColumn(i));
         this.caption = null;
     }
 
