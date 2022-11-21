@@ -6,10 +6,10 @@ This module currently has the following features:
 - Converting intermediary back to MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables
 - Formatting or minifying MultiMarkdown or GFM tables
 - Manipulating parsed/intermediary tables *(⚠️ possibly buggy, please run `Table.update()` after making any changes)*, e.g.
-  - by adding or removing rows
-  - by adding or removing columns
+  - by adding, deleting, or moving rows
+  - by adding, deleting, or moving columns
   - by changing the content of table cells
-  - by merging table cells
+  - by merging or splitting table cells
   - etc.
 
 ## Syntax
