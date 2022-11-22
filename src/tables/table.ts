@@ -227,7 +227,7 @@ export class Table {
         let colObj = typeof col === "number" ? this.columns.at(col) : col;
         let columnCells = this.getCellsInColumn(colObj);
         this.cells = this.cells.filter(cell => !columnCells.includes(cell));
-        this.columns = this.columns.filter(c => c != col);
+        this.columns = this.columns.filter(c => c != colObj);
     }
 
     /**
@@ -238,7 +238,7 @@ export class Table {
         let rowObj = typeof row === "number" ? this.rows.at(row) : row;
         let rowCells = this.getCellsInRow(rowObj);
         this.cells = this.cells.filter(cell => !rowCells.includes(cell));
-        this.rows = this.rows.filter(r => r != row);
+        this.rows = this.rows.filter(r => r != rowObj);
     }
 
     /**

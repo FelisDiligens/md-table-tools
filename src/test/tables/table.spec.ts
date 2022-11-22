@@ -26,6 +26,32 @@ describe("Table", () => {
         });
     });
 
+    describe(".removeRow()", () => {
+        it("should remove the row including it's cells", () => {
+            let table = new Table(5, 5);
+            table.getCell(3, 3).setText("Test");
+
+            // Remove row:
+            table.removeRow(3);
+            
+            expect(table.getRows()).to.be.an("array").with.a.lengthOf(4);
+            expect(table.getCell(3, 3).text).to.not.equal("Test");
+        });
+    });
+
+    describe(".removeColumn()", () => {
+        it("should remove the column including it's cells", () => {
+            let table = new Table(5, 5);
+            table.getCell(3, 3).setText("Test");
+
+            // Remove column:
+            table.removeColumn(3);
+            
+            expect(table.getColumns()).to.be.an("array").with.a.lengthOf(4);
+            expect(table.getCell(3, 3).text).to.not.equal("Test");
+        });
+    });
+
     describe(".moveRow()", () => {
         it("should move a row to a new index", () => {
             let table = new Table(4, 5);
