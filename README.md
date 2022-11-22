@@ -6,10 +6,10 @@
 - Converting intermediary back to MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables
 - Formatting or minifying MultiMarkdown or GFM tables
 - Manipulating parsed/intermediary tables *(⚠️ possibly buggy, please run `Table.update()` after making any changes)*, e.g.
-  - by adding, deleting, or moving rows
-  - by adding, deleting, or moving columns
+  - by adding, deleting, or moving rows/columns
   - by changing the content of table cells
   - by merging or splitting table cells
+  - by changing the text alignment within a column
   - etc.
 
 ## Syntax
