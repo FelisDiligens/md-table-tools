@@ -1,6 +1,6 @@
 # MultiMarkdown table tools
 
-## Features:
+## Features
 
 - Parsing MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables into intermediary
 - Converting intermediary back to MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables
@@ -48,7 +48,7 @@ $ npm run test
 
 ## Usage
 
-### Demo:
+### Demo
 
 ```bash
 $ npm run demo
