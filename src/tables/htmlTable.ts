@@ -48,14 +48,14 @@ function mdToHtml(markdown: string): string {
 function textAlignToCSS(textAlign: TextAlignment) {
     switch (textAlign) {
         case TextAlignment.left:
-            return "text-align: left;";
+            return "text-align: left";
         case TextAlignment.right:
-            return "text-align: right;";
+            return "text-align: right";
         case TextAlignment.center:
-            return "text-align: center;";
+            return "text-align: center";
         case TextAlignment.default:
         default:
-            return "text-align: start;";
+            return "text-align: start";
     }
 }
 
@@ -318,7 +318,7 @@ export class HTMLTableRenderer implements TableRenderer {
             let cellProps =
                 (colspan > 1 ? ` colspan="${colspan}"` : "") + 
                 (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
-                (cell.getTextAlignment() != TextAlignment.default ? ` align="${cell.getTextAlignment()}"` : ""); // ` style="${textAlignToCSS(cell.getTextAlignment())}"`
+                (cell.getTextAlignment() != TextAlignment.default ? ` style="${textAlignToCSS(cell.getTextAlignment())}"` : ""); // ` align="${cell.getTextAlignment()}"`
             let cellTag = cell.isHeaderCell() ? "th" : "td";
             return ["<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">"].join(""); // (markdown-it) mdIt.renderInline(cell.text)
         }
