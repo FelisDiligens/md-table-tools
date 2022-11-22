@@ -1,6 +1,6 @@
 # MultiMarkdown table tools
 
-This module currently has the following features:
+## Features:
 
 - Parsing MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables into intermediary
 - Converting intermediary back to MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables
@@ -29,16 +29,30 @@ GitHub-flavored Markdown tables (and similar variants) are fully supported, with
 - You can omit the header.
 - You can divide the table into multiple sections by adding a single empty line in-between rows.
 
-## Building
+## Development
 
-```
+### Building
+
+```bash
 $ git clone https://github.com/FelisDiligens/md-table-tools.git
 $ cd md-table-tools
 $ npm install
 $ npm run build
 ```
 
+### Testing
+
+```bash
+$ npm run test
+```
+
 ## Usage
+
+### Demo:
+
+```bash
+$ npm run demo
+```
 
 ```typescript
 import { MultiMarkdownTableParser } from "md-table-tools";
@@ -80,6 +94,32 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
 </table>
 */
 ```
+
+### Available classes
+
+- All classes implementing the interface `TableRenderer`
+  - `PrettyMultiMarkdownTableRenderer`
+  - `MinifiedMultiMarkdownTableRenderer`
+  - `GitHubFlavoredMarkdownTableRenderer`
+  - `HTMLTableRenderer`
+  - `CSVTableRenderer`
+- All classes implementing the interface `TableParser`
+  - `MultiMarkdownTableParser`
+  - `GitHubFlavoredMarkdownTableParser`
+  - `HTMLTableParser`
+  - `CSVTableParser`
+- Intermediary classes
+  - `Table`
+  - `TableRow`
+  - `TableColumn`
+  - `TableCell`
+  - `TableCaption`
+- Enums:
+  - `TextAlignment`
+  - `TableCellMerge` - indicates how a cell is merged with a neighboring cell
+  - `TableCaptionPosition`
+  - `HTMLTableParserMode`
+  - `CSVTableRendererMode`
 
 ## Build with...
 
