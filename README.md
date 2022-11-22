@@ -121,7 +121,7 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
   - `HTMLTableParserMode`
   - `CSVTableRendererMode`
 
-## Build with...
+## Built with...
 
 - [Turndown](https://mixmark-io.github.io/turndown/) - for inline HTML to Markdown conversion
 - [DOMParser](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser)
