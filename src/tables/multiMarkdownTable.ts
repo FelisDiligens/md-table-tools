@@ -24,7 +24,7 @@ enum ParsingState {
 
 export class MultiMarkdownTableParser implements TableParser {
     public parse(table: string): Table {
-        // Prepare/format all lines:
+        // Filter and prepare/format all lines:
         let beforeTable: string[] = [];
         let lines: string[] = [];
         let afterTable: string[] = [];
@@ -35,13 +35,13 @@ export class MultiMarkdownTableParser implements TableParser {
         let captionSeen = false;
         table.split("\n").forEach(line => {
             // Check if we are in the table:
-            if (state == ParsingState.BeforeTable && (line.match(/[^|\\]|[^|]/g) || line.trim().match(captionRegex))) {
+            if (state == ParsingState.BeforeTable && (line.match(/[^|\\`]\|/g) || line.trim().match(captionRegex))) {
                 state = ParsingState.InsideTable;
             }
 
             // Check if we are no longer in the table:
             if (state == ParsingState.InsideTable && !( // If not:
-                (line.match(/[^|\\]|[^|]/g) && !line.startsWith("[") && !line.endsWith("]")) || // row
+                (line.replace(/\`[^\`]*\`/g, "").match(/[^|\\`]\|/g) && !line.startsWith("[") && !line.endsWith("]")) || // row
                 (line.trim().match(captionRegex) && (!captionSeen || !separatorSeen)) || // valid caption
                 (line.trim() === "" && !rememberNewLine))) { // single empty line
                 state = ParsingState.AfterTable;
@@ -168,7 +168,8 @@ export class MultiMarkdownTableParser implements TableParser {
                                 cell.setText(
                                     cellContent
                                     .trim()
-                                    .replace(/(<[bB][rR]\s*\/?>)/g, "\n")
+                                    .replace(/(<\s*[bB][rR]\s*\/?>)/g, "\n")
+                                    //.replace(/[ \t]{2,}/g, " ")
                                 );
                             }
                         // except when in the header row:
@@ -241,9 +242,14 @@ export class MultiMarkdownTableParser implements TableParser {
                 caption.position = state == ParsingState.TopCaption ? TableCaptionPosition.top : TableCaptionPosition.bottom;
 
                 let split = line.split(/[\[\]]+/).filter(s => s.trim() !== "");
-                caption.text = split[0].trim();
+                caption.text = split[0]
+                               .trim()
+                               .replace(/(<\s*[bB][rR]\s*\/?>)/g, "\n")
+                               .replace(/[ \t]{2,}/g, " ");
                 if (split.length > 1)
-                    caption.label = split[1].trim();
+                    caption.label = split[1]
+                                    .trim()
+                                    .replace(/[ \t]+/g, "-");
 
                 parsedTable.caption = caption;
             }

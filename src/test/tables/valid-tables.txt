@@ -156,10 +156,12 @@ New section  \|     More     `|`        Data\|
     <tbody>
         <tr>
             <td>Content      |   <strong>Cell</strong>   `         Cell</td>
+            <td style="text-align: center"></td>
+            <td style="text-align: right"></td>
         </tr>
     </tbody>
 </table>
-<p>New section  |     More <code>|</code>        Data|</p>
+<p>New section  |     More     <code>|</code>        Data|</p>
 .
 | First Header                                 | Second Header | Third Header |
 |----------------------------------------------|:-------------:|-------------:|
@@ -568,7 +570,7 @@ Content       |   **Cell**    |         Cell |
             <td style="text-align: right">Cell</td>
         </tr>
     </tbody>
-    <caption id="" style="caption-side: bottom">|               |</caption>
+    <caption id="" style="caption-side: bottom">| |</caption>
 </table>
 .
 |              |           Grouping          ||
@@ -576,7 +578,7 @@ Content       |   **Cell**    |         Cell |
 |--------------|:-------------:|-------------:|
 | Content      |         *Long Cell*         ||
 | Content      |   **Cell**    |         Cell |
-[|               |]
+[| |]
 .
 
 

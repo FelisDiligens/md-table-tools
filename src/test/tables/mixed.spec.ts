@@ -77,12 +77,12 @@ describe("Mixed (HTMLTableParser, HTMLTableRenderer, MultiMarkdownTableParser, P
                     expect(mdOutput).to.equal(test.mdOutput);
 
                     // Parse the html output and render it again:
-                    /*expect(
+                    expect(
                         htmlPrettyRenderer.render(
                             htmlParser.parse(htmlOutput)
                         )
                     ).to.equal(test.htmlOutput);
-                    expect(
+                    /*expect(
                         mmdPrettyRenderer.render(
                             htmlParser.parse(htmlOutput)
                         )
