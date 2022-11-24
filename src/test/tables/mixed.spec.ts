@@ -40,6 +40,7 @@ function parseTestFile() {
             lines.push(line);
         }
     }
+    tests.push(test);
     return tests;
 }
 
