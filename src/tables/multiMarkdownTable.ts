@@ -45,6 +45,8 @@ export class MultiMarkdownTableParser implements TableParser {
                 (line.trim().match(captionRegex) && (!captionSeen || !separatorSeen)) || // valid caption
                 (line.trim() === "" && !rememberNewLine))) { // single empty line
                 state = ParsingState.AfterTable;
+                if (rememberNewLine)
+                    afterTable.push("");
             }
 
             // Order everything into their categories:
