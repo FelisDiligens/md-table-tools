@@ -269,8 +269,8 @@ New section   |     More      |         Data |
 .
 | First Header | Second Header | Third Header |
 |--------------|--------------+|--------------|
-| Content      |   **Cell**    |         Cell |
-| New section  |     More      |         Data |
+| Content      | **Cell**      | Cell         |
+| New section  | More          | Data         |
 .
 
 

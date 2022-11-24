@@ -135,7 +135,8 @@ export class TableColumn {
 
     public constructor(
         public index: number = 0,
-        public textAlign: TextAlignment = TextAlignment.default) {
+        public textAlign: TextAlignment = TextAlignment.default,
+        public wrappable: boolean = false) {
         this.cells = [];
     }
 

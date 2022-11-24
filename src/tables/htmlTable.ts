@@ -210,12 +210,14 @@ export class HTMLTableParser implements TableParser {
                 // Add cell to our Table object:
                 let cellContent = this.parseCell(domCell as HTMLTableCellElement);
                 let textAlign = cssToTextAlign(domCell as HTMLElement);
+                let wrappable = domCell.classList.contains("extend");
                 textAlign = textAlign != TextAlignment.default ? textAlign : defaultTextAlign;
                 allCellsAreTH = allCellsAreTH && domCell.tagName.toLowerCase() == "th";
 
                 let cell = new TableCell(table, row, column);
                 cell.setText(cellContent);
                 column.textAlign = textAlign;
+                column.wrappable = wrappable;
                 table.addCell(cell);
 
                 // Take "colspan" into account:
@@ -338,7 +340,8 @@ export class HTMLTableRenderer implements TableRenderer {
             let cellProps =
                 (colspan > 1 ? ` colspan="${colspan}"` : "") + 
                 (rowspan > 1 ? ` rowspan="${rowspan}"` : "") +
-                (cell.getTextAlignment() != TextAlignment.default ? ` style="${textAlignToCSS(cell.getTextAlignment())}"` : ""); // ` align="${cell.getTextAlignment()}"`
+                (cell.getTextAlignment() != TextAlignment.default ? ` style="${textAlignToCSS(cell.getTextAlignment())}"` : "") + // ` align="${cell.getTextAlignment()}"`
+                (cell.column.wrappable ? ` class="extend"` : "");
             let cellTag = cell.isHeaderCell() ? "th" : "td";
             return ["<", cellTag, cellProps, ">", mdToHtml(cell.text), "</", cellTag, ">"].join(""); // (markdown-it) mdIt.renderInline(cell.text)
         }

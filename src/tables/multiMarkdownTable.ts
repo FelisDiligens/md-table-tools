@@ -7,7 +7,7 @@ import { TableRenderer } from "./tableRenderer.js";
 */
 
 const rowRegex = /^\|(.+)\|$/
-const separatorRegex = /^\|([\s\.]*:?[\-=\.]+[:\+]?[\s\.]*\|)+$/;
+const separatorRegex = /^\|([\s\.]*:?[\-=\.]+:?\+?[\s\.]*\|)+$/;
 const captionRegex = /^(\[.+\]){1,2}$/;
 
 enum ParsingState {
@@ -194,13 +194,16 @@ export class MultiMarkdownTableParser implements TableParser {
             else if (state == ParsingState.Separator) {
                 let col = 0;
                 let alignment = TextAlignment.default;
+                let wrappable = false;
                 let separator = false;
                 for (let char of line.substring(1, line.length)) {
                     if (char == "|") {
                         parsedTable.getColumn(col).textAlign = alignment;
+                        parsedTable.getColumn(col).wrappable = wrappable;
 
                         alignment = TextAlignment.default;
                         separator = false;
+                        wrappable = false;
                         col++;
                     } else if (char == ":") {
                         if (!separator) {
@@ -213,11 +216,12 @@ export class MultiMarkdownTableParser implements TableParser {
                         }
                     } else if (char == "-" || char == "=") {
                         separator = true;
-                        if (alignment == TextAlignment.right)
+                        if (alignment == TextAlignment.right || wrappable)
                             throw new ParsingError("Invalid separator");
+                    } else if (char == "+") { // "If the separator line ends with +, then cells in that column will be wrapped when exporting to LaTeX if they are long enough."
+                        wrappable = true;
                     }
                     // char == "." => idk ???
-                    // char == "+" => "If the separator line ends with +, then cells in that column will be wrapped when exporting to LaTeX if they are long enough."
                 }
             }
             else if (state == ParsingState.TopCaption || state == ParsingState.BottomCaption) {
@@ -303,21 +307,23 @@ export class MinifiedMultiMarkdownTableRenderer implements TableRenderer {
         let result: string[] = [];
 
         table.getColumns().forEach((col, i) => {
+            let chunk;
             switch (col.textAlign) {
                 case TextAlignment.left:
-                    result.push(":-");
+                    chunk = ":-";
                     break;
                 case TextAlignment.center:
-                    result.push(":-:");
+                    chunk = ":-:";
                     break;
                 case TextAlignment.right:
-                    result.push("-:");
+                    chunk = "-:";
                     break;
                 case TextAlignment.default:
                 default:
-                    result.push("-");
+                    chunk = "-";
                     break;
             }
+            result.push(chunk + (col.wrappable ? "+" : ""));
         });
 
         return result.join("|");
@@ -413,17 +419,29 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
             let width = columnWidths[i];
             switch (col.textAlign) {
                 case TextAlignment.left:
-                    result.push(`:${"-".repeat(width + 1)}`);
+                    if (col.wrappable)
+                        result.push(`:${"-".repeat(width)}+`);
+                    else
+                        result.push(`:${"-".repeat(width + 1)}`);
                     break;
                 case TextAlignment.center:
-                    result.push(`:${"-".repeat(width)}:`);
+                    if (col.wrappable)
+                        result.push(`:${"-".repeat(width - 1)}:+`);
+                    else
+                        result.push(`:${"-".repeat(width)}:`);
                     break;
                 case TextAlignment.right:
-                    result.push(`${"-".repeat(width + 1)}:`);
+                    if (col.wrappable)
+                        result.push(`${"-".repeat(width)}:+`);
+                    else
+                        result.push(`${"-".repeat(width + 1)}:`);
                     break;
                 case TextAlignment.default:
                 default:
-                    result.push("-".repeat(width + 2));
+                    if (col.wrappable)
+                        result.push(`${"-".repeat(width + 1)}+`);
+                    else
+                        result.push("-".repeat(width + 2));
                     break;
             }
         });
