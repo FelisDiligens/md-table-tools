@@ -70,7 +70,7 @@ export class MultiMarkdownTableParser implements TableParser {
                     if (!line.startsWith("|"))
                         line = "|" + line;
 
-                    if (!line.endsWith("|"))
+                    if (!line.endsWith("|") || (line.charAt(line.length - 3) != "\\" && line.endsWith("\\|")))
                         line = line + "|";
 
                     if (!line.match(rowRegex))
@@ -151,9 +151,10 @@ export class MultiMarkdownTableParser implements TableParser {
                 // Parse each character:
                 let cellContent = "";
                 let col = 0;
-                let pipeEscaped = false;
+                let slashEscaped = false;
+                let fenceEscaped = false;
                 for (let char of line.substring(1, line.length)) {
-                    if (!pipeEscaped && char == "|") {
+                    if (!slashEscaped && !fenceEscaped && char == "|") {
                         // Ignore excess cells:
                         if (col < parsedTable.columnCount()) {
                             let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(col));
@@ -177,13 +178,15 @@ export class MultiMarkdownTableParser implements TableParser {
 
                         cellContent = "";
                         col++;
-                    } else if (!pipeEscaped && char == "\\") {
-                        pipeEscaped = true;
+                    } else if (!slashEscaped && char == "\\") {
+                        slashEscaped = true;
                     } else {
-                        if (pipeEscaped)
+                        if (!slashEscaped && char == "\`")
+                            fenceEscaped = !fenceEscaped;
+                        if (slashEscaped)
                             cellContent += "\\";
                         cellContent += char;
-                        pipeEscaped = false;
+                        slashEscaped = false;
                     }
                 }
 
