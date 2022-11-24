@@ -458,15 +458,15 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
             if (colspan > 1) {
                 for (let col = i + 1; col < i + colspan; col++)
                     cellWidth += columnWidths[col];
-                cellWidth += (colspan * 2) - 2; // + Math.floor((colspan - 1) / 2);
+                cellWidth += colspan * 2 - 2; // + Math.floor((colspan - 1) / 2);
             }
-            result.push(this.renderCell(cell, cellWidth));
+            result.push(this.renderCell(cell, colspan, cellWidth));
         });
 
         return `|${result.join("|")}|`;
     }
 
-    private renderCell(cell: TableCell, cellWidth: number = -1): string {
+    private renderCell(cell: TableCell, colspan: number = 1, cellWidth: number = -1): string {
         if (cell.merged == TableCellMerge.left)
             return "";
 
@@ -474,9 +474,9 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
 
         switch (cell.getTextAlignment()) {
             case TextAlignment.center:
-                return `${" ".repeat(Math.max(0, Math.floor((cellWidth - text.length) / 2)))} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - text.length) / 2)))}`;
+                return `${" ".repeat(Math.max(0, Math.floor((cellWidth - text.length + colspan - 1) / 2)))} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - text.length - colspan + 1) / 2)))}`;
             case TextAlignment.right:
-                return `${" ".repeat(Math.max(0, cellWidth - text.length))} ${text} `;
+                return `${" ".repeat(Math.max(0, cellWidth - text.length - colspan + 1))} ${text} `;
             case TextAlignment.left:
             case TextAlignment.default:
             default:

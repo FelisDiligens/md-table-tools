@@ -774,14 +774,14 @@ And more      | With an escaped '\|'         ||
     <caption id="prototypetable" style="caption-side: bottom">Prototype table</caption>
 </table>
 .
-|              |          Grouping           ||
+|              |           Grouping          ||
 | First Header | Second Header | Third Header |
 |--------------|:-------------:|-------------:|
 | Content      |         *Long Cell*         ||
 | Content      |   **Cell**    |         Cell |
 
 | New section  |     More      |         Data |
-| And more     |    With an escaped '\\|'     ||
+| And more     |    With an escaped '\\|'    ||
 [Prototype table]
 .
 
@@ -833,10 +833,10 @@ And more      | With an escaped '\|'         ||
 
 Multiple empty lines to end the table
 .
-|             |          Grouping           ||
-First Header  | Second Header | Third Header |
- ------------ | :-----------: | -----------: |
-Content       |          *Long Cell*        ||
+|              |           Grouping          ||
+| First Header | Second Header | Third Header |
+|--------------|:-------------:|-------------:|
+| Content      |         *Long Cell*         ||
 Content       |   **Cell**    |         Cell |
 
 
@@ -872,10 +872,10 @@ And more      | With an escaped '\|'         ||
 And more      | With an escaped '|'         ||
 [Prototype table]</p>
 .
-|              |          Grouping           ||
+|              |           Grouping          ||
 | First Header | Second Header | Third Header |
 |--------------|:-------------:|-------------:|
-| Content      |          *Long Cell*        ||
+| Content      |         *Long Cell*         ||
 | Content      |   **Cell**    |         Cell |
 
 
