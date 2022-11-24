@@ -8,6 +8,14 @@ export class CodeTableRenderer implements TableRenderer {
         //result.push(`import { Table, TableCaptionPosition, TableCellMerge, TextAlignment } from 'md-table-tools';`);
         result.push(`var table = new Table(${table.rowCount()}, ${table.columnCount()});`);
 
+        if (table.beforeTable.trim() !== "") {
+            result.push(`table.beforeTable = ${JSON.stringify(table.beforeTable)};`);
+        }
+
+        if (table.afterTable.trim() !== "") {
+            result.push(`table.afterTable = ${JSON.stringify(table.afterTable)};`);
+        }
+
         if (table.caption) {
             result.push(`table.caption = new TableCaption(${JSON.stringify(table.caption.text)}, ${table.caption.label && table.caption.label !== "" ? JSON.stringify(table.caption.label) : '""'}, TableCaptionPosition.${table.caption.position == TableCaptionPosition.bottom ? "bottom" : "top"});`);
         }

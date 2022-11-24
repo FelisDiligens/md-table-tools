@@ -1,7 +1,8 @@
+import { JSDOM } from 'jsdom'; 
+import TurndownService from 'turndown';
 import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table.js";
 import { ParsingError, TableParser } from "./tableParser.js";
 import { TableRenderer } from "./tableRenderer.js";
-import TurndownService from 'turndown';
 import { getTurndownService, removeInvisibleCharacters } from "./common.js";
 
 function escapeMarkdown(mdStr: string): string {
@@ -85,11 +86,13 @@ export class HTMLTableParser implements TableParser {
 
     public parse(table: string): Table {
         /*
-            Using DOMParser to parse the string and find our <table> tag to start:
+            Parse the html string and find our <table> tag to start:
         */
-        let domParser = new DOMParser();
-        let dom = domParser.parseFromString(table, "text/html");
-        let domTable = dom.querySelector("table");
+        // let domParser = new DOMParser();
+        // let dom = domParser.parseFromString(table, "text/html");
+        const dom = new JSDOM(table);
+        const doc = dom.window.document;
+        let domTable = doc.querySelector("table");
         if (domTable == null)
             throw new ParsingError("Couldn't find <table> tag in DOM.");
 
@@ -99,6 +102,14 @@ export class HTMLTableParser implements TableParser {
         let parsedTable = new Table();
         let hasSections = false;
         let tableTextAlign = cssToTextAlign(domTable);
+
+        // Get everything before <table>:
+        parsedTable.beforeTable = this.turndownService.turndown(
+            table.replace(/\r?\n/g, "").match(/^.*<\s*[tT][aA][bB][lL][eE][^<>]*>/)[0]);
+
+        // Get everything after </table>:
+        parsedTable.afterTable = this.turndownService.turndown(
+            table.replace(/\r?\n/g, "").match(/<\/\s*[tT][aA][bB][lL][eE]\s*>$/)[0]);
 
         // Parse <thead> tag in <table>:
         let domTHead = domTable.querySelector("thead");
@@ -267,10 +278,16 @@ export class HTMLTableParser implements TableParser {
 export class HTMLTableRenderer implements TableRenderer {
     public constructor(
         public prettify = true,
-        public indent = "  ") { }
+        public indent = "  ",
+        public renderOutsideTable = true) { }
 
     public render(table: Table): string {
-        let result: string[] = ["<table>"];
+        let result: string[] = [];
+
+        if (this.renderOutsideTable && table.beforeTable.trim() !== "")
+            result.push(mdToHtml(table.beforeTable));
+
+        result.push("<table>");
 
         let headerRows = table.getHeaderRows();
         let normalRows = table.getNormalRows();
@@ -294,6 +311,9 @@ export class HTMLTableRenderer implements TableRenderer {
 
         if (table.caption && table.caption.text.length > 0)
             result.push(this.indentString(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position};">${mdToHtml(table.caption.text.trim())}</caption>`, 1));
+
+        if (this.renderOutsideTable && table.afterTable.trim() !== "")
+            result.push(mdToHtml(table.afterTable));
 
         result.push("</table>");
         return result.join(this.prettify ? "\n" : "");

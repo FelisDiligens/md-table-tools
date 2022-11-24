@@ -11,50 +11,88 @@ const separatorRegex = /^\|([\s\.]*:?[\-=\.]+[:\+]?[\s\.]*\|)+$/;
 const captionRegex = /^(\[.+\]){1,2}$/;
 
 enum ParsingState {
+    BeforeTable,
+    InsideTable,
+    AfterTable,
+
     TopCaption,
     Header,
     Separator,
     Row,
-    BottomCaption,
+    BottomCaption
 }
 
 export class MultiMarkdownTableParser implements TableParser {
     public parse(table: string): Table {
         // Prepare/format all lines:
-        let lines = table.split("\n").map(line => {
-            // Remove spaces from start and end:
-            line = line.trim();
+        let beforeTable: string[] = [];
+        let lines: string[] = [];
+        let afterTable: string[] = [];
 
-            // Empty line?
-            if (line === "")
-                return "";
-
-            // Add '|' to the start and end of the line if necessary (and not if it's a caption):
-            if (!line.match(captionRegex)) {
-                if (!line.startsWith("|"))
-                    line = "|" + line;
-
-                if (!line.endsWith("|"))
-                    line = line + "|";
-
-                if (!line.match(rowRegex))
-                    throw new ParsingError(`Invalid row: ${line}`);
+        let rememberNewLine = false;
+        let state = ParsingState.BeforeTable;
+        table.split("\n").forEach(line => {
+            // Check if we are in the table:
+            if (state == ParsingState.BeforeTable && (line.match(/[^|\\]|[^|]/g) || line.trim().match(captionRegex))) {
+                state = ParsingState.InsideTable;
             }
 
-            return line;
+            // Check if we are no longer in the table:
+            if (state == ParsingState.InsideTable && (!line.match(/[^|\\]|[^|]/g) && !line.trim().match(captionRegex) && !(line.trim() === "" && !rememberNewLine))) {
+                state = ParsingState.AfterTable;
+                // if not:
+                if (lines.length == 0)
+                    beforeTable.push(line);
+                else
+                    afterTable.push(line);
+            }
+
+            // Order everything into their categories:
+            if (state == ParsingState.BeforeTable) {
+                beforeTable.push(line);
+            } else if (state == ParsingState.AfterTable) {
+                afterTable.push(line);
+            } else if (state == ParsingState.InsideTable) {
+                // Remove spaces from start and end:
+                line = line.trim();
+
+                // Empty line?
+                if (line === "") {
+                    rememberNewLine = true;
+                    lines.push("");
+                    return;
+                }
+
+                // Add '|' to the start and end of the line if necessary (and not if it's a caption):
+                if (!line.match(captionRegex)) {
+                    if (!line.startsWith("|"))
+                        line = "|" + line;
+
+                    if (!line.endsWith("|"))
+                        line = line + "|";
+
+                    if (!line.match(rowRegex))
+                        throw new ParsingError(`Invalid row: ${line}`);
+                }
+
+                lines.push(line);
+            }
         });
+
+        if (lines.length <= 0)
+            throw new ParsingError("Couldn't find table.");
 
         // First find the table header/row separator to determine how many columns the table has:
         let separators = lines.filter(line => line.match(separatorRegex));
-        if (separators.length > 1)
-            throw new ParsingError("Too many separator lines. (Only 1 allowed)");
-        else if (separators.length == 0)
+        if (separators.length == 0)
             throw new ParsingError("Invalid table: Separator line missing.");
         let columnCount = (separators[0].match(/\|/g) || []).length - 1;
         
         // Initalize table with 0 rows and the determined amount of columns:
         let parsedTable = new Table(0, columnCount);
-        let state = ParsingState.TopCaption;
+        parsedTable.beforeTable = beforeTable.join("\n");
+        parsedTable.afterTable = afterTable.join("\n");
+        state = ParsingState.TopCaption;
         let startNewSection = false;
 
         // Now parse line by line:
@@ -199,11 +237,17 @@ export class MultiMarkdownTableParser implements TableParser {
 }
 
 export class MinifiedMultiMarkdownTableRenderer implements TableRenderer {
+    public constructor(
+        public renderOutsideTable = true) { }
+
     public render(table: Table): string {
         const headerRows = table.getHeaderRows();
         const normalRows = table.getNormalRows();
 
         let result: string[] = [];
+
+        if (this.renderOutsideTable && table.beforeTable.trim() !== "")
+            result.push(table.beforeTable);
             
         // Caption (if position is top):
         if (table.caption && table.caption.position == TableCaptionPosition.top) {
@@ -229,6 +273,9 @@ export class MinifiedMultiMarkdownTableRenderer implements TableRenderer {
         if (table.caption && table.caption.position == TableCaptionPosition.bottom) {
             result.push(this.renderCaption(table.caption));
         }
+
+        if (this.renderOutsideTable && table.afterTable.trim() !== "")
+            result.push(table.afterTable);
 
         return result.join("\n");
     }
@@ -296,12 +343,18 @@ export class MinifiedMultiMarkdownTableRenderer implements TableRenderer {
 }
 
 export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
+    public constructor(
+        public renderOutsideTable = true) { }
+
     public render(table: Table): string {
         const headerRows = table.getHeaderRows();
         const normalRows = table.getNormalRows();
         const columnWidths = this.determineColumnWidths(table);
 
         let result: string[] = [];
+
+        if (this.renderOutsideTable && table.beforeTable.trim() !== "")
+            result.push(table.beforeTable);
             
         // Caption (if position is top):
         if (table.caption && table.caption.position == TableCaptionPosition.top) {
@@ -327,6 +380,9 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
         if (table.caption && table.caption.position == TableCaptionPosition.bottom) {
             result.push(this.renderCaption(table.caption));
         }
+        
+        if (this.renderOutsideTable && table.afterTable.trim() !== "")
+            result.push(table.afterTable);
 
         return result.join("\n");
     }

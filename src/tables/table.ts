@@ -160,11 +160,19 @@ export class Table {
     private columns: TableColumn[];
     public caption: TableCaption;
 
+    /** Text before the table */
+    public beforeTable: string;
+
+    /** Text after the table */
+    public afterTable: string;
+
     public constructor(rowNum: number = 0, colNum: number = 0) {
         this.cells = [];
         this.rows = Array.from({length: rowNum}, (_, i: number) => new TableRow(i));
         this.columns = Array.from({length: colNum}, (_, i: number) => new TableColumn(i));
         this.caption = null;
+        this.beforeTable = "";
+        this.afterTable = "";
     }
 
     /**

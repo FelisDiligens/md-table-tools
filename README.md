@@ -124,5 +124,5 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
 ## Built with...
 
 - [Turndown](https://mixmark-io.github.io/turndown/) - for inline HTML to Markdown conversion
-- [DOMParser](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser)
+- [jsdom](https://github.com/jsdom/jsdom) - for parsing HTML
 - [TypeScript](https://www.typescriptlang.org/)

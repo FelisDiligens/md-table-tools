@@ -24,10 +24,10 @@ Content Cell  | Content Cell
     </tbody>
 </table>
 .
-| First Header  | Second Header |
-|---------------|---------------|
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
+| First Header | Second Header |
+|--------------|---------------|
+| Content Cell | Content Cell  |
+| Content Cell | Content Cell  |
 .
 
 
@@ -57,16 +57,16 @@ Simplest table, with both leading and trailing pipes
     </tbody>
 </table>
 .
-| First Header  | Second Header |
-|---------------|---------------|
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
+| First Header | Second Header |
+|--------------|---------------|
+| Content Cell | Content Cell  |
+| Content Cell | Content Cell  |
 .
 
 
 Center-aligned and right-aligned separators
 .
-| Item      | Value |
+|  Item     | Value |
 | :-------: | -----:|
 | Computer  | $1600 |
 | Phone     |   $12 |
@@ -95,11 +95,11 @@ Center-aligned and right-aligned separators
     </tbody>
 </table>
 .
-| Item      | Value |
-|:---------:|------:|
-| Computer  | $1600 |
-| Phone     |   $12 |
-| Pipe      |    $1 |
+|   Item   | Value |
+|:--------:|------:|
+| Computer | $1600 |
+|  Phone   |   $12 |
+|   Pipe   |    $1 |
 .
 
 Inline formatting such as code, strong tags
@@ -128,10 +128,10 @@ Inline formatting such as code, strong tags
     </tbody>
 </table>
 .
-| Function name | Description                    |
-|---------------|--------------------------------|
-| `help()`      | Display the help window.       |
-| `destroy()`   | **Destroy your computer!**     |
+| Function name | Description                |
+|---------------|----------------------------|
+| `help()`      | Display the help window.   |
+| `destroy()`   | **Destroy your computer!** |
 .
 
 
@@ -310,24 +310,6 @@ New section   |     More      |         Data |
 .
 
 
-Invalid characters in separator
-.
-|             |   Grouping    |              |
-------------  | ------------- | -----------* |
-Content       |   **Cell**    |         Cell |
-New section   |     More      |         Data |
-.
-<p>|             |   Grouping    |              |
-------------  | ------------- | -----------* |
-Content       |   <strong>Cell</strong>    |         Cell |
-New section   |     More      |         Data |</p>
-.
-|             |   Grouping    |              |
-------------  | ------------- | -----------* |
-Content       |   **Cell**    |         Cell |
-New section   |     More      |         Data |
-.
-
 > Requirement 3: Cell content must be on one line only
 > Requirement 4: Columns are separated by |
 > Requirement 5: The first line of the table, and the alignment/divider line, must start at the beginning of the line
@@ -375,7 +357,7 @@ New section   |     More      |         Data |
 </table>
 .
 |              |   Grouping    |              |
-|              |               |  Grouping 2  |
+|              |               |   Grouping 2 |
 | First Header | Second Header | Third Header |
 |--------------|:-------------:|-------------:|
 | Content      |   **Cell**    |         Cell |
@@ -431,60 +413,12 @@ New section   |     More      |         Data |
 </table>
 .
 |              |   Grouping    |              |
-|              |               |  Grouping 2  |
+|              |               |   Grouping 2 |
 | First Header | Second Header | Third Header |
 |--------------|:-------------:|-------------:|
 | ------------ | ------------: | ------------ |
 | Content      |   **Cell**    |         Cell |
 | New section  |     More      |         Data |
-.
-
-
-Multiple table headers but no possible separator
-.
-|             |   Grouping    |              |
-|             |               |  Grouping 2  |
-First Header  | Second Header | Third Header |
-------------  | ------------- | -----------* |
-Content       |   **Cell**    |         Cell |
-New section   |     More      |         Data |
-.
-<p>|             |   Grouping    |              |
-|             |               |  Grouping 2  |
-First Header  | Second Header | Third Header |
-------------  | ------------- | -----------* |
-Content       |   <strong>Cell</strong>    |         Cell |
-New section   |     More      |         Data |</p>
-.
-|             |   Grouping    |              |
-|             |               |  Grouping 2  |
-First Header  | Second Header | Third Header |
-------------  | ------------- | -----------* |
-Content       |   **Cell**    |         Cell |
-New section   |     More      |         Data |
-.
-
-
-> Note 1: It is optional whether you have | characters at the beginning and end of lines.
-> Note 2: The “separator” line uses `----` or `====` to indicate the line between a header and cell. The length of the line doesn’t matter, but must have at least one character per cell.
-
-
-Invalid separator for containing no minus or equal signs
-.
-First Header  | Second Header | Third Header |
-============  | ::+           | -----------: |
-Content       |   **Cell**    |         Cell |
-New section   |     More      |         Data |
-.
-<p>First Header  | Second Header | Third Header |
-============  | ::+           | -----------: |
-Content       |   <strong>Cell</strong>    |         Cell |
-New section   |     More      |         Data |</p>
-.
-First Header  | Second Header | Third Header |
-============  | ::+           | -----------: |
-Content       |   **Cell**    |         Cell |
-New section   |     More      |         Data |
 .
 
 

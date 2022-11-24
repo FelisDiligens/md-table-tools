@@ -18,14 +18,14 @@ function parseTestFile() {
     let tests: TableTest[] = [];
     let lines: string[] = [];
     let test = {} as TableTest;
-    //const file_name = path.join(__dirname, "test-tables.txt");
-    const data = fs.readFileSync("./src/test/tables/test-tables.txt", "utf8");
+    //const file_name = path.join(__dirname, "valid-tables.txt");
+    const data = fs.readFileSync("./src/test/tables/valid-tables.txt", "utf8");
     for (const line of data.split(/\r?\n/g)) {
-        if (line === ".") {
+        if (line.trim() === ".") {
             if (test.mdOutput) {
                 tests.push(test);
-                lines = [];
                 test = {} as TableTest;
+                test.description = lines.join("\n");
             } else if (test.htmlOutput) {
                 test.mdOutput = lines.join("\n");
             } else if (test.mdInput) {
@@ -35,6 +35,7 @@ function parseTestFile() {
             } else {
                 test.description = lines.join("\n");
             }
+            lines = [];
         } else {
             lines.push(line);
         }

@@ -115,6 +115,18 @@ describe("MultiMarkdownTableParser", () => {
                 expect(table.getHeaderRows()).to.be.an( "array" ).that.has.a.lengthOf(1);
                 expect(table.getNormalRows()).to.be.an( "array" ).that.is.empty;
             });
+
+            it("should ignore multiple delimiter rows", () =>{
+                expect(() => {
+                    mmdParser.parse(dedent`
+                    | abc | def | ghi |
+                    |-----|-----|-----|
+                    | jkl | mno | pqr |
+                    |-----|-----|-----|
+                    | stu | vwx | yz# |
+                    `);
+                }).to.not.throw();
+            });
         });
 
         context("when parsing invalid tables", () => {
@@ -143,18 +155,6 @@ describe("MultiMarkdownTableParser", () => {
                     mmdParser.parse(dedent`
                     | abc | def | ghi |
                     | jkl | mno | pqr |
-                    `);
-                }).to.throw();
-            });
-
-            it("should throw an error on multiple delimiter rows", () =>{
-                expect(() => {
-                    mmdParser.parse(dedent`
-                    | abc | def | ghi |
-                    |-----|-----|-----|
-                    | jkl | mno | pqr |
-                    |-----|-----|-----|
-                    | stu | vwx | yz# |
                     `);
                 }).to.throw();
             });
