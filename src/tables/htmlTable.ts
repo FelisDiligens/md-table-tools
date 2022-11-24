@@ -38,7 +38,7 @@ function mdToHtml(markdown: string): string {
     html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
 
     // Escaped characters:
-    html = html.replace(/\\([#\.\|\*_\s`])/g, "$1");
+    html = html.replace(/\\([#\.\|\*_\s`\[\]])/g, "$1");
 
     // Newlines:
     html = html.replace(/\r?\n/g, "<br>");
@@ -104,12 +104,14 @@ export class HTMLTableParser implements TableParser {
         let tableTextAlign = cssToTextAlign(domTable);
 
         // Get everything before <table>:
-        parsedTable.beforeTable = this.turndownService.turndown(
-            table.replace(/\r?\n/g, "").match(/^.*<\s*[tT][aA][bB][lL][eE][^<>]*>/)[0]);
+        let m = table.replace(/\r?\n/g, "").match(/^.*<\s*[tT][aA][bB][lL][eE][^<>]*>/);
+        if (m)
+            parsedTable.beforeTable = this.turndownService.turndown(m[0]);
 
         // Get everything after </table>:
-        parsedTable.afterTable = this.turndownService.turndown(
-            table.replace(/\r?\n/g, "").match(/<\/\s*[tT][aA][bB][lL][eE]\s*>$/)[0]);
+        m = table.replace(/\r?\n/g, "").match(/<\/\s*[tT][aA][bB][lL][eE]\s*>.*$/);
+        if (m)
+            parsedTable.afterTable = this.turndownService.turndown(m[0]);
 
         // Parse <thead> tag in <table>:
         let domTHead = domTable.querySelector("thead");
