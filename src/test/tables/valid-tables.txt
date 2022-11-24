@@ -484,7 +484,7 @@ Multiple columns spanned
     <tbody>
         <tr>
             <td colspan="2"><em>Long Cell</em></td>
-            <td></td>
+            <td style="text-align: right"></td>
         </tr>
         <tr>
             <td colspan="3"></td>
@@ -492,14 +492,15 @@ Multiple columns spanned
     </tbody>
 </table>
 .
-|          | Grouping ||
-|----------|:-:|------:|
-| *Long Cell* ||       |
-|                    |||
+|     |  Grouping  ||
+|-----|:--------:|-:|
+| *Long Cell*   ||  |
+|                 |||
 .
 
 
 Multiple columns spanned, with some leading pipes
+(missing cell and excess cell)
 .
 |             |          Grouping           ||
  ------------ | :-----------: | -----------: |
@@ -516,18 +517,18 @@ Multiple columns spanned, with some leading pipes
     <tbody>
         <tr>
             <td colspan="2"><em>Long Cell</em></td>
+            <td style="text-align: right"></td>
         </tr>
         <tr>
             <td colspan="3"></td>
-            <td>Cell</td>
         </tr>
     </tbody>
 </table>
 .
-|          | Grouping ||
-|----------|:-:|------:|
-| *Long Cell* ||
-|                    ||| Cell |
+|     |  Grouping  ||
+|-----|:--------:|-:|
+| *Long Cell*   ||  |
+|                 |||
 .
 
     <caption
