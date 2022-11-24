@@ -10,8 +10,8 @@ function escapeMarkdown(mdStr: string): string {
         .replace(/\|/g, "\\|");
 }
 
-function mdToHtml(markdown: string): string {
-    let html = markdown; // escape(markdown);
+function mdToHtml(markdown: string, useBrTag = true): string {
+    let html = markdown.trim(); // escape(markdown);
 
     // Image:
     html = html.replace(/!\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "<img src=\"$2\" alt=\"$1\">");
@@ -41,10 +41,11 @@ function mdToHtml(markdown: string): string {
     html = html.replace(/\\([#\.\|\*_\s`\[\]\-])/g, "$1");
 
     // Newlines:
-    html = html.replace(/\r?\n/g, "<br>");
+    if (useBrTag)
+        html = html.replace(/\r?\n/g, "<br>");
 
     // Unnecessary whitespace:
-    // html = html.replace(/[ \t]{2,}/g, " ");
+    html = html.replace(/[ \t]{2,}/g, " ");
 
     return html;
 }
@@ -109,7 +110,7 @@ export class HTMLTableParser implements TableParser {
         // Get everything before <table>:
         let m = table.replace(/\r?\n/g, "").match(/^.*<\s*[tT][aA][bB][lL][eE][^<>]*>/);
         if (m)
-            parsedTable.beforeTable = this.turndownService.turndown(m[0]);
+            parsedTable.beforeTable = this.turndownService.turndown(m[0]); // "\n"
 
         // Get everything after </table>:
         m = table.replace(/\r?\n/g, "").match(/<\/\s*[tT][aA][bB][lL][eE]\s*>.*$/);
@@ -292,7 +293,7 @@ export class HTMLTableRenderer implements TableRenderer {
         let result: string[] = [];
 
         if (this.renderOutsideTable && table.beforeTable.trim() !== "")
-            result.push(`<p>${mdToHtml(table.beforeTable)}</p>`);
+            result.push(`<p>${mdToHtml(table.beforeTable, false)}</p>`);
 
         result.push("<table>");
 
@@ -317,12 +318,12 @@ export class HTMLTableRenderer implements TableRenderer {
         }
 
         if (table.caption && table.caption.text.length > 0)
-            result.push(this.indentString(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position}">${mdToHtml(table.caption.text.trim().replace(/[ \t]{2,}/g, " "))}</caption>`, 1));
+            result.push(this.indentString(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position}">${mdToHtml(table.caption.text)}</caption>`, 1));
 
         result.push("</table>");
 
         if (this.renderOutsideTable && table.afterTable.trim() !== "")
-            result.push(`<p>${mdToHtml(table.afterTable)}</p>`);
+            result.push(`<p>${mdToHtml(table.afterTable, false)}</p>`);
 
         return result.join(this.prettify ? "\n" : "");
     }
