@@ -31,6 +31,8 @@ export class MultiMarkdownTableParser implements TableParser {
 
         let rememberNewLine = false;
         let state = ParsingState.BeforeTable;
+        let separatorSeen = false;
+        let captionSeen = false;
         table.split("\n").forEach(line => {
             // Check if we are in the table:
             if (state == ParsingState.BeforeTable && (line.match(/[^|\\]|[^|]/g) || line.trim().match(captionRegex))) {
@@ -38,13 +40,11 @@ export class MultiMarkdownTableParser implements TableParser {
             }
 
             // Check if we are no longer in the table:
-            if (state == ParsingState.InsideTable && (!line.match(/[^|\\]|[^|]/g) && !line.trim().match(captionRegex) && !(line.trim() === "" && !rememberNewLine))) {
+            if (state == ParsingState.InsideTable && !( // If not:
+                (line.match(/[^|\\]|[^|]/g) && !line.startsWith("[") && !line.endsWith("]")) || // row
+                (line.trim().match(captionRegex) && (!captionSeen || !separatorSeen)) || // valid caption
+                (line.trim() === "" && !rememberNewLine))) { // single empty line
                 state = ParsingState.AfterTable;
-                // if not:
-                if (lines.length == 0)
-                    beforeTable.push(line);
-                else
-                    afterTable.push(line);
             }
 
             // Order everything into their categories:
@@ -64,7 +64,9 @@ export class MultiMarkdownTableParser implements TableParser {
                 }
 
                 // Add '|' to the start and end of the line if necessary (and not if it's a caption):
-                if (!line.match(captionRegex)) {
+                if (line.match(captionRegex)) {
+                    captionSeen = true;
+                } else {
                     if (!line.startsWith("|"))
                         line = "|" + line;
 
@@ -74,6 +76,9 @@ export class MultiMarkdownTableParser implements TableParser {
                     if (!line.match(rowRegex))
                         throw new ParsingError(`Invalid row: ${line}`);
                 }
+
+                if (line.match(separatorRegex))
+                    separatorSeen = true;
 
                 lines.push(line);
             }

@@ -287,7 +287,7 @@ export class HTMLTableRenderer implements TableRenderer {
         let result: string[] = [];
 
         if (this.renderOutsideTable && table.beforeTable.trim() !== "")
-            result.push(mdToHtml(table.beforeTable));
+            result.push(`<p>${mdToHtml(table.beforeTable)}</p>`);
 
         result.push("<table>");
 
@@ -314,10 +314,11 @@ export class HTMLTableRenderer implements TableRenderer {
         if (table.caption && table.caption.text.length > 0)
             result.push(this.indentString(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position}">${mdToHtml(table.caption.text.trim())}</caption>`, 1));
 
-        if (this.renderOutsideTable && table.afterTable.trim() !== "")
-            result.push(mdToHtml(table.afterTable));
-
         result.push("</table>");
+
+        if (this.renderOutsideTable && table.afterTable.trim() !== "")
+            result.push(`<p>${mdToHtml(table.afterTable)}</p>`);
+
         return result.join(this.prettify ? "\n" : "");
     }
 
