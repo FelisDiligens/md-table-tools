@@ -155,13 +155,13 @@ New section  \|     More     `|`        Data\|
     </thead>
     <tbody>
         <tr>
-            <td>Content      |   <strong>Cell</strong>   `         Cell</td>
+            <td>Content | <strong>Cell</strong> ` Cell</td>
             <td style="text-align: center"></td>
             <td style="text-align: right"></td>
         </tr>
     </tbody>
 </table>
-<p>New section  |     More     <code>|</code>        Data|</p>
+<p>New section | More <code>|</code> Data|</p>
 .
 | First Header                                 | Second Header | Third Header |
 |----------------------------------------------|:-------------:|-------------:|

@@ -38,10 +38,13 @@ function mdToHtml(markdown: string): string {
     html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
 
     // Escaped characters:
-    html = html.replace(/\\([#\.\|\*_\s`\[\]])/g, "$1");
+    html = html.replace(/\\([#\.\|\*_\s`\[\]\-])/g, "$1");
 
     // Newlines:
     html = html.replace(/\r?\n/g, "<br>");
+
+    // Unnecessary whitespace:
+    html = html.replace(/[ \t]{2,}/g, " ");
 
     return html;
 }
@@ -314,7 +317,7 @@ export class HTMLTableRenderer implements TableRenderer {
         }
 
         if (table.caption && table.caption.text.length > 0)
-            result.push(this.indentString(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position}">${mdToHtml(table.caption.text.trim())}</caption>`, 1));
+            result.push(this.indentString(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position}">${mdToHtml(table.caption.text.trim().replace(/[ \t]{2,}/g, " "))}</caption>`, 1));
 
         result.push("</table>");
 

@@ -25,7 +25,7 @@ function parseTestFile() {
             if (test.mdOutput) {
                 tests.push(test);
                 test = {} as TableTest;
-                test.description = lines.join("\n");
+                test.description = lines.at(-1).trim();
             } else if (test.htmlOutput) {
                 test.mdOutput = lines.join("\n");
             } else if (test.mdInput) {
@@ -33,7 +33,7 @@ function parseTestFile() {
             } else if (test.description) {
                 test.mdInput = lines.join("\n");
             } else {
-                test.description = lines.join("\n");
+                test.description = lines.at(-1).trim();
             }
             lines = [];
         } else {
