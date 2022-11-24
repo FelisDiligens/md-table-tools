@@ -44,7 +44,7 @@ function mdToHtml(markdown: string): string {
     html = html.replace(/\r?\n/g, "<br>");
 
     // Unnecessary whitespace:
-    html = html.replace(/[ \t]{2,}/g, " ");
+    // html = html.replace(/[ \t]{2,}/g, " ");
 
     return html;
 }

@@ -73,20 +73,22 @@ describe("Mixed (HTMLTableParser, HTMLTableRenderer, MultiMarkdownTableParser, P
                     // Render the table:
                     let htmlOutput = htmlPrettyRenderer.render(intermediaryTable);
                     let mdOutput = mmdPrettyRenderer.render(intermediaryTable);
-                    expect(htmlOutput).to.equal(test.htmlOutput);
+                    expect(
+                        htmlOutput.replace(/[ \t]{2,}/g, " ")
+                    ).to.equal(test.htmlOutput.replace(/[ \t]{2,}/g, " "));
                     expect(mdOutput).to.equal(test.mdOutput);
 
                     // Parse the html output and render it again:
                     expect(
                         htmlPrettyRenderer.render(
                             htmlParser.parse(htmlOutput)
-                        )
-                    ).to.equal(test.htmlOutput);
-                    /*expect(
+                        ).replace(/[ \t]{2,}/g, " ")
+                    ).to.equal(test.htmlOutput.replace(/[ \t]{2,}/g, " "));
+                    expect(
                         mmdPrettyRenderer.render(
                             htmlParser.parse(htmlOutput)
-                        )
-                    ).to.equal(test.mdOutput);*/
+                        ).replace(/[ \t]{2,}/g, " ")
+                    ).to.equal(test.mdOutput.replace(/[ \t]{2,}/g, " "));
                 });
             }
         });

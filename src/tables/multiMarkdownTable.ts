@@ -244,12 +244,11 @@ export class MultiMarkdownTableParser implements TableParser {
                 let split = line.split(/[\[\]]+/).filter(s => s.trim() !== "");
                 caption.text = split[0]
                                .trim()
-                               .replace(/(<\s*[bB][rR]\s*\/?>)/g, "\n")
-                               .replace(/[ \t]{2,}/g, " ");
+                               .replace(/(<\s*[bB][rR]\s*\/?>)/g, "\n");
                 if (split.length > 1)
                     caption.label = split[1]
                                     .trim()
-                                    .replace(/[ \t]+/g, "-");
+                                    .replace(/\s+/g, "-");
 
                 parsedTable.caption = caption;
             }

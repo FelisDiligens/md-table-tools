@@ -570,7 +570,7 @@ Content       |   **Cell**    |         Cell |
             <td style="text-align: right">Cell</td>
         </tr>
     </tbody>
-    <caption id="" style="caption-side: bottom">| |</caption>
+    <caption id="" style="caption-side: bottom">|               |</caption>
 </table>
 .
 |              |           Grouping          ||
@@ -578,7 +578,7 @@ Content       |   **Cell**    |         Cell |
 |--------------|:-------------:|-------------:|
 | Content      |         *Long Cell*         ||
 | Content      |   **Cell**    |         Cell |
-[| |]
+[|               |]
 .
 
 
