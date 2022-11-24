@@ -63,6 +63,8 @@ export class MultiMarkdownTableParser implements TableParser {
                     rememberNewLine = true;
                     lines.push("");
                     return;
+                } else {
+                    rememberNewLine = false;
                 }
 
                 // Add '|' to the start and end of the line if necessary (and not if it's a caption):
