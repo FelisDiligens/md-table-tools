@@ -310,7 +310,7 @@ export class HTMLTableRenderer implements TableRenderer {
         }
 
         if (table.caption && table.caption.text.length > 0)
-            result.push(this.indentString(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position};">${mdToHtml(table.caption.text.trim())}</caption>`, 1));
+            result.push(this.indentString(`<caption id="${table.caption.getLabel()}" style="caption-side: ${table.caption.position}">${mdToHtml(table.caption.text.trim())}</caption>`, 1));
 
         if (this.renderOutsideTable && table.afterTable.trim() !== "")
             result.push(mdToHtml(table.afterTable));

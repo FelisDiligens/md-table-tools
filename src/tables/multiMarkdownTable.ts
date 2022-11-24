@@ -149,22 +149,25 @@ export class MultiMarkdownTableParser implements TableParser {
                 let pipeEscaped = false;
                 for (let char of line.substring(1, line.length)) {
                     if (!pipeEscaped && char == "|") {
-                        if (col >= parsedTable.columnCount()) {
-                            throw new ParsingError(`Too many cells in row ${tableRow.index + 1}.`);
-                        }
-                        let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(col));
-                        parsedTable.addCell(cell);
-                        //let cell = parsedTable.getCellByObjs(tableRow, parsedTable.getColumn(col));
-                        if (cellContent.trim() == "^^") {
-                            cell.merged = TableCellMerge.above;
-                        } else if (cellContent === "") {
-                            cell.merged = TableCellMerge.left;
-                        } else {
-                            cell.setText(
-                                cellContent
-                                .trim()
-                                .replace(/(<[bB][rR]\s*\/?>)/g, "\n")
-                            );
+                        // Ignore excess cells:
+                        if (col < parsedTable.columnCount()) {
+                            let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(col));
+                            parsedTable.addCell(cell);
+                            //let cell = parsedTable.getCellByObjs(tableRow, parsedTable.getColumn(col));
+                            if (cellContent.trim() == "^^") {
+                                cell.merged = TableCellMerge.above;
+                            } else if (cellContent === "") {
+                                cell.merged = TableCellMerge.left;
+                            } else {
+                                cell.setText(
+                                    cellContent
+                                    .trim()
+                                    .replace(/(<[bB][rR]\s*\/?>)/g, "\n")
+                                );
+                            }
+                        // except when in the header row:
+                        } else if (state == ParsingState.Header) {
+                            throw new ParsingError("Header row doesn't match the separator row in the number of cells.");
                         }
 
                         cellContent = "";
@@ -179,8 +182,13 @@ export class MultiMarkdownTableParser implements TableParser {
                     }
                 }
 
-                if (col < parsedTable.columnCount()) {
+                /*if (col < parsedTable.columnCount()) {
                     throw new ParsingError(`Too few cells in row ${tableRow.index + 1}.`);
+                }*/
+                // Insert empty cells if missing:
+                for (; col < parsedTable.columnCount(); col++) {
+                    let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(col));
+                    parsedTable.addCell(cell);
                 }
             }
             else if (state == ParsingState.Separator) {

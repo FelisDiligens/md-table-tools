@@ -130,26 +130,6 @@ describe("MultiMarkdownTableParser", () => {
         });
 
         context("when parsing invalid tables", () => {
-            it("should throw an error on missing cells", () =>{
-                expect(() => {
-                    mmdParser.parse(dedent`
-                    | abc     | def  | ghi |
-                    |---------|------|-----|
-                    | missing | cell |
-                    `);
-                }).to.throw();
-            });
-
-            it("should throw an error on excess cells", () =>{
-                expect(() => {
-                    mmdParser.parse(dedent`
-                    | abc    | def  | ghi   |
-                    |--------|------|-------|
-                    | excess | cell | right | here! |
-                    `);
-                }).to.throw();
-            });
-
             it("should throw an error on missing delimiter row", () =>{
                 expect(() => {
                     mmdParser.parse(dedent`

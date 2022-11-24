@@ -67,6 +67,7 @@ describe("Mixed (HTMLTableParser, HTMLTableRenderer, MultiMarkdownTableParser, P
                     let intermediaryTable: Table;
                     expect(() => {
                         intermediaryTable = mmdParser.parse(test.mdInput);
+                        intermediaryTable.update();
                     }).to.not.throw();
 
                     // Render the table:
