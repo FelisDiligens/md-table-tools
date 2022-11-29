@@ -8,25 +8,24 @@ import { Table } from "../../tables/table.js";
 interface TableTest {
     description: string,
     mdInput: string,
-    htmlOutput: string
-    mdOutput: string,
+    htmlOutput?: string
+    mdOutput?: string,
 }
 
-function parseTestFile() {
+function readTablesFile(fileName: string, hasOutput: boolean) {
     let tests: TableTest[] = [];
     let lines: string[] = [];
     let test = {} as TableTest;
-    //const file_name = path.join(__dirname, "valid-tables.txt");
-    const data = fs.readFileSync("./src/test/tables/valid-tables.txt", "utf8");
+    const data = fs.readFileSync(`./src/test/tables/tables/${fileName}`, "utf8");
     for (const line of data.split(/\r?\n/g)) {
         if (line.trim() === ".") {
-            if (test.mdOutput) {
+            if ((hasOutput && test.mdOutput) || (!hasOutput && test.mdInput)) {
                 tests.push(test);
                 test = {} as TableTest;
                 test.description = lines.at(-1).trim();
-            } else if (test.htmlOutput) {
+            } else if (hasOutput && test.htmlOutput) {
                 test.mdOutput = lines.join("\n");
-            } else if (test.mdInput) {
+            } else if (hasOutput && test.mdInput) {
                 test.htmlOutput = lines.join("\n");
             } else if (test.description) {
                 test.mdInput = lines.join("\n");
@@ -42,8 +41,6 @@ function parseTestFile() {
     return tests;
 }
 
-const tests = parseTestFile();
-
 describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer)", () => {
     let htmlParser: HTMLTableParser;
     let htmlPrettyRenderer: HTMLTableRenderer;
@@ -58,6 +55,8 @@ describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMar
     });
 
     describe("results should match the given tables from the *.txt file", () => {
+
+        const tests = readTablesFile("valid-mmd-tables.txt", true);
 
         context("Multimd -> HTML", () => {
             for (const test of tests) {
@@ -150,5 +149,19 @@ describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMar
                 });
             }
         });
+    });
+
+    describe("invalid tables from the *.txt file should throw ParsingError", () => {
+
+        const tests = readTablesFile("invalid-mmd-tables.txt", false);
+
+        for (const test of tests) {
+            it(test.description, () => {
+                expect(() => {
+                    mmdParser.parse(test.mdInput);
+                }).to.throw();
+            });
+        }
+
     });
 });
