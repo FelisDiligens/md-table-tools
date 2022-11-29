@@ -10,7 +10,7 @@ function escapeMarkdown(mdStr: string): string {
         .replace(/\|/g, "\\|");
 }
 
-function mdToHtml(markdown: string, useBrTag = true): string {
+function mdToHtml(markdown: string, inline = true): string {
     let html = markdown.trim(); // escape(markdown);
 
     // Image:
@@ -41,13 +41,22 @@ function mdToHtml(markdown: string, useBrTag = true): string {
     html = html.replace(/\\([#\.\|\*_\s`\[\]\-])/g, "$1");
 
     // Newlines:
-    if (useBrTag)
+    if (inline)
         html = html.replace(/\r?\n/g, "<br>");
+    else
+        html = html.replace(/(\r?\n){2}/g, "</p>\n<p>").replace(/(?<!\<\\p\>)\r?\n(?!\<p\>)/g, " ");
 
-    // Unnecessary whitespace:
+    // Remove unnecessary whitespace:
     html = html.replace(/[ \t]{2,}/g, " ");
 
-    return html;
+    if (inline)
+        return html;
+    else
+        return `<p>${html}</p>`;
+}
+
+function htmlToMd(html: string, turndownService: TurndownService) {
+    return turndownService.turndown(html);
 }
 
 function textAlignToCSS(textAlign: TextAlignment) {
@@ -108,14 +117,16 @@ export class HTMLTableParser implements TableParser {
         let tableTextAlign = cssToTextAlign(domTable);
 
         // Get everything before <table>:
-        let m = table.replace(/\r?\n/g, "").match(/^.*<\s*[tT][aA][bB][lL][eE][^<>]*>/);
-        if (m)
-            parsedTable.beforeTable = this.turndownService.turndown(m[0]); // "\n"
+        let m = table.match(/((.|\n)*)<\s*[tT][aA][bB][lL][eE][^<>]*>/m);
+        if (m) {
+            parsedTable.beforeTable = htmlToMd(m[1], this.turndownService);
+        }
 
         // Get everything after </table>:
-        m = table.replace(/\r?\n/g, "").match(/<\/\s*[tT][aA][bB][lL][eE]\s*>.*$/);
-        if (m)
-            parsedTable.afterTable = this.turndownService.turndown(m[0]);
+        m = table.match(/<\/\s*[tT][aA][bB][lL][eE]\s*>((.|\n)*)/m);
+        if (m) {
+            parsedTable.afterTable = htmlToMd(m[1], this.turndownService);
+        }
 
         // Parse <thead> tag in <table>:
         let domTHead = domTable.querySelector("thead");
@@ -161,7 +172,7 @@ export class HTMLTableParser implements TableParser {
         let domCaption = domTable.querySelector("caption");
         if (domCaption != null) {
             let caption = new TableCaption();
-            caption.text = this.turndownService.turndown(domCaption.innerHTML).replace(/(\r?\n)/g, "").trim(); // domCaption.innerText.replace(/(\r?\n|\[|\])/g, "").trim();
+            caption.text = htmlToMd(domCaption.innerHTML, this.turndownService).replace(/(\r?\n)/g, "").trim(); // domCaption.innerText.replace(/(\r?\n|\[|\])/g, "").trim();
             if (caption.getLabel() != domCaption.id)
                 caption.label = domCaption.id.replace(/(\r?\n|\[|\])/g, "").trim();
             switch (domCaption.style.captionSide.toLowerCase()) {
@@ -278,7 +289,7 @@ export class HTMLTableParser implements TableParser {
                 return removeInvisibleCharacters(escapeMarkdown(domCell.innerText));
             case HTMLTableParserMode.ConvertHTMLElements:
             default:
-                return removeInvisibleCharacters(escapeMarkdown(this.turndownService.turndown(domCell.innerHTML)));
+                return removeInvisibleCharacters(escapeMarkdown(htmlToMd(domCell.innerHTML, this.turndownService)));
         }
     }
 }
@@ -293,7 +304,7 @@ export class HTMLTableRenderer implements TableRenderer {
         let result: string[] = [];
 
         if (this.renderOutsideTable && table.beforeTable.trim() !== "")
-            result.push(`<p>${mdToHtml(table.beforeTable, false)}</p>`);
+            result.push(mdToHtml(table.beforeTable, false));
 
         result.push("<table>");
 
@@ -323,7 +334,7 @@ export class HTMLTableRenderer implements TableRenderer {
         result.push("</table>");
 
         if (this.renderOutsideTable && table.afterTable.trim() !== "")
-            result.push(`<p>${mdToHtml(table.afterTable, false)}</p>`);
+            result.push(mdToHtml(table.afterTable, false));
 
         return result.join(this.prettify ? "\n" : "");
     }

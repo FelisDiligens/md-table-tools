@@ -514,23 +514,26 @@ Multiple columns spanned, with some leading pipes
         <tr>
             <th></th>
             <th colspan="2" style="text-align: center">Grouping</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td colspan="2"><em>Long Cell</em></td>
             <td style="text-align: right"></td>
+            <td></td>
         </tr>
         <tr>
             <td colspan="3"></td>
+            <td>Cell</td>
         </tr>
     </tbody>
 </table>
 .
-|     |  Grouping  ||
-|-----|:--------:|-:|
-| *Long Cell*   ||  |
-|                 |||
+|     |  Grouping  ||      |
+|-----|:--------:|-:|------|
+| *Long Cell*   ||  |      |
+|                 ||| Cell |
 .
 
     <caption
@@ -826,9 +829,7 @@ And more      | With an escaped '\|'         ||
         </tr>
     </tbody>
 </table>
-<p>New section   |     More      |         Data |
-And more      | With an escaped '|'         ||
-[Prototype table]</p>
+<p>New section   |     More      |         Data | And more      | With an escaped '|'         || [Prototype table]</p>
 .
 |              |           Grouping          ||
 | First Header | Second Header | Third Header |
@@ -869,11 +870,8 @@ And more      | With an escaped '\|'         ||
         </tr>
     </thead>
 </table>
-<p>Content       |  <em>Long Cell</em>        ||
-Content       |   <strong>Cell</strong>    |         Cell |</p>
-<p>New section   |     More      |         Data |
-And more      | With an escaped '|'         ||
-[Prototype table]</p>
+<p>Content       |  <em>Long Cell</em>        || Content       |   <strong>Cell</strong>    |         Cell |</p>
+<p>New section   |     More      |         Data | And more      | With an escaped '|'         || [Prototype table]</p>
 .
 |              |           Grouping          ||
 | First Header | Second Header | Third Header |

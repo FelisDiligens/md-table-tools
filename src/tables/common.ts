@@ -1,4 +1,5 @@
 import TurndownService from "turndown";
+//import { NodeHtmlMarkdown, NodeHtmlMarkdownOptions } from 'node-html-markdown';
 
 export function removeInvisibleCharacters(str: string): string {
     // See: https://www.utf8-chartable.de/unicode-utf8-table.pl
@@ -50,3 +51,14 @@ export function getTurndownService(): TurndownService {
 
     return turndownService;
 }
+
+/*export function getNodeHtmlMarkdown(): NodeHtmlMarkdown {
+    return new NodeHtmlMarkdown(
+        {
+            bulletMarker: '-',
+            emDelimiter: '*',
+            strongDelimiter: '**',
+            ignore: ['table', 'tbody', 'thead', 'tr', 'td', 'th']
+        }
+    );
+}*/

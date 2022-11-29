@@ -12,103 +12,55 @@ const captionRegex = /^(\[.+\]){1,2}$/;
 
 enum ParsingState {
     BeforeTable,
-    InsideTable,
-    AfterTable,
-
     TopCaption,
     Header,
     Separator,
     Row,
-    BottomCaption
+    BottomCaption,
+    AfterTable
 }
 
 export class MultiMarkdownTableParser implements TableParser {
     public parse(table: string): Table {
-        // Filter and prepare/format all lines:
-        let beforeTable: string[] = [];
-        let lines: string[] = [];
-        let afterTable: string[] = [];
-
-        let rememberNewLine = false;
+        let parsedTable = new Table();
         let state = ParsingState.BeforeTable;
-        let separatorSeen = false;
-        let captionSeen = false;
-        table.split("\n").forEach(line => {
+        let startNewSection = false;
+        let hasSeparator = false;
+        let beforeTable = [];
+        let afterTable = [];
+
+        // Parse line by line:
+        for (let line of table.split("\n")) {
+            /*
+                Determine parsing state and prepare:
+            */
+
             // Check if we are in the table:
             if (state == ParsingState.BeforeTable && (line.match(/[^|\\`]\|/g) || line.trim().match(captionRegex))) {
-                state = ParsingState.InsideTable;
+                if (line.trim().match(captionRegex))
+                    state = ParsingState.TopCaption;
+                else
+                    state = ParsingState.Header;
             }
 
             // Check if we are no longer in the table:
-            if (state == ParsingState.InsideTable && !( // If not:
+            if (state != ParsingState.BeforeTable && state != ParsingState.AfterTable && !( // If not:
                 (line.replace(/\`[^\`]*\`/g, "").match(/[^|\\`]\|/g) && !line.startsWith("[") && !line.endsWith("]")) || // row
-                (line.trim().match(captionRegex) && (!captionSeen || !separatorSeen)) || // valid caption
-                (line.trim() === "" && !rememberNewLine))) { // single empty line
+                (line.trim().match(captionRegex) && (state == ParsingState.TopCaption || parsedTable.caption == null)) || // valid caption
+                (line.trim() === "" && !startNewSection && state != ParsingState.Separator))) { // single empty line allowed (except after separator)
                 state = ParsingState.AfterTable;
-                if (rememberNewLine)
+                if (startNewSection)
                     afterTable.push("");
             }
 
-            // Order everything into their categories:
+            // If not inside table:
             if (state == ParsingState.BeforeTable) {
                 beforeTable.push(line);
+                continue; // Skip the rest
             } else if (state == ParsingState.AfterTable) {
                 afterTable.push(line);
-            } else if (state == ParsingState.InsideTable) {
-                // Remove spaces from start and end:
-                line = line.trim();
-
-                // Empty line?
-                if (line === "") {
-                    rememberNewLine = true;
-                    lines.push("");
-                    return;
-                } else {
-                    rememberNewLine = false;
-                }
-
-                // Add '|' to the start and end of the line if necessary (and not if it's a caption):
-                if (line.match(captionRegex)) {
-                    captionSeen = true;
-                } else {
-                    if (!line.startsWith("|"))
-                        line = "|" + line;
-
-                    if (!line.endsWith("|") || (line.charAt(line.length - 3) != "\\" && line.endsWith("\\|")))
-                        line = line + "|";
-
-                    if (!line.match(rowRegex))
-                        throw new ParsingError(`Invalid row: ${line}`);
-                }
-
-                if (line.match(separatorRegex))
-                    separatorSeen = true;
-
-                lines.push(line);
+                continue; // Skip the rest
             }
-        });
-
-        if (lines.length <= 0)
-            throw new ParsingError("Couldn't find table.");
-
-        // First find the table header/row separator to determine how many columns the table has:
-        let separators = lines.filter(line => line.match(separatorRegex));
-        if (separators.length == 0)
-            throw new ParsingError("Invalid table: Separator line missing.");
-        let columnCount = (separators[0].match(/\|/g) || []).length - 1;
-        
-        // Initalize table with 0 rows and the determined amount of columns:
-        let parsedTable = new Table(0, columnCount);
-        parsedTable.beforeTable = beforeTable.join("\n");
-        parsedTable.afterTable = afterTable.join("\n");
-        state = ParsingState.TopCaption;
-        let startNewSection = false;
-
-        // Now parse line by line:
-        for (let line of lines) {
-            /*
-                Determine parsing state:
-            */
 
             // Is empty line?
             if (line === "") {
@@ -119,6 +71,20 @@ export class MultiMarkdownTableParser implements TableParser {
                     startNewSection = true;
 
                 continue;
+            }
+
+            // Format table line:
+            line = line.trim();
+            if (!line.match(captionRegex)) {
+                if (!line.startsWith("|"))
+                    line = "|" + line;
+
+                if (!line.endsWith("|") ||
+                    (line.charAt(line.length - 3) != "\\" && line.endsWith("\\|"))) // Check if last pipe is escaped ('\|')
+                    line = line + "|";
+
+                if (!line.match(rowRegex))
+                    throw new ParsingError(`Invalid row: ${line}`);
             }
 
             // Is separator?
@@ -154,35 +120,31 @@ export class MultiMarkdownTableParser implements TableParser {
 
                 // Parse each character:
                 let cellContent = "";
-                let col = 0;
+                let colIndex = 0;
                 let slashEscaped = false;
                 let fenceEscaped = false;
                 for (let char of line.substring(1, line.length)) {
                     if (!slashEscaped && !fenceEscaped && char == "|") {
-                        // Ignore excess cells:
-                        if (col < parsedTable.columnCount()) {
-                            let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(col));
-                            parsedTable.addCell(cell);
-                            //let cell = parsedTable.getCellByObjs(tableRow, parsedTable.getColumn(col));
-                            if (cellContent.trim() == "^^") {
-                                cell.merged = TableCellMerge.above;
-                            } else if (cellContent === "") {
-                                cell.merged = TableCellMerge.left;
-                            } else {
-                                cell.setText(
-                                    cellContent
-                                    .trim()
-                                    .replace(/(<\s*[bB][rR]\s*\/?>)/g, "\n")
-                                    //.replace(/[ \t]{2,}/g, " ")
-                                );
-                            }
-                        // except when in the header row:
-                        } else if (state == ParsingState.Header) {
-                            throw new ParsingError("Header row doesn't match the separator row in the number of cells.");
+                        let tableColumn = parsedTable.getColumn(colIndex);
+                        if (!tableColumn)
+                            tableColumn = parsedTable.addColumn();
+                        let cell = new TableCell(parsedTable, tableRow, tableColumn);
+                        parsedTable.addCell(cell);
+
+                        if (cellContent.trim() == "^^") {
+                            cell.merged = TableCellMerge.above;
+                        } else if (cellContent === "") {
+                            cell.merged = TableCellMerge.left;
+                        } else {
+                            cell.setText(
+                                cellContent
+                                .trim()
+                                .replace(/(<\s*[bB][rR]\s*\/?>)/g, "\n")
+                            );
                         }
 
                         cellContent = "";
-                        col++;
+                        colIndex++;
                     } else if (!slashEscaped && char == "\\") {
                         slashEscaped = true;
                     } else {
@@ -195,29 +157,30 @@ export class MultiMarkdownTableParser implements TableParser {
                     }
                 }
 
-                /*if (col < parsedTable.columnCount()) {
-                    throw new ParsingError(`Too few cells in row ${tableRow.index + 1}.`);
-                }*/
                 // Insert empty cells if missing:
-                for (; col < parsedTable.columnCount(); col++) {
-                    let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(col));
+                for (; colIndex < parsedTable.columnCount(); colIndex++) {
+                    let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(colIndex));
                     parsedTable.addCell(cell);
                 }
             }
             else if (state == ParsingState.Separator) {
-                let col = 0;
+                hasSeparator = true;
+                let colIndex = 0;
                 let alignment = TextAlignment.default;
                 let wrappable = false;
                 let separator = false;
                 for (let char of line.substring(1, line.length)) {
                     if (char == "|") {
-                        parsedTable.getColumn(col).textAlign = alignment;
-                        parsedTable.getColumn(col).wrappable = wrappable;
+                        let tableColumn = parsedTable.getColumn(colIndex);
+                        if (!tableColumn)
+                            tableColumn = parsedTable.addColumn();
+                        tableColumn.textAlign = alignment;
+                        tableColumn.wrappable = wrappable;
 
                         alignment = TextAlignment.default;
                         separator = false;
                         wrappable = false;
-                        col++;
+                        colIndex++;
                     } else if (char == ":") {
                         if (!separator) {
                             alignment = TextAlignment.left;
@@ -260,6 +223,12 @@ export class MultiMarkdownTableParser implements TableParser {
                 throw new ParsingError(`Not implemented ParsingState: ${state}`);
             }
         }
+
+        if (!hasSeparator)
+            throw new ParsingError("No separator row found.");
+
+        parsedTable.beforeTable = beforeTable.join("\n");
+        parsedTable.afterTable = afterTable.join("\n");
 
         return parsedTable;
     }

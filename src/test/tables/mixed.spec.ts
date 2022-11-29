@@ -1,8 +1,6 @@
 import "mocha";
 import { expect } from "chai";
 import fs from "fs";
-import readline from "readline";
-import path from "path";
 import { HTMLTableParser, HTMLTableRenderer } from "../../tables/htmlTable.js";
 import { MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "../../tables/multiMarkdownTable.js";
 import { Table } from "../../tables/table.js";
@@ -46,7 +44,7 @@ function parseTestFile() {
 
 const tests = parseTestFile();
 
-describe("Mixed (HTMLTableParser, HTMLTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer)", () => {
+describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer)", () => {
     let htmlParser: HTMLTableParser;
     let htmlPrettyRenderer: HTMLTableRenderer;
     let mmdParser: MultiMarkdownTableParser;
@@ -59,9 +57,9 @@ describe("Mixed (HTMLTableParser, HTMLTableRenderer, MultiMarkdownTableParser, P
         mmdPrettyRenderer = new PrettyMultiMarkdownTableRenderer();
     });
 
-    describe("Multimd -> HTML -> HTML/Multimd", () => {
+    describe("results should match the given tables from the *.txt file", () => {
 
-        context("results should match the given tables from the *.txt file", () => {
+        context("Multimd -> HTML", () => {
             for (const test of tests) {
                 it(test.description, () => {
                     // Parse the table:
@@ -73,23 +71,82 @@ describe("Mixed (HTMLTableParser, HTMLTableRenderer, MultiMarkdownTableParser, P
 
                     // Render the table:
                     let htmlOutput = htmlPrettyRenderer.render(intermediaryTable);
-                    let mdOutput = mmdPrettyRenderer.render(intermediaryTable);
                     expect(
                         htmlOutput.replace(/[ \t]{2,}/g, " ")
                     ).to.equal(test.htmlOutput.replace(/[ \t]{2,}/g, " "));
-                    expect(mdOutput).to.equal(test.mdOutput);
+                });
+            }
+        });
 
-                    // Parse the html output and render it again:
-                    /*expect(
-                        htmlPrettyRenderer.render(
-                            htmlParser.parse(htmlOutput)
-                        ).replace(/[ \t]{2,}/g, " ")
-                    ).to.equal(test.htmlOutput.replace(/[ \t]{2,}/g, " "));
-                    expect(
-                        mmdPrettyRenderer.render(
-                            htmlParser.parse(htmlOutput)
-                        ).replace(/[ \t]{2,}/g, " ")
-                    ).to.equal(test.mdOutput.replace(/[ \t]{2,}/g, " "));*/
+        context("Multimd -> Multimd", () => {
+            for (const test of tests) {
+                it(test.description, () => {
+                    // Parse the table:
+                    let intermediaryTable: Table;
+                    expect(() => {
+                        intermediaryTable = mmdParser.parse(test.mdInput);
+                        intermediaryTable.update();
+                    }).to.not.throw();
+
+                    // Render the table:
+                    let mdOutput = mmdPrettyRenderer.render(intermediaryTable);
+                    expect(mdOutput).to.equal(test.mdOutput);
+                });
+            }
+        });
+
+        context("Multimd -> HTML -> HTML", () => {
+            for (const test of tests) {
+                it(test.description, () => {
+                    let htmlOutput;
+                    try {
+                        // Parse the table:
+                        let intermediaryTable: Table;
+                        intermediaryTable = mmdParser.parse(test.mdInput);
+                        intermediaryTable.update();
+    
+                        // Render the table:
+                        htmlOutput = htmlPrettyRenderer.render(intermediaryTable);
+                    } catch { }
+
+                    if (htmlOutput) {
+                        // Parse the html output and render it again:
+                        expect(
+                            htmlPrettyRenderer.render(
+                                htmlParser.parse(htmlOutput)
+                            ).replace(/[ \t]{2,}/g, " ")
+                        ).to.equal(
+                            test.htmlOutput.replace(/[ \t]{2,}/g, " ")
+                        );
+                    }
+                });
+            }
+        });
+
+        context("Multimd -> Multimd -> Multimd", () => {
+            for (const test of tests) {
+                it(test.description, () => {
+                    let mdOutput;
+                    try {
+                        // Parse the table:
+                        let intermediaryTable: Table;
+                        intermediaryTable = mmdParser.parse(test.mdInput);
+                        intermediaryTable.update();
+    
+                        // Render the table:
+                        mdOutput = mmdPrettyRenderer.render(intermediaryTable);
+                    } catch { }
+
+                    if (mdOutput) {
+                        // Parse the mmd output and render it again:
+                        expect(
+                            mmdPrettyRenderer.render(
+                                mmdParser.parse(mdOutput)
+                            )
+                        ).to.equal(
+                            test.mdOutput
+                        );
+                    }
                 });
             }
         });
