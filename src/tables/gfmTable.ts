@@ -7,62 +7,63 @@ import { TableRenderer } from "./tableRenderer.js";
 */
 
 const rowRegex = /^\|(.+)\|$/
-const separatorRegex = /^\|(\s*:?\-+:?\s*\|)+$/;
+const delimiterRowRegex = /^\|(\s*:?\-+:?\s*\|)+$/;
 
 enum ParsingState {
+    BeforeTable,
     HeaderRow,
     DelimiterRow,
-    DataRows
+    DataRows,
+    AfterTable
 }
 
 export class GitHubFlavoredMarkdownTableParser implements TableParser {
     public parse(table: string): Table {
-        // Prepare/format all lines:
-        let lines = table.split("\n").map(line => {
-            // Remove spaces from start and end:
+        let parsedTable = new Table();
+        let state = ParsingState.BeforeTable;
+        let hasDelimiterRow = false;
+        let beforeTable = [];
+        let afterTable = [];
+
+        // Now parse line by line:
+        for (let line of table.split("\n")) {
+            /*
+                Determine parsing state and prepare:
+            */
+
+            // Check if we are in the table:
+            if (state == ParsingState.BeforeTable && line.match(/[^|\\`]\|/g)) {
+                state = ParsingState.HeaderRow;
+            }
+
+            // The table is broken at the first empty line, or beginning of another block-level structure:
+            if (line.trim() === "" || line.trim().startsWith("> ")){
+                state = ParsingState.AfterTable;
+            }
+
+            // If not inside table:
+            if (state == ParsingState.BeforeTable) {
+                beforeTable.push(line);
+                continue; // Skip the rest
+            } else if (state == ParsingState.AfterTable) {
+                afterTable.push(line);
+                continue; // Skip the rest
+            }
+
+            // Format table line:
             line = line.trim();
-
-            // Empty line?
-            if (line === "")
-                return "";
-
-            // Add '|' to the start and end of the line if necessary:
             if (!line.startsWith("|"))
                 line = "|" + line;
 
-            if (!line.endsWith("|"))
+            if (!line.endsWith("|") ||
+                (line.charAt(line.length - 3) != "\\" && line.endsWith("\\|"))) // Check if last pipe is escaped ('\|')
                 line = line + "|";
 
             if (!line.match(rowRegex))
                 throw new ParsingError(`Invalid row: ${line}`);
 
-            return line;
-        });
-
-        // First find the table header/row separator to determine how many columns the table has:
-        let separators = lines.filter(line => line.match(separatorRegex));
-        if (separators.length > 1)
-            throw new ParsingError("Too many delimiter rows. (Only 1 allowed)");
-        else if (separators.length == 0)
-            throw new ParsingError("Invalid table: Delimiter row missing.");
-        let columnCount = (separators[0].match(/\|/g) || []).length - 1;
-        
-        // Initalize table with 0 rows and the determined amount of columns:
-        let parsedTable = new Table(0, columnCount);
-        let state = ParsingState.HeaderRow;
-
-        // Now parse line by line:
-        for (let line of lines) {
-            /*
-                Determine parsing state:
-            */
-
-            // Ignore empty lines:
-            if (line === "")
-                continue;
-
             // Is delimiter row too early?
-            if (state == ParsingState.HeaderRow && line.match(separatorRegex)) {
+            if (state == ParsingState.HeaderRow && line.match(delimiterRowRegex)) {
                 throw new ParsingError("Header row missing.");
             }
 
@@ -77,27 +78,26 @@ export class GitHubFlavoredMarkdownTableParser implements TableParser {
 
                 // Parse each character:
                 let cellContent = "";
-                let col = 0;
+                let colIndex = 0;
                 let slashEscaped = false;
                 let fenceEscaped = false;
                 for (let char of line.substring(1, line.length)) {
                     if (!slashEscaped && !fenceEscaped && char == "|") {
                         // Ignore excess cells:
-                        if (col < parsedTable.columnCount()) {
-                            let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(col));
+                        if (state == ParsingState.HeaderRow || colIndex < parsedTable.columnCount()) {
+                            let tableColumn = parsedTable.getColumn(colIndex);
+                            if (!tableColumn)
+                                tableColumn = parsedTable.addColumn();
+                            let cell = new TableCell(parsedTable, tableRow, tableColumn);
                             parsedTable.addCell(cell);
                             cell.setText(
                                 cellContent
                                 .trim()
                                 .replace(/(<[bB][rR]\s*\/?>)/g, "\n")
                             );
-                        // except when in the header row:
-                        } else if (state == ParsingState.HeaderRow) {
-                            throw new ParsingError("Header row doesn't match the delimiter row in the number of cells.");
                         }
-
                         cellContent = "";
-                        col++;
+                        colIndex++;
                     } else if (!slashEscaped && char == "\\") {
                         slashEscaped = true;
                     } else {
@@ -111,8 +111,8 @@ export class GitHubFlavoredMarkdownTableParser implements TableParser {
                 }
 
                 // Insert empty cells if missing:
-                for (; col < parsedTable.columnCount(); col++) {
-                    let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(col));
+                for (; colIndex < parsedTable.columnCount(); colIndex++) {
+                    let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(colIndex));
                     parsedTable.addCell(cell);
                 }
 
@@ -121,16 +121,23 @@ export class GitHubFlavoredMarkdownTableParser implements TableParser {
                     state = ParsingState.DelimiterRow;
             }
             else if (state == ParsingState.DelimiterRow) {
-                let col = 0;
+                if (!line.match(delimiterRowRegex))
+                    throw new ParsingError("Invalid delimiter row");
+
+                hasDelimiterRow = true;
+                let colIndex = 0;
                 let alignment = TextAlignment.default;
                 let separator = false;
                 for (let char of line.substring(1, line.length)) {
                     if (char == "|") {
-                        parsedTable.getColumn(col).textAlign = alignment;
+                        let tableColumn = parsedTable.getColumn(colIndex);
+                        if (!tableColumn)
+                            throw new ParsingError("Header row doesn't match the delimiter row in the number of cells.");
+                        tableColumn.textAlign = alignment;
 
                         alignment = TextAlignment.default;
                         separator = false;
-                        col++;
+                        colIndex++;
                     } else if (char == ":") {
                         if (!separator) {
                             alignment = TextAlignment.left;
@@ -143,10 +150,14 @@ export class GitHubFlavoredMarkdownTableParser implements TableParser {
                     } else if (char == "-") {
                         separator = true;
                         if (alignment == TextAlignment.right)
-                            throw new ParsingError("Invalid delimiter row");
+                            throw new ParsingError("Invalid delimiter row (minus sign after colon)");
                     } else if (!char.match(/\s/g)) {
                         throw new ParsingError(`Unexpected character in delimiter row: '${char}'`);
                     }
+                }
+                
+                if (colIndex < parsedTable.columnCount()) {
+                    throw new ParsingError("Header row doesn't match the delimiter row in the number of cells.");
                 }
 
                 // Once the delimiter row has been parsed, parse the data rows next:
@@ -157,13 +168,20 @@ export class GitHubFlavoredMarkdownTableParser implements TableParser {
             }
         }
 
+        if (!hasDelimiterRow)
+            throw new ParsingError("No delimiter row found.");
+
+        parsedTable.beforeTable = beforeTable.join("\n");
+        parsedTable.afterTable = afterTable.join("\n");
+
         return parsedTable;
     }
 }
 
 export class GitHubFlavoredMarkdownTableRenderer implements TableRenderer {
     public constructor(
-        public prettify = true) { }
+        public prettify = true,
+        public renderOutsideTable = true) { }
 
     public render(table: Table): string {
         const headerRow = table.getHeaderRows()[0];
@@ -171,6 +189,9 @@ export class GitHubFlavoredMarkdownTableRenderer implements TableRenderer {
         const columnWidths: number[] = this.prettify ? this.determineColumnWidths(table) : null;
 
         let result: string[] = [];
+
+        if (this.renderOutsideTable && table.beforeTable.trim() !== "")
+            result.push(table.beforeTable);
 
         // Header row:
         result.push(this.renderRow(table, headerRow, columnWidths));
@@ -181,6 +202,9 @@ export class GitHubFlavoredMarkdownTableRenderer implements TableRenderer {
         // Data rows:
         for (const row of dataRows)
             result.push(this.renderRow(table, row, columnWidths));
+
+        if (this.renderOutsideTable && table.afterTable.trim() !== "")
+            result.push(table.afterTable);
 
         return result.join("\n");
     }

@@ -35,3 +35,25 @@ The header row must match the delimiter row in the number of cells. If not, a ta
 | --- |
 | bar |
 .
+
+Multiple header rows #1
+.
+| Main Header Cell |||
+| Sub Header Cell || Sub Header Cell |
+| Name        | Name | Name        | Name |
+|-------------|------|-------------|------|
+| Cell        | Cell | Cell        | Cell |
+| Cell        | Cell | Cell        | Cell |
+| Cell        | Cell | Cell        | Cell |
+| Cell        | Cell | Cell        | Cell |
+.
+
+Multiple header rows #2
+.
+| | Grouping | |
+| | | Grouping 2 |
+First Header  | Second Header | Third Header |
+------------  | ------------- | ------------ |
+Content       |   **Cell**    |         Cell |
+New section   |     More      |         Data |
+.

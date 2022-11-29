@@ -302,10 +302,6 @@ Treat "captions" like cells
             <td>bim</td>
         </tr>
         <tr>
-            <td>baz</td>
-            <td>bim</td>
-        </tr>
-        <tr>
             <td>[Caption]</td>
             <td></td>
         </tr>
@@ -431,105 +427,4 @@ If there are no rows in the body, no <tbody> is generated in HTML output
 .
 | abc | def |
 |-----|-----|
-.
-
-Ignore multiple header rows #1
-.
-| Main Header Cell |||
-| Sub Header Cell || Sub Header Cell |
-| Name        | Name | Name        | Name |
-|-------------|------|-------------|------|
-| Cell        | Cell | Cell        | Cell |
-| Cell        | Cell | Cell        | Cell |
-| Cell        | Cell | Cell        | Cell |
-| Cell        | Cell | Cell        | Cell |
-.
-<p>| Main Header Cell |||</p>
-<p>| Sub Header Cell || Sub Header Cell |</p>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Name</th>
-            <th>Name</th>
-            <th>Name</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Cell</td>
-            <td>Cell</td>
-            <td>Cell</td>
-            <td>Cell</td>
-        </tr>
-        <tr>
-            <td>Cell</td>
-            <td>Cell</td>
-            <td>Cell</td>
-            <td>Cell</td>
-        </tr>
-        <tr>
-            <td>Cell</td>
-            <td>Cell</td>
-            <td>Cell</td>
-            <td>Cell</td>
-        </tr>
-        <tr>
-            <td>Cell</td>
-            <td>Cell</td>
-            <td>Cell</td>
-            <td>Cell</td>
-        </tr>
-    </tbody>
-</table>
-.
-| Main Header Cell |||
-| Sub Header Cell || Sub Header Cell |
-| Name        | Name | Name        | Name |
-|-------------|------|-------------|------|
-| Cell        | Cell | Cell        | Cell |
-| Cell        | Cell | Cell        | Cell |
-| Cell        | Cell | Cell        | Cell |
-| Cell        | Cell | Cell        | Cell |
-.
-
-Ignore multiple header rows #2
-.
-| | Grouping | |
-| | | Grouping 2 |
-First Header  | Second Header | Third Header |
-------------  | ------------- | ------------ |
-Content       |   **Cell**    |         Cell |
-New section   |     More      |         Data |
-.
-<p>| | Grouping | |</p>
-<p>| | | Grouping 2 |</p>
-<table>
-    <thead>
-        <tr>
-            <th>First Header</th>
-            <th>Second Header</th>
-            <th>Third Header</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Content</td>
-            <td><strong>Cell</strong></td>
-            <td>Cell</td>
-        </tr>
-        <tr>
-            <td>New section</td>
-            <td>More</td>
-            <td>Data</td>
-        </tr>
-    </tbody>
-</table>
-.
-| | Grouping | |
-| | | Grouping 2 |
-| First Header | Second Header | Third Header |
-|--------------|---------------|--------------|
-| Content      | **Cell**      | Cell         |
-| New section  | More          | Data         |
 .
