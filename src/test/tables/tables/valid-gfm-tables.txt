@@ -156,9 +156,13 @@ New section  \|     More     `|`        Data\|
             <td style="text-align: center"></td>
             <td style="text-align: right"></td>
         </tr>
+        <tr>
+            <td>New section | More <code>|</code> Data|</td>
+            <td style="text-align: center"></td>
+            <td style="text-align: right"></td>
+        </tr>
     </tbody>
 </table>
-<p>New section | More <code>|</code> Data|</p>
 .
 | First Header                                   | Second Header | Third Header |
 |------------------------------------------------|:-------------:|-------------:|
