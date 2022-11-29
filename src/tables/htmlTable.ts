@@ -49,10 +49,15 @@ function mdToHtml(markdown: string, inline = true): string {
     // Remove unnecessary whitespace:
     html = html.replace(/[ \t]{2,}/g, " ");
 
-    if (inline)
-        return html;
-    else
-        return `<p>${html}</p>`;
+    if (!inline) {
+        // Blockquote (TODO):
+        html = html.replace(/^>\s+(.*)$/g, "<blockquote>\n    <p>$1</p>\n</blockquote>");
+
+        if (!html.startsWith("<blockquote>"))
+            html = `<p>${html}</p>`;
+    }
+
+    return html;
 }
 
 function htmlToMd(html: string, turndownService: TurndownService) {

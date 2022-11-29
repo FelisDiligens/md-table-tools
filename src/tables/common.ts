@@ -40,6 +40,14 @@ export function getTurndownService(): TurndownService {
         }
     });
 
+    // Add blockquote:
+    /*turndownService.addRule('blockquote', {
+        filter: ['blockquote'],
+        replacement: function (content) {
+            return '> ' + content;
+        }
+    });*/
+
     // Filter table tags:
     turndownService
         .remove('table')
