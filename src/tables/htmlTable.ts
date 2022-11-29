@@ -1,4 +1,3 @@
-import { JSDOM } from 'jsdom'; 
 import TurndownService from 'turndown';
 import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table.js";
 import { ParsingError, TableParser } from "./tableParser.js";
@@ -106,11 +105,9 @@ export class HTMLTableParser implements TableParser {
         /*
             Parse the html string and find our <table> tag to start:
         */
-        // let domParser = new DOMParser();
-        // let dom = domParser.parseFromString(table, "text/html");
-        const dom = new JSDOM(table);
-        const doc = dom.window.document;
-        let domTable = doc.querySelector("table");
+        let domParser = new DOMParser();
+        let dom = domParser.parseFromString(table, "text/html"); // (new JSDOM(table)).window.document;
+        let domTable = dom.querySelector("table");
         if (domTable == null)
             throw new ParsingError("Couldn't find <table> tag in DOM.");
 
