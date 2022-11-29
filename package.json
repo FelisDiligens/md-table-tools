@@ -1,5 +1,5 @@
 {
-    "name": "@felisdiligens/md-table-tools",
+    "name": "md-table-tools",
     "version": "1.0.0",
     "description": "MultiMarkdown table tools",
     "type": "module",
