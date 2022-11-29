@@ -1,9 +1,10 @@
 import "mocha";
 import { expect } from "chai";
 import fs from "fs";
+import dedent from 'dedent-js'; // https://stackoverflow.com/questions/25924057/multiline-strings-that-dont-break-indentation
 import { HTMLTableParser, HTMLTableRenderer } from "../../tables/htmlTable.js";
-import { MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "../../tables/multiMarkdownTable.js";
-import { Table } from "../../tables/table.js";
+import { MinifiedMultiMarkdownTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "../../tables/multiMarkdownTable.js";
+import { Table, TableCellMerge } from "../../tables/table.js";
 import { GitHubFlavoredMarkdownTableParser, GitHubFlavoredMarkdownTableRenderer } from "../../tables/gfmTable.js";
 
 interface TableTest {
@@ -42,18 +43,47 @@ function readTablesFile(fileName: string, hasOutput: boolean) {
     return tests;
 }
 
-/* TODO: Test MinifiedMultiMarkdownTableRenderer */
-describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer)", () => {
+describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer, MinifiedMultiMarkdownTableRenderer)", () => {
     let htmlParser: HTMLTableParser;
     let htmlPrettyRenderer: HTMLTableRenderer;
     let mmdParser: MultiMarkdownTableParser;
+    let mmdMinifiedRenderer: MinifiedMultiMarkdownTableRenderer;
     let mmdPrettyRenderer: PrettyMultiMarkdownTableRenderer;
 
     before(() => {
         htmlParser = new HTMLTableParser();
         htmlPrettyRenderer = new HTMLTableRenderer(true, " ".repeat(4));
         mmdParser = new MultiMarkdownTableParser();
+        mmdMinifiedRenderer = new MinifiedMultiMarkdownTableRenderer();
         mmdPrettyRenderer = new PrettyMultiMarkdownTableRenderer();
+    });
+
+    describe("converting from HTML to Markdown", () => {
+
+        const tests = readTablesFile("convert-mmd-tables.txt", true);
+
+        context("Multimd -> HTML -> Multimd", () => {
+            for (const test of tests) {
+                it(test.description, () => {
+                    let htmlOutput;
+                    try {
+                        // Parse the table:
+                        let intermediaryTable: Table;
+                        intermediaryTable = mmdParser.parse(test.mdInput);
+    
+                        // Render the table:
+                        htmlOutput = htmlPrettyRenderer.render(intermediaryTable);
+                    } catch { }
+
+                    if (htmlOutput) {
+                        // Parse the html output and render it again:
+                        let intermediaryTable = htmlParser.parse(htmlOutput);
+                        expect(mmdPrettyRenderer.render(intermediaryTable)).to.equal(test.mdInput);
+                        expect(mmdMinifiedRenderer.render(intermediaryTable)).to.equal(test.mdOutput);
+                    }
+                });
+            }
+        });
     });
 
     describe("results should match the given tables from the *.txt file", () => {
@@ -67,7 +97,6 @@ describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMar
                     let intermediaryTable: Table;
                     expect(() => {
                         intermediaryTable = mmdParser.parse(test.mdInput);
-                        intermediaryTable.update();
                     }).to.not.throw();
 
                     // Render the table:
@@ -86,7 +115,6 @@ describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMar
                     let intermediaryTable: Table;
                     expect(() => {
                         intermediaryTable = mmdParser.parse(test.mdInput);
-                        intermediaryTable.update();
                     }).to.not.throw();
 
                     // Render the table:
@@ -104,7 +132,6 @@ describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMar
                         // Parse the table:
                         let intermediaryTable: Table;
                         intermediaryTable = mmdParser.parse(test.mdInput);
-                        intermediaryTable.update();
     
                         // Render the table:
                         htmlOutput = htmlPrettyRenderer.render(intermediaryTable);
@@ -132,7 +159,6 @@ describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMar
                         // Parse the table:
                         let intermediaryTable: Table;
                         intermediaryTable = mmdParser.parse(test.mdInput);
-                        intermediaryTable.update();
     
                         // Render the table:
                         mdOutput = mmdPrettyRenderer.render(intermediaryTable);
@@ -193,7 +219,6 @@ describe("Mixed GitHub-Flavored-Markdown test (HTMLTableParser, HTMLTableRendere
                     let intermediaryTable: Table;
                     expect(() => {
                         intermediaryTable = mdParser.parse(test.mdInput);
-                        intermediaryTable.update();
                     }).to.not.throw();
 
                     // Render the table:
@@ -212,7 +237,6 @@ describe("Mixed GitHub-Flavored-Markdown test (HTMLTableParser, HTMLTableRendere
                     let intermediaryTable: Table;
                     expect(() => {
                         intermediaryTable = mdParser.parse(test.mdInput);
-                        intermediaryTable.update();
                     }).to.not.throw();
 
                     // Render the table:
@@ -230,7 +254,6 @@ describe("Mixed GitHub-Flavored-Markdown test (HTMLTableParser, HTMLTableRendere
                         // Parse the table:
                         let intermediaryTable: Table;
                         intermediaryTable = mdParser.parse(test.mdInput);
-                        intermediaryTable.update();
     
                         // Render the table:
                         htmlOutput = htmlPrettyRenderer.render(intermediaryTable);
@@ -258,7 +281,6 @@ describe("Mixed GitHub-Flavored-Markdown test (HTMLTableParser, HTMLTableRendere
                         // Parse the table:
                         let intermediaryTable: Table;
                         intermediaryTable = mdParser.parse(test.mdInput);
-                        intermediaryTable.update();
     
                         // Render the table:
                         mdOutput = mdPrettyRenderer.render(intermediaryTable);

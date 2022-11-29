@@ -191,7 +191,7 @@ export class HTMLTableParser implements TableParser {
             parsedTable.caption = caption;
         }
 
-        return parsedTable;
+        return parsedTable.update();
     }
 
     private parseSection(table: Table, domRows: HTMLCollectionOf<HTMLTableRowElement>, defaultTextAlign: TextAlignment, isHeader: boolean = false, allowHeaderDetection: boolean = false, firstRowStartsNewSection: boolean = false) {

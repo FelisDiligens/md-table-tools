@@ -1,0 +1,198 @@
+Another example table
+.
+| Punkte | Note                 |||
+|:------:|:---|----|--------------|
+|   15   | 1+ | 1  | sehr gut     |
+|   14   | 1  | ^^ | ^^           |
+|   13   | 1- | ^^ | ^^           |
+|   12   | 2+ | 2  | gut          |
+|   11   | 2  | ^^ | ^^           |
+|   10   | 2- | ^^ | ^^           |
+|   9    | 3+ | 3  | befriedigend |
+|   8    | 3  | ^^ | ^^           |
+|   7    | 3- | ^^ | ^^           |
+|   6    | 4+ | 4  | ausreichend  |
+|   5    | 4  | ^^ | ^^           |
+|   4    | 4- | ^^ | ^^           |
+|   3    | 5+ | 5  | mangelhaft   |
+|   2    | 5  | ^^ | ^^           |
+|   1    | 5- | ^^ | ^^           |
+|   0    | 6  | 6  | ungenügend   |
+.
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center">Punkte</th>
+            <th colspan="3" style="text-align: left">Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center">15</td>
+            <td style="text-align: left">1+</td>
+            <td rowspan="3">1</td>
+            <td rowspan="3">sehr gut</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">14</td>
+            <td style="text-align: left">1</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">13</td>
+            <td style="text-align: left">1-</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">12</td>
+            <td style="text-align: left">2+</td>
+            <td rowspan="3">2</td>
+            <td rowspan="3">gut</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">11</td>
+            <td style="text-align: left">2</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">10</td>
+            <td style="text-align: left">2-</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">9</td>
+            <td style="text-align: left">3+</td>
+            <td rowspan="3">3</td>
+            <td rowspan="3">befriedigend</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">8</td>
+            <td style="text-align: left">3</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">7</td>
+            <td style="text-align: left">3-</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">6</td>
+            <td style="text-align: left">4+</td>
+            <td rowspan="3">4</td>
+            <td rowspan="3">ausreichend</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">5</td>
+            <td style="text-align: left">4</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">4</td>
+            <td style="text-align: left">4-</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">3</td>
+            <td style="text-align: left">5+</td>
+            <td rowspan="3">5</td>
+            <td rowspan="3">mangelhaft</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">2</td>
+            <td style="text-align: left">5</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">1</td>
+            <td style="text-align: left">5-</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">0</td>
+            <td style="text-align: left">6</td>
+            <td>6</td>
+            <td>ungenügend</td>
+        </tr>
+    </tbody>
+</table>
+.
+Punkte|Note|||
+:-:|:-|-|-
+15|1+|1|sehr gut
+14|1|^^|^^|
+13|1-|^^|^^|
+12|2+|2|gut
+11|2|^^|^^|
+10|2-|^^|^^|
+9|3+|3|befriedigend
+8|3|^^|^^|
+7|3-|^^|^^|
+6|4+|4|ausreichend
+5|4|^^|^^|
+4|4-|^^|^^|
+3|5+|5|mangelhaft
+2|5|^^|^^|
+1|5-|^^|^^|
+0|6|6|ungenügend
+.
+
+Simplest table, without leading or trailing pipes
+.
+| First Header | Second Header |
+|--------------|---------------|
+| Content Cell | Content Cell  |
+| Content Cell | Content Cell  |
+.
+<table>
+    <thead>
+        <tr>
+            <th>First Header</th>
+            <th>Second Header</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Content Cell</td>
+            <td>Content Cell</td>
+        </tr>
+        <tr>
+            <td>Content Cell</td>
+            <td>Content Cell</td>
+        </tr>
+    </tbody>
+</table>
+.
+First Header|Second Header
+-|-
+Content Cell|Content Cell
+Content Cell|Content Cell
+.
+
+
+Center-aligned and right-aligned separators
+.
+|   Item   | Value |
+|:--------:|------:|
+| Computer | $1600 |
+|  Phone   |   $12 |
+|   Pipe   |    $1 |
+.
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center">Item</th>
+            <th style="text-align: right">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center">Computer</td>
+            <td style="text-align: right">$1600</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">Phone</td>
+            <td style="text-align: right">$12</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">Pipe</td>
+            <td style="text-align: right">$1</td>
+        </tr>
+    </tbody>
+</table>
+.
+Item|Value
+:-:|-:
+Computer|$1600
+Phone|$12
+Pipe|$1
+.

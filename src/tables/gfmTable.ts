@@ -174,7 +174,7 @@ export class GitHubFlavoredMarkdownTableParser implements TableParser {
         parsedTable.beforeTable = beforeTable.join("\n");
         parsedTable.afterTable = afterTable.join("\n");
 
-        return parsedTable;
+        return parsedTable.update();
     }
 }
 
