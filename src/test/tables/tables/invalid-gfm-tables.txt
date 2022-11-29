@@ -1,0 +1,37 @@
+Invalid characters in delimiter row
+.
+First Header  | Second Header | Third Header |
+------------  | ------------- | ============ |
+Content       |   **Cell**    |         Cell |
+New section   |     More      |         Data |
+.
+
+No delimiter row
+.
+First Header  | Second Header | Third Header |
+Content       |   **Cell**    |         Cell |
+New section   |     More      |         Data |
+.
+
+Invalid delimiter row for containing no minus signs
+.
+First Header  | Second Header | Third Header |
+------------  | ::            | -----------: |
+Content       |   **Cell**    |         Cell |
+New section   |     More      |         Data |
+.
+
+No valid pipes (escaped or fenced) at first line (missing header row)
+.
+First Header \| Second Header`|`Third Header\|
+------------  | :-----------: | -----------: |
+Content       |   **Cell**    |         Cell |
+New section   |      More     |        Data  |
+.
+
+The header row must match the delimiter row in the number of cells. If not, a table will not be recognized
+.
+| abc | def |
+| --- |
+| bar |
+.
