@@ -12,6 +12,33 @@ function escapeMarkdown(mdStr: string): string {
 function mdToHtml(markdown: string, inline = true): string {
     let html = markdown.trim(); // escape(markdown);
 
+    // Blockquote:
+    if (!inline) {
+        let lines = [];
+        let quoted = false;
+        for (let line of html.split(/\r?\n/)) {
+            if (line.startsWith("> ")) {
+                if (!quoted)
+                    lines.push("<blockquote>");
+                quoted = true;
+
+                lines.push(`<p>${mdToHtml(line.substring(2))}</p>`);
+            } else {
+                if (quoted)
+                    lines.push("</blockquote>");
+                quoted = false;
+
+                lines.push(line);
+            }
+            if (quoted)
+                lines.push("</blockquote>");
+        }
+        html = lines.join("\n");
+
+        if (!html.startsWith("<blockquote>"))
+            html = `<p>${html}</p>`;
+    }
+
     // Image:
     html = html.replace(/!\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "<img src=\"$2\" alt=\"$1\">");
 
@@ -47,14 +74,6 @@ function mdToHtml(markdown: string, inline = true): string {
 
     // Remove unnecessary whitespace:
     html = html.replace(/[ \t]{2,}/g, " ");
-
-    if (!inline) {
-        // Blockquote (TODO):
-        html = html.replace(/^>\s+(.*)$/g, "<blockquote>\n    <p>$1</p>\n</blockquote>");
-
-        if (!html.startsWith("<blockquote>"))
-            html = `<p>${html}</p>`;
-    }
 
     return html;
 }
