@@ -462,7 +462,7 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
             case TextAlignment.center:
                 return `${" ".repeat(Math.max(0, Math.floor((cellWidth - text.length + colspan - 1) / 2)))} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - text.length - colspan + 1) / 2)))}`;
             case TextAlignment.right:
-                return `${" ".repeat(Math.max(0, cellWidth - text.length - colspan + 1))} ${text} `;
+                return `${" ".repeat(Math.max(0, cellWidth - text.length))} ${text} `;
             case TextAlignment.left:
             case TextAlignment.default:
             default:
