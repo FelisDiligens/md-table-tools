@@ -1,11 +1,14 @@
 # MultiMarkdown table tools
 
+> **Warning** Development has stopped until I can figure out how to make unit tests work in the browser, or how to make DOMParser usable in the browser as well as NodeJS. (Is there really no way?)  
+> If you want to, you can use this project as a starting point. It works in Electron and in Node if you install JSDOM.
+
 ## Features
 
 - Parsing MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables into intermediary
 - Converting intermediary back to MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables
 - Formatting or minifying MultiMarkdown or GFM tables
-- Manipulating parsed/intermediary tables *(⚠️ possibly buggy, please run `Table.update()` after making any changes)*, e.g.
+- Manipulating parsed/intermediary tables (⚠️ *possibly buggy, please run `Table.update()` after making any changes*), e.g.
   - by adding, deleting, or moving rows/columns
   - by changing the content of table cells
   - by merging or splitting table cells
