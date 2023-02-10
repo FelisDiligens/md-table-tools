@@ -1,7 +1,9 @@
 # MultiMarkdown table tools
 
+<!--
 > **Warning** Development has stopped until I can figure out how to make unit tests work in the browser, or how to make DOMParser usable in the browser as well as NodeJS. (Is there really no way?)  
 > If you want to, you can use this project as a starting point. It works in Electron and in Node if you install JSDOM.
+-->
 
 ## Features
 
@@ -124,10 +126,33 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
   - `HTMLTableParserMode`
   - `CSVTableRendererMode`
 
+### Usage in NodeJS
+
+> **Warning** This is subject to change.
+
+In node, if you plan to use `HTMLTableParser`, you'll need to install [jsdom](https://github.com/jsdom/jsdom) (`npm install --save jsdom`).
+
+When you instantiate `HTMLTableParser`, you'll need to pass a function that uses jsdom, like so:
+
+```typescript
+import { HTMLTableParser } from "md-table-tools";
+import jsdom from "jsdom";
+
+function jsdomParse (table: string) {
+    const dom = new jsdom.JSDOM(table);
+    return dom.window.document;
+}
+
+const htmlParser = new HTMLTableParser(
+    HTMLTableParserMode.ConvertHTMLElements,
+    jsdomParse
+);
+```
+
 ## Built with...
 
 - [Turndown](https://mixmark-io.github.io/turndown/) - for inline HTML to Markdown conversion
 - [DOMParser](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser) - for parsing HTML.
-  - ⚠️ Won't work in Node.js unless replaced with jsdom.
+  - ⚠️ Won't work in Node.js unless replaced with [jsdom](https://github.com/jsdom/jsdom).
 - [TypeScript](https://www.typescriptlang.org/)
 - [Mocha](https://mochajs.org/) and [Chai](https://www.chaijs.com/)
