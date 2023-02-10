@@ -115,17 +115,33 @@ export enum HTMLTableParserMode {
     PreserveHTMLElements // uses innerHTML without any converting
 }
 
+/** Use browser DOMParser or jsdom. Will probably fail in NodeJS regardless. */
+function autoDomParser (table: string) {
+    // First, try window.DOMParser:
+    try {
+        let domParser = new window.DOMParser();
+        let dom = domParser.parseFromString(table, "text/html");
+        return dom;
+    } catch {} // Probably fails with `ReferenceError: window is not defined` in NodeJS.
+    try {
+        const jsdom = require("jsdom");
+        const dom = new jsdom.JSDOM(table);
+        return dom.window.document;
+    } catch {} // Either fails because jsdom isn't installed or because of `ReferenceError: require is not defined`.
+    throw new Error("Couldn't find any DOMParser. Please run in the browser or use jsdom.");
+}
+
 export class HTMLTableParser implements TableParser {
     public constructor(
         public mode: HTMLTableParserMode = HTMLTableParserMode.ConvertHTMLElements,
+        public parseDom: Function = autoDomParser,
         public turndownService: TurndownService = getTurndownService()) {}
 
     public parse(table: string): Table {
         /*
             Parse the html string and find our <table> tag to start:
         */
-        let domParser = new DOMParser();
-        let dom = domParser.parseFromString(table, "text/html"); // (new JSDOM(table)).window.document;
+        let dom = this.parseDom(table);
         let domTable = dom.querySelector("table");
         if (domTable == null)
             throw new ParsingError("Couldn't find <table> tag in DOM.");
@@ -164,7 +180,7 @@ export class HTMLTableParser implements TableParser {
         // Parse <tbody> tags in <table>:
         let domTBodies = domTable.querySelectorAll("tbody");
         if (domTBodies.length > 0) {
-            domTBodies.forEach((domTBody, i) => {
+            domTBodies.forEach((domTBody: any, i: number) => {
                 let sectionTextAlign = cssToTextAlign(domTBody);
                 this.parseSection(
                     parsedTable,

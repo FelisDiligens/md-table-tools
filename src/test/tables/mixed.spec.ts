@@ -1,11 +1,17 @@
 import "mocha";
 import { expect } from "chai";
 import fs from "fs";
+import jsdom from "jsdom";
 import dedent from 'dedent-js'; // https://stackoverflow.com/questions/25924057/multiline-strings-that-dont-break-indentation
-import { HTMLTableParser, HTMLTableRenderer } from "../../tables/htmlTable.js";
+import { HTMLTableParser, HTMLTableParserMode, HTMLTableRenderer } from "../../tables/htmlTable.js";
 import { MinifiedMultiMarkdownTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "../../tables/multiMarkdownTable.js";
 import { Table, TableCellMerge } from "../../tables/table.js";
 import { GitHubFlavoredMarkdownTableParser, GitHubFlavoredMarkdownTableRenderer } from "../../tables/gfmTable.js";
+
+function jsdomParse (table: string) {
+    const dom = new jsdom.JSDOM(table);
+    return dom.window.document;
+}
 
 interface TableTest {
     description: string,
@@ -51,7 +57,7 @@ describe("Mixed Multimarkdown test (HTMLTableParser, HTMLTableRenderer, MultiMar
     let mmdPrettyRenderer: PrettyMultiMarkdownTableRenderer;
 
     before(() => {
-        htmlParser = new HTMLTableParser();
+        htmlParser = new HTMLTableParser(HTMLTableParserMode.ConvertHTMLElements, jsdomParse);
         htmlPrettyRenderer = new HTMLTableRenderer(true, " ".repeat(4));
         mmdParser = new MultiMarkdownTableParser();
         mmdMinifiedRenderer = new MinifiedMultiMarkdownTableRenderer();
@@ -202,7 +208,7 @@ describe("Mixed GitHub-Flavored-Markdown test (HTMLTableParser, HTMLTableRendere
     let mdPrettyRenderer: GitHubFlavoredMarkdownTableRenderer;
 
     before(() => {
-        htmlParser = new HTMLTableParser();
+        htmlParser = new HTMLTableParser(HTMLTableParserMode.ConvertHTMLElements, jsdomParse);
         htmlPrettyRenderer = new HTMLTableRenderer(true, " ".repeat(4));
         mdParser = new GitHubFlavoredMarkdownTableParser();
         mdPrettyRenderer = new GitHubFlavoredMarkdownTableRenderer();
