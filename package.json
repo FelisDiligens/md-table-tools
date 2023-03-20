@@ -1,10 +1,13 @@
 {
-    "name": "md-table-tools",
+    "name": "@felisdiligens/md-table-tools",
     "version": "1.0.0",
     "description": "MultiMarkdown table tools",
     "type": "module",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
         "prepublish": "npm run build",
         "build": "tsc",
@@ -27,7 +30,7 @@
         "@types/turndown": "^5.0.1",
         "chai": "^4.3.7",
         "dedent-js": "^1.0.1",
-        "jsdom": "^21.1.0",
+        "jsdom": "^21.1.1",
         "mocha": "^10.1.0",
         "ts-loader": "^9.4.1",
         "ts-mocha": "^10.0.0",
