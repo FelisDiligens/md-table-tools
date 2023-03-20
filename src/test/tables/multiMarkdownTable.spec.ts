@@ -25,7 +25,7 @@ describe("MultiMarkdownTableParser", () => {
 
     describe(".parse()", () => {
         context("when parsing valid tables", () => {
-            it("should parse the example table just fine", () =>{
+            it("should parse the example table just fine", () => {
                 let table: Table;
                 expect(() => {
                     table = mmdParser.parse(dedent`
@@ -101,6 +101,60 @@ describe("MultiMarkdownTableParser", () => {
 
                 expect(table.getHeaderRows()).to.be.an( "array" ).that.is.empty;
                 expect(table.getNormalRows()).to.be.an( "array" ).that.has.a.lengthOf(1);
+            });
+
+            it("should parse a minified table", () =>{
+                let table: Table;
+                expect(() => {
+                    table = mmdParser.parse(dedent`
+                    Punkte|Note|||
+                    :-:|:-|-|-
+                    15|1+|1|sehr gut
+                    14|1|^^|^^|
+                    13|1-|^^|^^|
+                    12|2+|2|gut
+                    11|2|^^|^^|
+                    10|2-|^^|^^|
+                    9|3+|3|befriedigend
+                    8|3|^^|^^|
+                    7|3-|^^|^^|
+                    6|4+|4|ausreichend
+                    5|4|^^|^^|
+                    4|4-|^^|^^|
+                    3|5+|5|mangelhaft
+                    2|5|^^|^^|
+                    1|5-|^^|^^|
+                    0|6|6|ungenügend
+                    `);
+                }).to.not.throw();
+
+                expect(table.columnCount()).to.equal(4);
+                expect(table.rowCount()).to.equal(17);
+                expect(table.getHeaderRows()).to.be.an( "array" ).that.has.a.lengthOf(1);
+                expect(table.getNormalRows()).to.be.an( "array" ).that.has.a.lengthOf(16);
+                expect(table.getColumn(0).textAlign).to.equal(TextAlignment.center);
+                expect(table.getColumn(1).textAlign).to.equal(TextAlignment.left);
+                expect(table.getCell(2, 2).merged).to.equal(TableCellMerge.above);
+                expect(table.getCell(2, 3).merged).to.equal(TableCellMerge.above);
+            });
+
+            it("should parse a multiline table", () =>{
+                let table: Table;
+                expect(() => {
+                    table = mmdParser.parse(dedent`
+                    |   Markdown   | Rendered HTML |
+                    |--------------|---------------|
+                    |    *Italic*  | *Italic*      | \
+                    |              |               |
+                    |    - Item 1  | - Item 1      | \
+                    |    - Item 2  | - Item 2      |
+                    |    \`\`\`python | \`\`\`python       \
+                    |    .1 + .2   | .1 + .2         \
+                    |    \`\`\`       | \`\`\`           |
+                    `);
+                }).to.not.throw();
+
+                // TODO!!
             });
 
             it("should parse a header-only table", () =>{
