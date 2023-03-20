@@ -1,17 +1,19 @@
 import "mocha";
 import { expect } from "chai";
 import dedent from 'dedent-js'; // https://stackoverflow.com/questions/25924057/multiline-strings-that-dont-break-indentation
-import { HTMLTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "../../index.js";
+import { HTMLTableRenderer, MinifiedMultiMarkdownTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "../../index.js";
 
 describe("Mixed MultiMarkdown test", () => {
     let htmlPrettyRenderer: HTMLTableRenderer;
     let mmdParser: MultiMarkdownTableParser;
-    let mmdRenderer: PrettyMultiMarkdownTableRenderer;
+    let mmdPrettyRenderer: PrettyMultiMarkdownTableRenderer;
+    let mmdMinifiedRenderer: MinifiedMultiMarkdownTableRenderer;
 
     before(() => {
         htmlPrettyRenderer = new HTMLTableRenderer(true, " ".repeat(4));
         mmdParser = new MultiMarkdownTableParser();
-        mmdRenderer = new PrettyMultiMarkdownTableRenderer();
+        mmdPrettyRenderer = new PrettyMultiMarkdownTableRenderer();
+        mmdMinifiedRenderer = new MinifiedMultiMarkdownTableRenderer();
     });
 
     describe("converting between Markdown and HTML", () => {
@@ -140,7 +142,8 @@ describe("Mixed MultiMarkdown test", () => {
             |    \`\`\`       | \`\`\`           |
             `);
 
-            let prettyTable = mmdRenderer.render(table);
+            let prettyTable = mmdPrettyRenderer.render(table);
+            console.log(prettyTable);
 
             expect(prettyTable).to.equal(dedent`
             | Markdown  | Rendered HTML |
@@ -152,6 +155,33 @@ describe("Mixed MultiMarkdown test", () => {
             | \`\`\`python | \`\`\`python     | \\
             | .1 + .2   | .1 + .2       | \\
             | \`\`\`       | \`\`\`           |`);
+        });
+
+        it("should minify multiline tables", () => {
+            let table = mmdParser.parse(dedent`
+            |   Markdown   | Rendered HTML |
+            |--------------|---------------|
+            |    *Italic*  | *Italic*      | \\
+            |              |               |
+            |    - Item 1  | - Item 1      | \\
+            |    - Item 2  | - Item 2      |
+            |    \`\`\`python | \`\`\`python       \\
+            |    .1 + .2   | .1 + .2         \\
+            |    \`\`\`       | \`\`\`           |
+            `);
+
+            let minifiedTable = mmdMinifiedRenderer.render(table);
+
+            expect(minifiedTable).to.equal(dedent`
+            Markdown|Rendered HTML
+            -|-
+            *Italic*|*Italic* \\
+            | | |
+            - Item 1|- Item 1 \\
+            - Item 2|- Item 2
+            \`\`\`python|\`\`\`python \\
+            .1 + .2|.1 + .2 \\
+            \`\`\`|\`\`\``);
         });
 
         it("should convert multiline tables", () => {

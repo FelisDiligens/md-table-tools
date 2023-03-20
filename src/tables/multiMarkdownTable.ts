@@ -351,6 +351,9 @@ export class MinifiedMultiMarkdownTableRenderer implements TableRenderer {
             // Last cell:
             if (i == cells.length - 1 && cell.text.trim() != "" && cell.merged != TableCellMerge.left)
                 result = result.substring(0, result.length - 1); // Omit last '|' if possible
+
+            if (row.isMultiline)
+                result += " \\";
         });
 
         return result;
