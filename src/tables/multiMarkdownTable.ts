@@ -28,12 +28,18 @@ export class MultiMarkdownTableParser implements TableParser {
         let hasSeparator = false;
         let beforeTable = [];
         let afterTable = [];
+        let isMultiline = false;
+        let wasMultiline = false;
 
         // Parse line by line:
         for (let line of table.split("\n")) {
             /*
                 Determine parsing state and prepare:
             */
+
+            // Reset values:
+            wasMultiline = isMultiline;
+            isMultiline = false;
 
             // Check if we are in the table:
             if (state == ParsingState.BeforeTable && (line.match(/[^|\\`]\|/g) || line.trim().match(captionRegex))) {
@@ -45,7 +51,7 @@ export class MultiMarkdownTableParser implements TableParser {
 
             // Check if we are no longer in the table:
             if (state != ParsingState.BeforeTable && state != ParsingState.AfterTable && !( // If not:
-                (line.replace(/\`[^\`]*\`/g, "").match(/[^|\\`]\|/g) && !line.startsWith("[") && !line.endsWith("]")) || // row
+                ((line.trim().endsWith("\\") || wasMultiline || line.replace(/\`[^\`]*\`/g, "").match(/[^|\\`]\|/g)) && !line.startsWith("[") && !line.endsWith("]")) || // row
                 (line.trim().match(captionRegex) && (state == ParsingState.TopCaption || parsedTable.caption == null)) || // valid caption
                 (line.trim() === "" && !startNewSection && state != ParsingState.Separator))) { // single empty line allowed (except after separator)
                 state = ParsingState.AfterTable;
@@ -76,15 +82,23 @@ export class MultiMarkdownTableParser implements TableParser {
             // Format table line:
             line = line.trim();
             if (!line.match(captionRegex)) {
-                if (!line.startsWith("|"))
+                if (!line.startsWith("|")) {
                     line = "|" + line;
+                }
+
+                if (line.endsWith("\\")) {
+                    isMultiline = true;
+                    line = line.substring(0, line.length - 1).trim();
+                }
 
                 if (!line.endsWith("|") ||
-                    (line.charAt(line.length - 3) != "\\" && line.endsWith("\\|"))) // Check if last pipe is escaped ('\|')
+                    (line.charAt(line.length - 3) != "\\" && line.endsWith("\\|"))) { // Check if last pipe is escaped ('\|')
                     line = line + "|";
+                }
 
-                if (!line.match(rowRegex))
+                if (!line.match(rowRegex)) {
                     throw new ParsingError(`Invalid row: ${line}`);
+                }
             }
 
             // Is separator?
@@ -114,6 +128,7 @@ export class MultiMarkdownTableParser implements TableParser {
                     tableRow.isHeader = true;
                 } else {
                     tableRow.startsNewSection = startNewSection;
+                    tableRow.isMultiline = isMultiline;
                     startNewSection = false;
                 }
                 parsedTable.addRow(-1, tableRow);
@@ -148,7 +163,7 @@ export class MultiMarkdownTableParser implements TableParser {
                     } else if (!slashEscaped && char == "\\") {
                         slashEscaped = true;
                     } else {
-                        if (!slashEscaped && char == "\`")
+                        if (!slashEscaped && char == "\`" && !isMultiline && !wasMultiline)
                             fenceEscaped = !fenceEscaped;
                         if (slashEscaped)
                             cellContent += "\\";
@@ -449,7 +464,7 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
             result.push(this.renderCell(cell, colspan, cellWidth));
         });
 
-        return `|${result.join("|")}|`;
+        return `|${result.join("|")}|` + (row.isMultiline ? " \\" : "");
     }
 
     private renderCell(cell: TableCell, colspan: number = 1, cellWidth: number = -1): string {

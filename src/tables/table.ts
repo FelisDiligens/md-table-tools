@@ -111,6 +111,7 @@ export class TableRow {
     public constructor(
         public index: number = 0,
         public isHeader: boolean = false,
+        public isMultiline: boolean = false,
         public startsNewSection: boolean = false) {
         this.cells = [];
     }
