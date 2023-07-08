@@ -25454,8 +25454,10 @@ function renderOutput(table, format) {
     switch (format) {
         case "preview":
         case "html-pretty":
+            table.mergeMultilineRows();
             return htmlPrettyRenderer.render(table);
         case "html-mini":
+            table.mergeMultilineRows();
             return htmlMinifiedRenderer.render(table);
         case "mmd-pretty":
             return mmdPrettyRenderer.render(table);
