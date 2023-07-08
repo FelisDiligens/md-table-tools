@@ -3,7 +3,7 @@
 # MultiMarkdown table tools
 
 ![](assets/demo.png)
-> Screenshot of web demo
+> Screenshot of [web demo](https://felisdiligens.github.io/md-table-tools/demo/)
 
 ## Features
 
@@ -63,6 +63,8 @@ $ npm run test
 ### Web demo
 
 A web demo (see screenshot above) is available under `demo/src/index.html`.
+
+You can also click [here](https://felisdiligens.github.io/md-table-tools/demo/) to view it.
 
 ### NodeJS demo
 
