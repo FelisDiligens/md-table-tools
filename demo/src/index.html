@@ -1,12 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src='bundle.js'></script>
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"
+            defer
+        ></script>
+        <script src="bundle.js" defer></script>
+        <title>MultiMarkdown table tools demo</title>
+        <style>
+            table {
+                border-collapse: collapse;
+                border-spacing: 2px;
+                border: 1px solid #333;
+            }
+
+            th,
+            td {
+                padding: 0.5em 1em 0.5em 1em;
+                border: 1px solid #333;
+            }
+
+            th {
+                text-align: left;
+                font-weight: bold;
+                border-bottom: 2px solid #333;
+                background-color: #333;
+            }
+
+            tr:nth-child(odd) {
+                background-color: #333;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <header
+                class="d-flex flex-wrap align-items-center justify-content-center py-3 mb-4 border-bottom flex-column"
+            >
+                <h4>MultiMarkdown table tools demo</h4>
+                <p>Type something on the left to see an output on the right.</p>
+            </header>
+            <div class="container overflow-hidden text-center" style="max-width: 100%;">
+                <div class="row">
+                    <div class="col">
+                        <h5>Input</h5>
+                        <select class="form-select" id="input-format">
+                            <option value="auto" selected>Auto-detect</option>
+                            <option value="mmd">MultiMarkdown</option>
+                            <option value="gfm">GitHub-flavored Markdown</option>
+                            <option value="html">HTML</option>
+                            <option value="csv">CSV</option>
+                            <option value="csv-semi">CSV (;)</option>
+                        </select>
+                        <div style="height: 10px;"></div>
+                        <textarea class="form-control" style="font-family: monospace; height: calc(100svh - 220px);" id="input">|             |          Grouping           ||
+First Header  | Second Header | Third Header |
+ ------------ | :-----------: | -----------: |
+Content       |          *Long Cell*        ||
+Content       |   **Cell**    |         Cell |
+
+New section   |     More      |         Data |
+And more      | With an escaped '\|'         ||  
+[Prototype table]</textarea>
+                    </div>
+                    <div class="col">
+                        <h5>Output</h5>
+                        <select class="form-select" id="output-format">
+                            <option value="preview">Preview (HTML)</option>
+                            <option value="mmd-pretty">MultiMarkdown (pretty)</option>
+                            <option value="mmd-mini">MultiMarkdown (minified)</option>
+                            <option value="gfm-pretty">GitHub-flavored Markdown (pretty)</option>
+                            <option value="gfm-mini">GitHub-flavored Markdown (minified)</option>
+                            <option value="html-pretty">HTML (pretty)</option>
+                            <option value="html-mini">HTML (minified)</option>
+                            <option value="csv">CSV</option>
+                            <option value="csv-semi">CSV (;)</option>
+                        </select>
+                        <div style="height: 10px;"></div>
+                        <div id="output"></div>
+                        <div class="alert alert-danger" id="error" role="alert"></div>
+                    </div>
+                </div>
+            </div>         
+        </main>
+    </body>
 </html>

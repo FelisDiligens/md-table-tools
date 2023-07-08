@@ -2,6 +2,9 @@
 
 # MultiMarkdown table tools
 
+![](assets/demo.png)
+> Screenshot of web demo
+
 ## Features
 
 - Parsing MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables into intermediary
@@ -59,7 +62,7 @@ $ npm run test
 
 ### Web demo
 
-> Under development!
+A web demo (see screenshot above) is available under `demo/src/index.html`.
 
 ### NodeJS demo
 
