@@ -1,10 +1,5 @@
 # MultiMarkdown table tools
 
-<!--
-> **Warning** Development has stopped until I can figure out how to make unit tests work in the browser, or how to make DOMParser usable in the browser as well as NodeJS. (Is there really no way?)  
-> If you want to, you can use this project as a starting point. It works in Electron and in Node if you install JSDOM.
--->
-
 ## Features
 
 - Parsing MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables into intermediary
@@ -21,14 +16,17 @@
 
 This module mostly follows the MultiMarkdown specs: https://fletcher.github.io/MultiMarkdown-6/syntax/tables.html
 
-With one exception: You can merge cells vertically by writing `^^` into a cell.
+With a few exceptions:
+- You can merge cells vertically by writing `^^` into a cell.
+- You can use `\` to join rows together.
 
 ### Differences to tables in GitHub-flavored Markdown (and similar variants)
 
 GitHub-flavored Markdown tables (and similar variants) are fully supported, with these additional features:
 
 - You can merge cells horizontally by adding additional pipes (`|`) at the end of the cell.
-- You can merge cells vertically by writing `^^` into a cell;
+- You can merge cells vertically by writing `^^` into a cell.
+- You can merge the row below by writing `\` at the end of a row.
 - You can add a caption above or below to the table. Captions can optionally have labels.
 - You can have a header with multiple rows.
 - You can omit the header.

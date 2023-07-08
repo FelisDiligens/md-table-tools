@@ -1,4 +1,4 @@
-import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableColumn, TableRow, TextAlignment } from "./table.js";
+import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table.js";
 import { ParsingError, TableParser } from "./tableParser.js";
 import { TableRenderer } from "./tableRenderer.js";
 
@@ -351,10 +351,10 @@ export class MinifiedMultiMarkdownTableRenderer implements TableRenderer {
             // Last cell:
             if (i == cells.length - 1 && cell.text.trim() != "" && cell.merged != TableCellMerge.left)
                 result = result.substring(0, result.length - 1); // Omit last '|' if possible
-
-            if (row.isMultiline)
-                result += " \\";
         });
+
+        if (row.isMultiline)
+            result += " \\";
 
         return result;
     }
