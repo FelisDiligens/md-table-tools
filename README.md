@@ -152,7 +152,6 @@ const htmlParser = new HTMLTableParser(
 ## Built with...
 
 - [Turndown](https://mixmark-io.github.io/turndown/) - for inline HTML to Markdown conversion
-- [DOMParser](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser) - for parsing HTML.
-  - ⚠️ Won't work in Node.js unless replaced with [jsdom](https://github.com/jsdom/jsdom).
+- [Cheerio](https://github.com/cheeriojs/cheerio#readme) and [htmlparser2](https://github.com/fb55/htmlparser2#readme) - for parsing HTML.
 - [TypeScript](https://www.typescriptlang.org/)
 - [Mocha](https://mochajs.org/) and [Chai](https://www.chaijs.com/)

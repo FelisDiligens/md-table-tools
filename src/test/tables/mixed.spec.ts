@@ -1,6 +1,6 @@
-import "mocha";
 import { expect } from "chai";
 import dedent from 'dedent-js'; // https://stackoverflow.com/questions/25924057/multiline-strings-that-dont-break-indentation
+import "mocha";
 import { HTMLTableRenderer, MinifiedMultiMarkdownTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "../../index.js";
 
 describe("Mixed MultiMarkdown test", () => {
@@ -143,7 +143,6 @@ describe("Mixed MultiMarkdown test", () => {
             `);
 
             let prettyTable = mmdPrettyRenderer.render(table);
-            console.log(prettyTable);
 
             expect(prettyTable).to.equal(dedent`
             | Markdown  | Rendered HTML |

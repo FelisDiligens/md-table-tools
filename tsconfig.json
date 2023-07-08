@@ -11,6 +11,12 @@
        */
       "moduleResolution": "NodeNext",
       "esModuleInterop": true,
-      "declaration": true
-    }
+      "declaration": true,
+      /* https://github.com/cheeriojs/cheerio/issues/2703#issuecomment-1242702115 */
+      "paths": {
+          "cheerio": [
+              "./node_modules/cheerio/lib/index.d.ts"
+          ]
+      }
+  }
 }

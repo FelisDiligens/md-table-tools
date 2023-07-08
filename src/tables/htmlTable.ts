@@ -1,12 +1,13 @@
+import * as cheerio from 'cheerio';
+import * as htmlparser2 from 'htmlparser2';
 import TurndownService from 'turndown';
+import { getTurndownService, removeInvisibleCharacters } from "./common.js";
 import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table.js";
 import { ParsingError, TableParser } from "./tableParser.js";
 import { TableRenderer } from "./tableRenderer.js";
-import { getTurndownService, removeInvisibleCharacters } from "./common.js";
 
 function escapeMarkdown(mdStr: string): string {
-    return mdStr
-        .replace(/\|/g, "\\|");
+    return mdStr.replace(/\|/g, "\\|");
 }
 
 function mdToHtml(markdown: string, inline = true): string {
@@ -96,8 +97,11 @@ function textAlignToCSS(textAlign: TextAlignment) {
     }
 }
 
-function cssToTextAlign(element: HTMLElement): TextAlignment {
-    switch (element.style.textAlign.toLowerCase()) {
+function cssToTextAlign(element: cheerio.Cheerio): TextAlignment {
+    if (!element.css("text-align")) // Might return 'undefined'
+        return TextAlignment.default;
+        
+    switch (element.css("text-align").toLowerCase()) {
         case "left":
             return TextAlignment.left;
         case "center":
@@ -110,48 +114,42 @@ function cssToTextAlign(element: HTMLElement): TextAlignment {
 }
 
 export enum HTMLTableParserMode {
-    StripHTMLElements,   // uses innerText
-    ConvertHTMLElements, // uses innerHTML and converts to Markdown if possible (default)
-    PreserveHTMLElements // uses innerHTML without any converting
-}
-
-/** Use browser DOMParser or jsdom. Will probably fail in NodeJS regardless. */
-function autoDomParser (table: string) {
-    // First, try window.DOMParser:
-    try {
-        let domParser = new window.DOMParser();
-        let dom = domParser.parseFromString(table, "text/html");
-        return dom;
-    } catch {} // Probably fails with `ReferenceError: window is not defined` in NodeJS.
-    try {
-        const jsdom = require("jsdom");
-        const dom = new jsdom.JSDOM(table);
-        return dom.window.document;
-    } catch {} // Either fails because jsdom isn't installed or because of `ReferenceError: require is not defined`.
-    throw new Error("Couldn't find any DOMParser. Please run in the browser or use jsdom.");
+    /** uses only text (`Cheerio.text()`) */
+    StripHTMLElements,
+    /** uses the HTML code (`Cheerio.html()`) without any converting */
+    PreserveHTMLElements,
+    /** uses the HTML code (`Cheerio.html()`) and converts to Markdown using Turndown if possible (default) */
+    ConvertHTMLElements, 
 }
 
 export class HTMLTableParser implements TableParser {
     public constructor(
         public mode: HTMLTableParserMode = HTMLTableParserMode.ConvertHTMLElements,
-        public parseDom: Function = autoDomParser,
         public turndownService: TurndownService = getTurndownService()) {}
 
     public parse(table: string): Table {
         /*
             Parse the html string and find our <table> tag to start:
         */
-        let dom = this.parseDom(table);
-        let domTable = dom.querySelector("table");
-        if (domTable == null)
+        const dom = htmlparser2.parseDocument(table, {
+            xmlMode: false,
+            lowerCaseTags: true,
+            lowerCaseAttributeNames: true,
+            decodeEntities: true,
+        });
+        const $ = cheerio.load(dom as any);
+        const $tables = $("table");
+        if ($tables.length === 0) {
             throw new ParsingError("Couldn't find <table> tag in DOM.");
+        }
+        const $table = $($tables[0]);
 
         /*
             Converting table to Markdown:
         */
         let parsedTable = new Table();
         let hasSections = false;
-        let tableTextAlign = cssToTextAlign(domTable);
+        let tableTextAlign = cssToTextAlign($table);
 
         // Get everything before <table>:
         let m = table.match(/((.|\n)*)<\s*[tT][aA][bB][lL][eE][^<>]*>/m);
@@ -166,28 +164,32 @@ export class HTMLTableParser implements TableParser {
         }
 
         // Parse <thead> tag in <table>:
-        let domTHead = domTable.querySelector("thead");
-        if (domTHead != null) {
-            let sectionTextAlign = cssToTextAlign(domTHead);
+        let $theads = $table.find("thead");
+        if ($theads.length != 0) {
+            let sectionTextAlign = cssToTextAlign($theads);
             this.parseSection(
+                $,
                 parsedTable,
-                domTHead.rows,
+                $theads.find("tr"),
                 (sectionTextAlign != TextAlignment.default ? sectionTextAlign : tableTextAlign),
                 true);
             hasSections = true;
         }
 
         // Parse <tbody> tags in <table>:
-        let domTBodies = domTable.querySelectorAll("tbody");
-        if (domTBodies.length > 0) {
-            domTBodies.forEach((domTBody: any, i: number) => {
+        const self = this;
+        let $tbodies = $table.find("tbody");
+        if ($tbodies.length > 0) {
+            $tbodies.each((i: number, element: cheerio.Element) => {
+                const domTBody = $(element);
                 let sectionTextAlign = cssToTextAlign(domTBody);
-                this.parseSection(
+                self.parseSection(
+                    $,
                     parsedTable,
-                    domTBody.rows,
+                    domTBody.find("tr"),
                     (sectionTextAlign != TextAlignment.default ? sectionTextAlign : tableTextAlign),
                     false,
-                    domTHead == null,
+                    $theads == null,
                     i > 0);
             });
             hasSections = true;
@@ -197,8 +199,9 @@ export class HTMLTableParser implements TableParser {
         if (!hasSections) {
             // Parse table that doesn't have thead or tbody tags as one section with no header:
             this.parseSection(
+                $,
                 parsedTable,
-                domTable.rows,
+                $table.find("tr"),
                 tableTextAlign,
                 false,
                 true,
@@ -206,13 +209,14 @@ export class HTMLTableParser implements TableParser {
         }
 
         // Parse <caption> tag in <table>:
-        let domCaption = domTable.querySelector("caption");
-        if (domCaption != null) {
+        let $captions = $table.find("caption");
+        if ($captions.length != 0) {
+            const $caption = $($captions);
             let caption = new TableCaption();
-            caption.text = htmlToMd(domCaption.innerHTML, this.turndownService).replace(/(\r?\n)/g, "").trim(); // domCaption.innerText.replace(/(\r?\n|\[|\])/g, "").trim();
-            if (caption.getLabel() != domCaption.id)
-                caption.label = domCaption.id.replace(/(\r?\n|\[|\])/g, "").trim();
-            switch (domCaption.style.captionSide.toLowerCase()) {
+            caption.text = htmlToMd($caption.html() ? $caption.html() : "", this.turndownService).replace(/(\r?\n)/g, "").trim(); // domCaption.innerText.replace(/(\r?\n|\[|\])/g, "").trim();
+            if ($caption.attr('id') && caption.getLabel() != $caption.attr('id'))
+                caption.label = $caption.attr('id').replace(/(\r?\n|\[|\])/g, "").trim();
+            switch ($caption.css("caption-side") && $caption.css("caption-side").toLowerCase()) {
                 case "bottom":
                     caption.position = TableCaptionPosition.bottom;
                     break;
@@ -226,7 +230,7 @@ export class HTMLTableParser implements TableParser {
         return parsedTable.update();
     }
 
-    private parseSection(table: Table, domRows: HTMLCollectionOf<HTMLTableRowElement>, defaultTextAlign: TextAlignment, isHeader: boolean = false, allowHeaderDetection: boolean = false, firstRowStartsNewSection: boolean = false) {
+    private parseSection($: cheerio.Root, table: Table, $rows: cheerio.Cheerio, defaultTextAlign: TextAlignment, isHeader: boolean = false, allowHeaderDetection: boolean = false, firstRowStartsNewSection: boolean = false) {
         // HTML skips "ghost" cells that are overshadowed by other cells that have a rowspan > 1.
         // We'll memorize them:
         let rowspanGhostCells: { row: number; col: number; }[] = [];
@@ -235,7 +239,7 @@ export class HTMLTableParser implements TableParser {
         let rowOffset = table.rowCount();
 
         // Iterate over each row (<tr>) of the HTML table:
-        for (let domRowIndex = 0; domRowIndex < domRows.length; domRowIndex++) {
+        $rows.each((domRowIndex: number, element: cheerio.Element) => {
             let rowIndex = domRowIndex + rowOffset;
             let row = table.getRow(rowIndex);
             if (!row)
@@ -248,10 +252,11 @@ export class HTMLTableParser implements TableParser {
             let colOffset = 0;
 
             // Iterate over each cell (<td> or <th>) of the HTML table row:
-            let domRow = domRows[domRowIndex];
-            let domCells = domRow.querySelectorAll("td, th");
+            const $row = $(element);
+            let $cells = $row.find("td, th");
             let allCellsAreTH = true;
-            domCells.forEach((domCell, domColIndex) => {
+            $cells.each((domColIndex: number, element: cheerio.Element) => {
+                const $cell = $(element);
                 // Get the TableColumn of our Table object, taking the memorized rowspans and colOffset into account:
                 let colIndex = domColIndex + colOffset;
                 while (rowspanGhostCells.filter(ghost => ghost.row == rowIndex && ghost.col == colIndex).length > 0) {
@@ -262,11 +267,11 @@ export class HTMLTableParser implements TableParser {
                     column = table.addColumn();
 
                 // Add cell to our Table object:
-                let cellContent = this.parseCell(domCell as HTMLTableCellElement);
-                let textAlign = cssToTextAlign(domCell as HTMLElement);
-                let wrappable = domCell.classList.contains("extend");
+                let cellContent = this.parseCell($cell);
+                let textAlign = cssToTextAlign($cell);
+                let wrappable = $cell.hasClass("extend");
                 textAlign = textAlign != TextAlignment.default ? textAlign : defaultTextAlign;
-                allCellsAreTH = allCellsAreTH && domCell.tagName.toLowerCase() == "th";
+                allCellsAreTH = allCellsAreTH && $cell.prop("tagName").toLowerCase() == "th";
 
                 let cell = new TableCell(table, row, column);
                 cell.setText(cellContent);
@@ -275,7 +280,7 @@ export class HTMLTableParser implements TableParser {
                 table.addCell(cell);
 
                 // Take "colspan" into account:
-                let colspan = (domCell as HTMLTableCellElement).colSpan;
+                let colspan = $cell.prop("colspan");
                 if (colspan > 1) {
                     // Add empty cells to our Table object:
                     for (let i = 1; i < colspan; i++) {
@@ -291,7 +296,7 @@ export class HTMLTableParser implements TableParser {
                 }
 
                 // Take "rowspan" into account:
-                let rowspan = (domCell as HTMLTableCellElement).rowSpan;
+                let rowspan = $cell.prop("rowspan");
                 if (rowspan > 1) {
                     // Add empty cells to our Table object:
                     for (let i = 1; i < rowspan; i++) {
@@ -315,18 +320,18 @@ export class HTMLTableParser implements TableParser {
             if (allowHeaderDetection && !isHeader) {
                 row.isHeader = allCellsAreTH;
             }
-        }
+        });
     }
 
-    private parseCell(domCell: HTMLTableCellElement): string {
+    private parseCell($cell: cheerio.Cheerio): string {
         switch (this.mode) {
             case HTMLTableParserMode.PreserveHTMLElements:
-                return removeInvisibleCharacters(escapeMarkdown(domCell.innerHTML));
+                return removeInvisibleCharacters(escapeMarkdown($cell.html()));
             case HTMLTableParserMode.StripHTMLElements:
-                return removeInvisibleCharacters(escapeMarkdown(domCell.innerText));
+                return removeInvisibleCharacters(escapeMarkdown($cell.text()));
             case HTMLTableParserMode.ConvertHTMLElements:
             default:
-                return removeInvisibleCharacters(escapeMarkdown(htmlToMd(domCell.innerHTML, this.turndownService)));
+                return removeInvisibleCharacters(escapeMarkdown(htmlToMd($cell.html(), this.turndownService)));
         }
     }
 }

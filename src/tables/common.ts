@@ -1,5 +1,4 @@
 import TurndownService from "turndown";
-//import { NodeHtmlMarkdown, NodeHtmlMarkdownOptions } from 'node-html-markdown';
 
 export function removeInvisibleCharacters(str: string): string {
     // See: https://www.utf8-chartable.de/unicode-utf8-table.pl
@@ -13,31 +12,33 @@ export function removeInvisibleCharacters(str: string): string {
         .replace(/\u00A0/g, "&nbsp;")
         .replace(/\u2002/g, "&ensp;")
         .replace(/\u2003/g, "&emsp;")
-        .replace(/\u2009/g, "&thinsp;")
+        .replace(/\u2009/g, "&thinsp;");
     //.replace(/[\u0378\u0379\u0380-\u0383\u038B\u038D\u03A2\u0530\u0557\u0558\u058B\u058C\u0590\u05C8-\u05CF\u05EB-\u05EE\u05F5-\u05FF\u070E\u074B\u074C\u07B2-\u07BF\u07FB\u07FC\u082E\u082F\u083F]/g, ""); // Weird characters
 }
 
-/** Returns a TurndownService object configured for my own taste... deal with it 😎
- * (nah, jk, if you don't like it, you can configure it to fit your needs) */
+/**
+ * Returns a TurndownService object configured for my own taste...
+ * (of course, if you don't like it, you can configure it to fit your needs)
+ */
 export function getTurndownService(): TurndownService {
     const turndownService = new TurndownService({
-        headingStyle: 'atx',
-        hr: '---',
-        bulletListMarker: '-',
-        codeBlockStyle: 'fenced',
-        fence: '```',
-        emDelimiter: '*',
-        strongDelimiter: '**',
-        linkStyle: 'inlined',
-        linkReferenceStyle: 'full'
+        headingStyle: "atx",
+        hr: "---",
+        bulletListMarker: "-",
+        codeBlockStyle: "fenced",
+        fence: "```",
+        emDelimiter: "*",
+        strongDelimiter: "**",
+        linkStyle: "inlined",
+        linkReferenceStyle: "full",
     });
 
     // Add strikethrough:
-    turndownService.addRule('strikethrough', {
-        filter: ['del', 's'], // , 'strike'
+    turndownService.addRule("strikethrough", {
+        filter: ["del", "s"], // , 'strike'
         replacement: function (content) {
-            return '~~' + content + '~~';
-        }
+            return "~~" + content + "~~";
+        },
     });
 
     // Add blockquote:
@@ -50,23 +51,12 @@ export function getTurndownService(): TurndownService {
 
     // Filter table tags:
     turndownService
-        .remove('table')
-        .remove('tbody')
-        .remove('thead')
-        .remove('tr')
-        .remove('td')
-        .remove('th');
+        .remove("table")
+        .remove("tbody")
+        .remove("thead")
+        .remove("tr")
+        .remove("td")
+        .remove("th");
 
     return turndownService;
 }
-
-/*export function getNodeHtmlMarkdown(): NodeHtmlMarkdown {
-    return new NodeHtmlMarkdown(
-        {
-            bulletMarker: '-',
-            emDelimiter: '*',
-            strongDelimiter: '**',
-            ignore: ['table', 'tbody', 'thead', 'tr', 'td', 'th']
-        }
-    );
-}*/
