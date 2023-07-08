@@ -1,0 +1,19 @@
+{
+    "name": "md-table-tools-demo",
+    "version": "1.0.0",
+    "description": "",
+    "directories": {
+        "lib": "lib"
+    },
+    "author": "FelisDiligens",
+    "license": "MIT",
+    "scripts": {
+        "build": "browserify src/main.js -o src/bundle.js"
+    },
+    "dependencies": {
+        "@felisdiligens/md-table-tools": "file:lib/felisdiligens-md-table-tools-1.1.0.tgz"
+    },
+    "devDependencies": {
+        "browserify": "^17.0.0"
+    }
+}

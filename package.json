@@ -3,14 +3,19 @@
     "version": "1.1.0",
     "description": "MultiMarkdown table tools",
     "type": "module",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "main": "dist/cjs/bundle.js",
+    "module": "dist/mjs/bundle.js",
+    "types": "dist/types/bundle.d.ts",
+    "exports": {
+        "require": "./dist/cjs/bundle.js",
+        "import": "./dist/mjs/bundle.js"
+    },
     "publishConfig": {
         "access": "public"
     },
     "scripts": {
         "prepublish": "npm run build",
-        "build": "tsc",
+        "build": "rollup --config && bash ./fixup.sh",
         "test": "ts-mocha -n loader=ts-node/esm -p tsconfig.json src/**/*.spec.ts",
         "demo": "ts-node --esm --project tsconfig.json src/demo.ts"
     },
@@ -18,22 +23,29 @@
         "multimarkdown",
         "markdown",
         "html",
+        "gfm",
         "table",
         "convert"
     ],
     "author": "FelisDiligens",
     "license": "MIT",
     "devDependencies": {
+        "@rollup/plugin-typescript": "^11.1.2",
         "@types/chai": "^4.3.5",
         "@types/cheerio": "^0.22.31",
         "@types/mocha": "^10.0.1",
         "@types/turndown": "^5.0.1",
         "chai": "^4.3.7",
         "dedent-js": "^1.0.1",
+        "esbuild": "^0.18.11",
         "mocha": "^10.2.0",
+        "rollup": "^3.26.2",
+        "rollup-plugin-dts": "^5.3.0",
+        "rollup-plugin-esbuild": "^5.0.0",
         "ts-loader": "^9.4.4",
         "ts-mocha": "^10.0.0",
         "ts-node": "^10.9.1",
+        "tslib": "^2.6.0",
         "typescript": "^5.1.6"
     },
     "dependencies": {

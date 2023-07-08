@@ -1,22 +1,21 @@
 {
+    "include": ["src/**/*"],
     "compilerOptions": {
-      "outDir": "./dist/",
-      "noImplicitAny": true,
-      "module": "es6",
-      "target": "es5",
-      "allowJs": true,
-      /*
-       * https://stackoverflow.com/a/72215487
-       * https://stackoverflow.com/questions/72841589/relative-import-paths-need-explicit-file-extensions-in-ecmascript-imports-when
-       */
-      "moduleResolution": "NodeNext",
-      "esModuleInterop": true,
-      "declaration": true,
-      /* https://github.com/cheeriojs/cheerio/issues/2703#issuecomment-1242702115 */
-      "paths": {
-          "cheerio": [
-              "./node_modules/cheerio/lib/index.d.ts"
-          ]
-      }
-  }
+        "outDir": "./dist/",
+        "noImplicitAny": true,
+        "module": "es6",
+        "target": "esnext",
+        "allowJs": true,
+        /*
+         * https://stackoverflow.com/a/72215487
+         * https://stackoverflow.com/questions/72841589/relative-import-paths-need-explicit-file-extensions-in-ecmascript-imports-when
+         */
+        "moduleResolution": "NodeNext",
+        "esModuleInterop": true,
+        "declaration": true,
+        /* https://github.com/cheeriojs/cheerio/issues/2703#issuecomment-1242702115 */
+        "paths": {
+            "cheerio": ["./node_modules/cheerio/lib/index.d.ts"]
+        }
+    }
 }

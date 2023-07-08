@@ -127,7 +127,8 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
 
 ## Built with...
 
+- written in [TypeScript](https://www.typescriptlang.org/)
+- [Cheerio](https://github.com/cheeriojs/cheerio#readme) and [htmlparser2](https://github.com/fb55/htmlparser2#readme) - for parsing HTML
 - [Turndown](https://mixmark-io.github.io/turndown/) - for inline HTML to Markdown conversion
-- [Cheerio](https://github.com/cheeriojs/cheerio#readme) and [htmlparser2](https://github.com/fb55/htmlparser2#readme) - for parsing HTML.
-- [TypeScript](https://www.typescriptlang.org/)
-- [Mocha](https://mochajs.org/) and [Chai](https://www.chaijs.com/)
+- [Rollup](https://rollupjs.org/) - for bundling
+- [Mocha](https://mochajs.org/) and [Chai](https://www.chaijs.com/) - for testing
