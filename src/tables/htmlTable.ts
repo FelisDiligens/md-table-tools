@@ -46,6 +46,9 @@ function mdToHtml(markdown: string, inline = true): string {
     // Links:
     html = html.replace(/\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "<a href=\"$2\">$1</a>");
 
+    // Block code:
+    html = html.replace(/```[a-z]*?\n(.*?)\n```/g, "<code>$1</code>");
+
     // Inline code:
     html = html.replace(/`(.*?)`/g, "<code>$1</code>");
 

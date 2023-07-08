@@ -111,6 +111,7 @@ export class TableRow {
     public constructor(
         public index: number = 0,
         public isHeader: boolean = false,
+        /** Only pertains to MultiMarkdown multiline feature. Ignored by other parsers/renderers. See Table.mergeMultilineRows() */
         public isMultiline: boolean = false,
         public startsNewSection: boolean = false) {
         this.cells = [];
@@ -431,6 +432,42 @@ export class Table {
                 cell.merged = TableCellMerge.none;
         }
         
+        return this;
+    }
+
+    /**
+     * Merges multiline rows (from MultiMarkdown feature) into "normal" rows.
+     * This will destroy MultiMarkdown formatting! Only use when rendering into different formats.
+     */
+    public mergeMultilineRows(): Table {
+        let newRows: TableRow[] = [];
+
+        let merging = false;
+        let actualRowIndex = 0;
+        this.getRows().forEach((row, index) => {
+            if (merging) {
+                row.getCells().forEach((cell, index) => {
+                    const parentCell = newRows[actualRowIndex - 1].getCell(index);
+                    parentCell.setText(parentCell.text + "\n" + cell.text);
+                });
+            } else {
+                row.index = actualRowIndex;
+                newRows.push(row);
+                actualRowIndex++;
+            }
+
+            if (!merging && row.isMultiline) {
+                merging = true;
+            } else if (merging && !row.isMultiline) {
+                merging = false;
+            }
+
+            row.isMultiline = false;
+        });
+
+        this.rows = newRows;
+        this.update();
+
         return this;
     }
 }

@@ -1,5 +1,5 @@
-import { MultiMarkdownTableParser } from "./tables/multiMarkdownTable.js";
 import { HTMLTableRenderer } from "./tables/htmlTable.js";
+import { MultiMarkdownTableParser } from "./tables/multiMarkdownTable.js";
 
 const mdParser = new MultiMarkdownTableParser();
 const htmlRenderer = new HTMLTableRenderer();

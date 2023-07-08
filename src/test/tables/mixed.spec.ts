@@ -183,7 +183,7 @@ describe("Mixed MultiMarkdown test", () => {
             \`\`\`|\`\`\``);
         });
 
-        it("should convert multiline tables", () => {
+        it("should convert multiline tables into HTML", () => {
             let table = mmdParser.parse(dedent`
             |   Markdown   | Rendered HTML |
             |--------------|---------------|
@@ -195,6 +195,8 @@ describe("Mixed MultiMarkdown test", () => {
             |    .1 + .2   | .1 + .2         \\
             |    \`\`\`       | \`\`\`           |
             `);
+
+            table.mergeMultilineRows(); // Without merging them beforehand, the HTML table won't be rendered correctly.
 
             let htmlTable = htmlPrettyRenderer.render(table);
 
@@ -212,17 +214,13 @@ describe("Mixed MultiMarkdown test", () => {
                         <td><em>Italic</em></td>
                     </tr>
                     <tr>
-                        <td>- Item 1</td>
-                        <td>- Item 1</td>
+                        <td>- Item 1<br>- Item 2</td>
+                        <td>- Item 1<br>- Item 2</td>
                     </tr>
                     <tr>
-                        <td>- Item 2</td>
-                        <td>- Item 2</td>
+                        <td><code>.1 + .2</code></td>
+                        <td><code>.1 + .2</code></td>
                     </tr>
-                    <tr>
-                         <td><code>.1 + .2</code></td>
-                         <td><code>.1 + .2</code></td>
-                     </tr>
                 </tbody>
             </table>`);
         });
