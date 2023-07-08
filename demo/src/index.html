@@ -21,28 +21,39 @@
             table {
                 border-collapse: collapse;
                 border-spacing: 2px;
-                border: 1px solid #333;
+                border: 1px solid #171a1d;
+            }
+
+            thead, tbody {
+                border-collapse: collapse;
             }
 
             th,
             td {
                 padding: 0.5em 1em 0.5em 1em;
-                border: 1px solid #333;
+                border: 1px solid #171a1d;
             }
 
             th {
                 text-align: left;
                 font-weight: bold;
-                border-bottom: 2px solid #333;
-                background-color: #333;
+                background-color: #30363b;
             }
 
-            tr:nth-child(odd) {
-                background-color: #333;
+            thead > tr:last-child > th {
+                border-bottom: 2px solid #171a1d;
+            }
+
+            tr:nth-child(even) {
+                background-color: #30363b;
+            }
+
+            caption {
+                text-align: center;
             }
         </style>
     </head>
-    <body>
+    <body data-bs-theme="dark">
         <main>
             <header
                 class="d-flex flex-wrap align-items-center justify-content-center py-3 mb-4 border-bottom flex-column"
