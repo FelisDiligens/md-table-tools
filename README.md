@@ -1,3 +1,5 @@
+> ⚠️ Work in progress
+
 # MultiMarkdown table tools
 
 ## Features
@@ -12,7 +14,11 @@
   - by changing the text alignment within a column
   - etc.
 
-## Syntax
+## Module format
+
+This project gets packaged as CommonJS and ES module. Types are generated as well.
+
+## MultiMarkdown Syntax
 
 This module mostly follows the MultiMarkdown specs: https://fletcher.github.io/MultiMarkdown-6/syntax/tables.html
 
@@ -51,15 +57,19 @@ $ npm run test
 
 ## Usage
 
-### Demo
+### Web demo
+
+> Under development!
+
+### NodeJS demo
 
 ```bash
 $ npm run demo
 ```
 
 ```typescript
-import { MultiMarkdownTableParser } from "md-table-tools";
-import { HTMLTableRenderer } from "md-table-tools";
+import { MultiMarkdownTableParser } from "@felisdiligens/md-table-tools";
+import { HTMLTableRenderer } from "@felisdiligens/md-table-tools";
 
 const mdParser = new MultiMarkdownTableParser();
 const htmlRenderer = new HTMLTableRenderer();
