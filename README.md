@@ -126,28 +126,6 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
   - `HTMLTableParserMode`
   - `CSVTableRendererMode`
 
-### Usage in NodeJS
-
-> **Warning** This is subject to change.
-
-In node, if you plan to use `HTMLTableParser`, you'll need to install [jsdom](https://github.com/jsdom/jsdom) (`npm install --save jsdom`).
-
-When you instantiate `HTMLTableParser`, you'll need to pass a function that uses jsdom, like so:
-
-```typescript
-import { HTMLTableParser } from "md-table-tools";
-import jsdom from "jsdom";
-
-function jsdomParse (table: string) {
-    const dom = new jsdom.JSDOM(table);
-    return dom.window.document;
-}
-
-const htmlParser = new HTMLTableParser(
-    HTMLTableParserMode.ConvertHTMLElements,
-    jsdomParse
-);
-```
 
 ## Built with...
 
