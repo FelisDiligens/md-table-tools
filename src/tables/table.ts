@@ -1,3 +1,4 @@
+/** indicates how text is aligned in a column */
 export enum TextAlignment {
     left = "left",
     center = "center",
@@ -5,12 +6,14 @@ export enum TextAlignment {
     default = "start"
 }
 
+/** indicates how a cell is merged with a neighboring cell */
 export enum TableCellMerge {
     above,
     left,
     none
 }
 
+/** indicates the placement of the table caption */
 export enum TableCaptionPosition {
     top = "top",
     bottom = "bottom"
@@ -269,7 +272,7 @@ export class Table {
 
     /**
      * Moves the given row to the new index.
-     * @param col Either index or object reference.
+     * @param row Either index or object reference.
      * @param newIndex The new index of the given row.
      * @throws {IndexOutOfBoundsError} Can't move row outside of table.
      */
@@ -353,7 +356,7 @@ export class Table {
     }
 
     /**
-     * Adds the cell to the Table and the cell's respective TableRow and TableColumn.
+     * Adds the cell to the Table and the cell's respective TableRow and TableColumn.  
      * (Be careful not to add a cell with row/column that already exist. Otherwise, the added cell will be overshadowed and not be used.)
      */
     public addCell(cell: TableCell) {
@@ -373,11 +376,11 @@ export class Table {
     }
 
     /**
-     * -> Ensures that all table cells exist.
-     * -> Updates indices and sorts the cells within rows and columns.
-     * -> Tries to find invalid configurations and sanitize them.
+     * → Ensures that all table cells exist.  
+     * → Updates indices and sorts the cells within rows and columns.  
+     * → Tries to find invalid configurations and sanitize them.  
      * 
-     * Use this when altering the table.
+     * Call this method after altering the table.
      */
     public update(): Table {
         // Iterate over the entire table:
@@ -436,7 +439,7 @@ export class Table {
     }
 
     /**
-     * Merges multiline rows (from MultiMarkdown feature) into "normal" rows.
+     * Merges multiline rows (from MultiMarkdown feature) into "normal" rows.  
      * This will destroy MultiMarkdown formatting! Only use when rendering into different formats.
      */
     public mergeMultilineRows(): Table {

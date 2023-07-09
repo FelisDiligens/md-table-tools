@@ -17,7 +17,8 @@
         "prepublish": "npm run build",
         "build": "rollup --config && bash ./fixup.sh",
         "test": "ts-mocha -n loader=ts-node/esm -p tsconfig.json src/**/*.spec.ts",
-        "demo": "ts-node --esm --project tsconfig.json src/demo.ts"
+        "demo": "ts-node --esm --project tsconfig.json src/demo.ts",
+        "docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts && cp -rfv assets docs"
     },
     "keywords": [
         "multimarkdown",
@@ -46,6 +47,8 @@
         "ts-mocha": "^10.0.0",
         "ts-node": "^10.9.1",
         "tslib": "^2.6.0",
+        "typedoc": "^0.24.8",
+        "typedoc-plugin-markdown": "^3.15.3",
         "typescript": "^5.1.6"
     },
     "dependencies": {

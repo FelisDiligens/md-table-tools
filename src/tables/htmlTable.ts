@@ -116,6 +116,7 @@ function cssToTextAlign(element: cheerio.Cheerio): TextAlignment {
     }
 }
 
+/** changes the behavior of HTMLTableParser */
 export enum HTMLTableParserMode {
     /** uses only text (`Cheerio.text()`) */
     StripHTMLElements,

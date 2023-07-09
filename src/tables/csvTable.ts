@@ -1,4 +1,4 @@
-import { Table, TableCell, TableColumn, TableRow } from "./table.js";
+import { Table, TableCell } from "./table.js";
 import { TableParser } from "./tableParser.js";
 import { TableRenderer } from "./tableRenderer.js";
 
@@ -80,6 +80,7 @@ export class CSVTableParser implements TableParser {
     }
 }
 
+/** changes the output of CSVTableRenderer */
 export enum CSVTableRendererMode {
     OmitSpecialCharacters,
     EscapeWithQuotes,

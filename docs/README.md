@@ -1,3 +1,5 @@
+@felisdiligens/md-table-tools / [Exports](modules.md)
+
 > ⚠️ Work in progress
 
 # MultiMarkdown table tools
@@ -35,7 +37,7 @@ GitHub-flavored Markdown tables (and similar variants) are fully supported, with
 
 - You can merge cells horizontally by adding additional pipes (`|`) at the end of the cell.
 - You can merge cells vertically by writing `^^` into a cell.
-- You can merge the row below by writing `\` at the end of a row.
+- You can merge the row below by writing `` at the end of a row.
 - You can add a caption above or below to the table. Captions can optionally have labels.
 - You can have a header with multiple rows.
 - You can omit the header.
@@ -117,32 +119,31 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
 
 - All classes implementing the interface [`TableRenderer`](/docs/interfaces/TableRenderer.md):  
   You can always use the `TableRenderer.render(Table)` method to get a rendered string.
-  - [`PrettyMultiMarkdownTableRenderer`](/docs/classes/PrettyMultiMarkdownTableRenderer.html)
-  - [`MinifiedMultiMarkdownTableRenderer`](/docs/classes/MinifiedMultiMarkdownTableRenderer.html)
-  - [`GitHubFlavoredMarkdownTableRenderer`](/docs/classes/GitHubFlavoredMarkdownTableRenderer.html)
-  - [`HTMLTableRenderer`](/docs/classes/HTMLTableRenderer.html)
-  - [`CSVTableRenderer`](/docs/classes/CSVTableRenderer.html)
-- All classes implementing the interface [`TableParser`](/docs/interfaces/TableParser.html):  
+  - [`PrettyMultiMarkdownTableRenderer`](classes/PrettyMultiMarkdownTableRenderer.html)
+  - [`MinifiedMultiMarkdownTableRenderer`](classes/MinifiedMultiMarkdownTableRenderer.html)
+  - [`GitHubFlavoredMarkdownTableRenderer`](classes/GitHubFlavoredMarkdownTableRenderer.html)
+  - [`HTMLTableRenderer`](classes/HTMLTableRenderer.html)
+  - [`CSVTableRenderer`](classes/CSVTableRenderer.html)
+- All classes implementing the interface [`TableParser`](interfaces/TableParser.html):  
   You can always use the `TableParser.parse(string)` method to get an intermediary `Table` object.
-  - [`MultiMarkdownTableParser`](/docs/classes/MultiMarkdownTableParser.html)
-  - [`GitHubFlavoredMarkdownTableParser`](/docs/classes/GitHubFlavoredMarkdownTableParser.html)
-  - [`HTMLTableParser`](/docs/classes/HTMLTableParser.html)
-  - [`CSVTableParser`](/docs/classes/CSVTableParser.html)
+  - [`MultiMarkdownTableParser`](classes/MultiMarkdownTableParser.html)
+  - [`GitHubFlavoredMarkdownTableParser`](classes/GitHubFlavoredMarkdownTableParser.html)
+  - [`HTMLTableParser`](classes/HTMLTableParser.html)
+  - [`CSVTableParser`](classes/CSVTableParser.html)
 - Intermediary classes:  
   You can access rows, columns, cells, and the caption from the `Table` parent class.  
   Use these to manipulate the table. Don't forget to run `Table.update()` method afterwards!
-  - [`Table`](/docs/classes/Table.html)
-  - [`TableRow`](/docs/classes/TableRow.html)
-  - [`TableColumn`](/docs/classes/TableColumn.html)
-  - [`TableCell`](/docs/classes/TableCell.html)
-  - [`TableCaption`](/docs/classes/TableCaption.html)
+  - [`Table`](classes/Table.html)
+  - [`TableRow`](classes/TableRow.html)
+  - [`TableColumn`](classes/TableColumn.html)
+  - [`TableCell`](classes/TableCell.html)
+  - [`TableCaption`](classes/TableCaption.html)
 - Enums:
-  - [`TextAlignment`](/docs/enums/TextAlignment.html)
-  - [`TableCellMerge`](/docs/enums/TableCellMerge.html)
-  - [`TableCaptionPosition`](/docs/enums/TableCaptionPosition.html)
-  - [`HTMLTableParserMode`](/docs/enums/HTMLTableParserMode.html)
-  - [`CSVTableRendererMode`](/docs/enums/CSVTableRendererMode.html)
-
+  - [`TextAlignment`](enums/TextAlignment.html)
+  - [`TableCellMerge`](enums/TableCellMerge.html)
+  - [`TableCaptionPosition`](enums/TableCaptionPosition.html)
+  - [`HTMLTableParserMode`](enums/HTMLTableParserMode.html)
+  - [`CSVTableRendererMode`](enums/CSVTableRendererMode.html)
 
 ## Built with...
 
