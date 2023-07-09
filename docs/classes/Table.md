@@ -60,7 +60,7 @@
 
 #### Defined in
 
-[tables/table.ts:175](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L175)
+[tables/table.ts:175](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L175)
 
 ## Properties
 
@@ -72,7 +72,7 @@ Text after the table
 
 #### Defined in
 
-[tables/table.ts:173](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L173)
+[tables/table.ts:173](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L173)
 
 ___
 
@@ -84,7 +84,7 @@ Text before the table
 
 #### Defined in
 
-[tables/table.ts:170](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L170)
+[tables/table.ts:170](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L170)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:167](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L167)
+[tables/table.ts:167](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L167)
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:164](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L164)
+[tables/table.ts:164](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L164)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:166](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L166)
+[tables/table.ts:166](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L166)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:165](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L165)
+[tables/table.ts:165](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L165)
 
 ## Methods
 
@@ -147,7 +147,7 @@ Adds the cell to the Table and the cell's respective TableRow and TableColumn.
 
 #### Defined in
 
-[tables/table.ts:362](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L362)
+[tables/table.ts:362](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L362)
 
 ___
 
@@ -172,7 +172,7 @@ The added column.
 
 #### Defined in
 
-[tables/table.ts:206](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L206)
+[tables/table.ts:206](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L206)
 
 ___
 
@@ -197,7 +197,7 @@ The added row.
 
 #### Defined in
 
-[tables/table.ts:190](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L190)
+[tables/table.ts:190](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L190)
 
 ___
 
@@ -213,7 +213,7 @@ Returns the total amount of columns in the table.
 
 #### Defined in
 
-[tables/table.ts:374](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L374)
+[tables/table.ts:374](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L374)
 
 ___
 
@@ -239,7 +239,7 @@ The cell at row and column.
 
 #### Defined in
 
-[tables/table.ts:351](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L351)
+[tables/table.ts:351](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L351)
 
 ___
 
@@ -262,7 +262,7 @@ Returns the cell at row and column.
 
 #### Defined in
 
-[tables/table.ts:332](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L332)
+[tables/table.ts:332](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L332)
 
 ___
 
@@ -278,7 +278,7 @@ Returns all cells in the table. Isn't necessarily sorted!
 
 #### Defined in
 
-[tables/table.ts:309](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L309)
+[tables/table.ts:309](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L309)
 
 ___
 
@@ -301,7 +301,7 @@ See also: [()](TableColumn.md#getcells)
 
 #### Defined in
 
-[tables/table.ts:327](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L327)
+[tables/table.ts:327](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L327)
 
 ___
 
@@ -324,7 +324,7 @@ See also: [()](TableRow.md#getcells)
 
 #### Defined in
 
-[tables/table.ts:318](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L318)
+[tables/table.ts:318](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L318)
 
 ___
 
@@ -346,7 +346,7 @@ Gets the column at index. Negative index counts back from the end. Returns undef
 
 #### Defined in
 
-[tables/table.ts:227](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L227)
+[tables/table.ts:227](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L227)
 
 ___
 
@@ -362,7 +362,7 @@ Returns all columns in the table, from left to right.
 
 #### Defined in
 
-[tables/table.ts:304](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L304)
+[tables/table.ts:304](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L304)
 
 ___
 
@@ -378,7 +378,7 @@ Returns a list of all rows that are headers.
 
 #### Defined in
 
-[tables/table.ts:289](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L289)
+[tables/table.ts:289](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L289)
 
 ___
 
@@ -394,7 +394,7 @@ Returns a list of all rows that aren't headers.
 
 #### Defined in
 
-[tables/table.ts:294](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L294)
+[tables/table.ts:294](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L294)
 
 ___
 
@@ -416,7 +416,7 @@ Gets the row at index. Negative index counts back from the end. Returns undefine
 
 #### Defined in
 
-[tables/table.ts:217](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L217)
+[tables/table.ts:217](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L217)
 
 ___
 
@@ -432,7 +432,7 @@ Retruns all rows in the table, from top to bottom, including header rows.
 
 #### Defined in
 
-[tables/table.ts:299](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L299)
+[tables/table.ts:299](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L299)
 
 ___
 
@@ -454,7 +454,7 @@ Gets the index of the column. -1 if it hasn't been found.
 
 #### Defined in
 
-[tables/table.ts:232](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L232)
+[tables/table.ts:232](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L232)
 
 ___
 
@@ -476,7 +476,7 @@ Gets the index of the row. -1 if it hasn't been found.
 
 #### Defined in
 
-[tables/table.ts:222](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L222)
+[tables/table.ts:222](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L222)
 
 ___
 
@@ -493,7 +493,7 @@ This will destroy MultiMarkdown formatting! Only use when rendering into differe
 
 #### Defined in
 
-[tables/table.ts:445](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L445)
+[tables/table.ts:445](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L445)
 
 ___
 
@@ -520,7 +520,7 @@ Can't move column outside of table.
 
 #### Defined in
 
-[tables/table.ts:264](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L264)
+[tables/table.ts:264](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L264)
 
 ___
 
@@ -547,7 +547,7 @@ Can't move row outside of table.
 
 #### Defined in
 
-[tables/table.ts:279](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L279)
+[tables/table.ts:279](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L279)
 
 ___
 
@@ -569,7 +569,7 @@ Removes the given column. Also removes all cells within the column.
 
 #### Defined in
 
-[tables/table.ts:240](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L240)
+[tables/table.ts:240](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L240)
 
 ___
 
@@ -591,7 +591,7 @@ Removes the given row. Also removes all cells within the row.
 
 #### Defined in
 
-[tables/table.ts:251](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L251)
+[tables/table.ts:251](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L251)
 
 ___
 
@@ -607,7 +607,7 @@ Returns the total amount of rows in the table, including the header rows.
 
 #### Defined in
 
-[tables/table.ts:369](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L369)
+[tables/table.ts:369](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L369)
 
 ___
 
@@ -623,7 +623,7 @@ Tries to find invalid configurations and sanitize them.
 
 #### Defined in
 
-[tables/table.ts:417](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L417)
+[tables/table.ts:417](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L417)
 
 ___
 
@@ -643,4 +643,4 @@ Call this method after altering the table.
 
 #### Defined in
 
-[tables/table.ts:385](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L385)
+[tables/table.ts:385](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L385)

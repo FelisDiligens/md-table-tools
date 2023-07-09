@@ -38,7 +38,7 @@
 
 #### Defined in
 
-[tables/htmlTable.ts:130](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/htmlTable.ts#L130)
+[tables/htmlTable.ts:130](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/htmlTable.ts#L130)
 
 ## Properties
 
@@ -48,7 +48,7 @@
 
 #### Defined in
 
-[tables/htmlTable.ts:131](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/htmlTable.ts#L131)
+[tables/htmlTable.ts:131](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/htmlTable.ts#L131)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[tables/htmlTable.ts:132](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/htmlTable.ts#L132)
+[tables/htmlTable.ts:132](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/htmlTable.ts#L132)
 
 ## Methods
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[tables/htmlTable.ts:134](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/htmlTable.ts#L134)
+[tables/htmlTable.ts:134](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/htmlTable.ts#L134)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[tables/htmlTable.ts:330](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/htmlTable.ts#L330)
+[tables/htmlTable.ts:330](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/htmlTable.ts#L330)
 
 ___
 
@@ -128,4 +128,4 @@ ___
 
 #### Defined in
 
-[tables/htmlTable.ts:237](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/htmlTable.ts#L237)
+[tables/htmlTable.ts:237](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/htmlTable.ts#L237)
