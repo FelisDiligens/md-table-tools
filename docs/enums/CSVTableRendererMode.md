@@ -20,7 +20,7 @@ changes the output of CSVTableRenderer
 
 #### Defined in
 
-[tables/csvTable.ts:87](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/csvTable.ts#L87)
+[tables/csvTable.ts:87](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/csvTable.ts#L87)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[tables/csvTable.ts:86](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/csvTable.ts#L86)
+[tables/csvTable.ts:86](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/csvTable.ts#L86)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[tables/csvTable.ts:85](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/csvTable.ts#L85)
+[tables/csvTable.ts:85](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/csvTable.ts#L85)

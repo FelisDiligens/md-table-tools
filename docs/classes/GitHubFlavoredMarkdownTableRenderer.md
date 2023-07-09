@@ -41,7 +41,7 @@
 
 #### Defined in
 
-[tables/gfmTable.ts:182](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/gfmTable.ts#L182)
+[tables/gfmTable.ts:182](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/gfmTable.ts#L182)
 
 ## Properties
 
@@ -51,7 +51,7 @@
 
 #### Defined in
 
-[tables/gfmTable.ts:183](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/gfmTable.ts#L183)
+[tables/gfmTable.ts:183](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/gfmTable.ts#L183)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[tables/gfmTable.ts:184](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/gfmTable.ts#L184)
+[tables/gfmTable.ts:184](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/gfmTable.ts#L184)
 
 ## Methods
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[tables/gfmTable.ts:274](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/gfmTable.ts#L274)
+[tables/gfmTable.ts:274](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/gfmTable.ts#L274)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[tables/gfmTable.ts:281](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/gfmTable.ts#L281)
+[tables/gfmTable.ts:281](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/gfmTable.ts#L281)
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 #### Defined in
 
-[tables/gfmTable.ts:186](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/gfmTable.ts#L186)
+[tables/gfmTable.ts:186](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/gfmTable.ts#L186)
 
 ___
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[tables/gfmTable.ts:255](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/gfmTable.ts#L255)
+[tables/gfmTable.ts:255](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/gfmTable.ts#L255)
 
 ___
 
@@ -168,7 +168,7 @@ ___
 
 #### Defined in
 
-[tables/gfmTable.ts:212](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/gfmTable.ts#L212)
+[tables/gfmTable.ts:212](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/gfmTable.ts#L212)
 
 ___
 
@@ -190,4 +190,4 @@ ___
 
 #### Defined in
 
-[tables/gfmTable.ts:240](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/gfmTable.ts#L240)
+[tables/gfmTable.ts:240](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/gfmTable.ts#L240)

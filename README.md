@@ -117,31 +117,31 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
 
 - All classes implementing the interface [`TableRenderer`](/docs/interfaces/TableRenderer.md):  
   You can always use the `TableRenderer.render(Table)` method to get a rendered string.
-  - [`PrettyMultiMarkdownTableRenderer`](/docs/classes/PrettyMultiMarkdownTableRenderer.html)
-  - [`MinifiedMultiMarkdownTableRenderer`](/docs/classes/MinifiedMultiMarkdownTableRenderer.html)
-  - [`GitHubFlavoredMarkdownTableRenderer`](/docs/classes/GitHubFlavoredMarkdownTableRenderer.html)
-  - [`HTMLTableRenderer`](/docs/classes/HTMLTableRenderer.html)
-  - [`CSVTableRenderer`](/docs/classes/CSVTableRenderer.html)
-- All classes implementing the interface [`TableParser`](/docs/interfaces/TableParser.html):  
+  - [`PrettyMultiMarkdownTableRenderer`](/docs/classes/PrettyMultiMarkdownTableRenderer.md)
+  - [`MinifiedMultiMarkdownTableRenderer`](/docs/classes/MinifiedMultiMarkdownTableRenderer.md)
+  - [`GitHubFlavoredMarkdownTableRenderer`](/docs/classes/GitHubFlavoredMarkdownTableRenderer.md)
+  - [`HTMLTableRenderer`](/docs/classes/HTMLTableRenderer.md)
+  - [`CSVTableRenderer`](/docs/classes/CSVTableRenderer.md)
+- All classes implementing the interface [`TableParser`](/docs/interfaces/TableParser.md):  
   You can always use the `TableParser.parse(string)` method to get an intermediary `Table` object.
-  - [`MultiMarkdownTableParser`](/docs/classes/MultiMarkdownTableParser.html)
-  - [`GitHubFlavoredMarkdownTableParser`](/docs/classes/GitHubFlavoredMarkdownTableParser.html)
-  - [`HTMLTableParser`](/docs/classes/HTMLTableParser.html)
-  - [`CSVTableParser`](/docs/classes/CSVTableParser.html)
+  - [`MultiMarkdownTableParser`](/docs/classes/MultiMarkdownTableParser.md)
+  - [`GitHubFlavoredMarkdownTableParser`](/docs/classes/GitHubFlavoredMarkdownTableParser.md)
+  - [`HTMLTableParser`](/docs/classes/HTMLTableParser.md)
+  - [`CSVTableParser`](/docs/classes/CSVTableParser.md)
 - Intermediary classes:  
   You can access rows, columns, cells, and the caption from the `Table` parent class.  
   Use these to manipulate the table. Don't forget to run `Table.update()` method afterwards!
-  - [`Table`](/docs/classes/Table.html)
-  - [`TableRow`](/docs/classes/TableRow.html)
-  - [`TableColumn`](/docs/classes/TableColumn.html)
-  - [`TableCell`](/docs/classes/TableCell.html)
-  - [`TableCaption`](/docs/classes/TableCaption.html)
+  - [`Table`](/docs/classes/Table.md)
+  - [`TableRow`](/docs/classes/TableRow.md)
+  - [`TableColumn`](/docs/classes/TableColumn.md)
+  - [`TableCell`](/docs/classes/TableCell.md)
+  - [`TableCaption`](/docs/classes/TableCaption.md)
 - Enums:
-  - [`TextAlignment`](/docs/enums/TextAlignment.html)
-  - [`TableCellMerge`](/docs/enums/TableCellMerge.html)
-  - [`TableCaptionPosition`](/docs/enums/TableCaptionPosition.html)
-  - [`HTMLTableParserMode`](/docs/enums/HTMLTableParserMode.html)
-  - [`CSVTableRendererMode`](/docs/enums/CSVTableRendererMode.html)
+  - [`TextAlignment`](/docs/enums/TextAlignment.md)
+  - [`TableCellMerge`](/docs/enums/TableCellMerge.md)
+  - [`TableCaptionPosition`](/docs/enums/TableCaptionPosition.md)
+  - [`HTMLTableParserMode`](/docs/enums/HTMLTableParserMode.md)
+  - [`CSVTableRendererMode`](/docs/enums/CSVTableRendererMode.md)
 
 
 ## Built with...

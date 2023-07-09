@@ -44,4 +44,4 @@
 
 #### Defined in
 
-[tables/gfmTable.ts:21](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/gfmTable.ts#L21)
+[tables/gfmTable.ts:21](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/gfmTable.ts#L21)

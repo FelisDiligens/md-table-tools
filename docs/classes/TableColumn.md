@@ -37,7 +37,7 @@
 
 #### Defined in
 
-[tables/table.ts:141](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/table.ts#L141)
+[tables/table.ts:141](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L141)
 
 ## Properties
 
@@ -47,7 +47,7 @@
 
 #### Defined in
 
-[tables/table.ts:139](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/table.ts#L139)
+[tables/table.ts:139](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L139)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:142](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/table.ts#L142)
+[tables/table.ts:142](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L142)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:143](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/table.ts#L143)
+[tables/table.ts:143](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L143)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:144](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/table.ts#L144)
+[tables/table.ts:144](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L144)
 
 ## Methods
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:154](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/table.ts#L154)
+[tables/table.ts:154](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L154)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:158](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/table.ts#L158)
+[tables/table.ts:158](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L158)
 
 ___
 
@@ -131,4 +131,4 @@ ___
 
 #### Defined in
 
-[tables/table.ts:148](https://github.com/FelisDiligens/md-table-tools/blob/1e1bcfc/src/tables/table.ts#L148)
+[tables/table.ts:148](https://github.com/FelisDiligens/md-table-tools/blob/4fd20a3/src/tables/table.ts#L148)
