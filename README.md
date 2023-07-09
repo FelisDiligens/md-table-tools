@@ -62,9 +62,9 @@ $ npm run test
 
 ### Web demo
 
-A web demo (see screenshot above) is available under `demo/src/index.html`.
+A web demo (see screenshot above) can be accessed [here](https://felisdiligens.github.io/md-table-tools/demo/).
 
-You can also click [here](https://felisdiligens.github.io/md-table-tools/demo/) to view it.
+The source code is under `./demo`.
 
 ### CLI demo
 

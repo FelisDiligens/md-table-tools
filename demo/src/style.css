@@ -1,0 +1,87 @@
+/*
+    Table style
+*/
+
+table {
+    border-collapse: collapse;
+    border-spacing: 2px;
+    border: 1px solid #171a1d;
+}
+
+thead, tbody {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 0.5em 1em 0.5em 1em;
+    border: 1px solid #171a1d;
+}
+
+th {
+    text-align: left;
+    font-weight: bold;
+    background-color: #30363b;
+}
+
+thead > tr:last-child > th {
+    border-bottom: 2px solid #171a1d;
+}
+
+tr:nth-child(even) {
+    background-color: #30363b;
+}
+
+caption {
+    text-align: center;
+}
+
+/*
+    Site style
+*/
+
+div.separator {
+    height: 10px;
+}
+
+textarea#input {
+    font-family: monospace;
+    height: calc(100svh - 300px);
+}
+
+.container {
+    max-width: 100%;
+}
+
+.btn-action {
+    margin-right: 4px;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    background-color: #16181b;
+}
+
+.btn-action:hover {
+    background-color: #363d44;
+}
+
+.svg-icon {
+    width: 20px;
+    height: 20px;
+    filter: invert();
+}
+
+.tooltip {
+    --bs-tooltip-bg: black;
+    --bs-tooltip-color: white;
+}
+
+span.label {
+    min-width: 120px;
+    width: 120px;
+    text-align: left;
+}
+
+.hide {
+    display: none !important;
+}

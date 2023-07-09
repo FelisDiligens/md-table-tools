@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 27.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 512 512"
+   style="enable-background:new 0 0 512 512;"
+   xml:space="preserve"
+   sodipodi:docname="table-delete-column.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs11" /><sodipodi:namedview
+   id="namedview9"
+   pagecolor="#ffffff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   showgrid="false"
+   inkscape:zoom="1.4183568"
+   inkscape:cx="255.22493"
+   inkscape:cy="262.62786"
+   inkscape:window-width="1522"
+   inkscape:window-height="1236"
+   inkscape:window-x="976"
+   inkscape:window-y="156"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="g6" />
+<style
+   type="text/css"
+   id="style2">
+	.st0{fill:#212121;}
+</style>
+<g
+   id="g6"
+   style="stroke:none;stroke-opacity:1">
+	<path
+   class="st0"
+   d="M512,44.8v108.8H384v-44.8c0-45.95,37.25-83.2,83.2-83.2h25.6C503.4,25.6,512,34.2,512,44.8z M512,192v128H384   V192H512z M492.8,486.4c10.6,0,19.2-8.6,19.2-19.2V358.4H384v44.8c0,45.95,37.25,83.2,83.2,83.2H492.8z M0,467.2   c0,10.6,8.6,19.2,19.2,19.2h25.6c45.95,0,83.2-37.25,83.2-83.2v-44.8H0V467.2z M0,192v128h128V192H0z M0,44.8v108.8h128v-44.8   c0-45.95-37.25-83.2-83.2-83.2H19.2C8.6,25.6,0,34.2,0,44.8z M236.8,346.18V492.8c0,10.6,8.6,19.2,19.2,19.2   c10.6,0,19.2-8.6,19.2-19.2V346.18l-1.94-1.84L256,327.08l-17.26,17.26L236.8,346.18z M236.8,172.22l1.94,1.84L256,191.32   l17.26-17.26l1.94-1.84V19.2C275.2,8.6,266.6,0,256,0c-10.6,0-19.2,8.6-19.2,19.2V172.22z M191.22,320.78   c-7.5-7.5-7.5-19.65,0-27.15L228.85,256l-37.62-37.62c-7.5-7.5-7.5-19.65,0-27.15c7.5-7.5,19.65-7.5,27.15,0L256,228.85   l37.62-37.62c7.5-7.5,19.65-7.5,27.15,0c7.5,7.5,7.5,19.65,0,27.15L283.15,256l37.62,37.62c7.5,7.5,7.5,19.65,0,27.15   c-7.5,7.5-19.65,7.5-27.15,0L256,283.15l-37.62,37.62C210.88,328.27,198.72,328.27,191.22,320.78z"
+   id="path4"
+   style="stroke:none;stroke-opacity:1;opacity:1;fill:#000000;fill-opacity:1" />
+</g>
+</svg>

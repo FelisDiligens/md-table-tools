@@ -1,3 +1,7 @@
+/*
+    Import all parsers/renderers from md-table-tools
+*/
+
 const {
     HTMLTableRenderer,
     MultiMarkdownTableParser,
@@ -9,6 +13,11 @@ const {
     MinifiedMultiMarkdownTableRenderer,
     GitHubFlavoredMarkdownTableRenderer,
 } = require("@felisdiligens/md-table-tools");
+
+
+/*
+    Instantiate all parsers/renderers
+*/
 
 const mmdParser = new MultiMarkdownTableParser();
 const gfmParser = new GitHubFlavoredMarkdownTableParser();
@@ -25,6 +34,11 @@ const htmlMinifiedRenderer = new HTMLTableRenderer(false);
 const csvRenderer = new CSVTableRenderer();
 const csvSemicolonRenderer = new CSVTableRenderer(";");
 
+
+/*
+    Helpers
+*/
+
 function escapeHTML(value) {
     return value
         .replace(/&/g, "&amp;")
@@ -32,36 +46,6 @@ function escapeHTML(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&apos;"); // &#039;
-}
-
-function getInputFormat() {
-    return document.getElementById("input-format").value;
-}
-
-function getInput() {
-    return document.getElementById("input").value;
-}
-
-function getOutputFormat() {
-    return document.getElementById("output-format").value;
-}
-
-function setOutputRaw(value) {
-    document.getElementById("output").innerHTML = value;
-}
-
-function setOutputPre(value) {
-    document.getElementById("output").innerHTML = `<pre style="text-align: left;">${escapeHTML(value)}</pre>`;
-}
-
-function setErrorOutput(value) {
-    const error = document.getElementById("error");
-    error.innerHTML = escapeHTML(value);
-    error.style.visibility = "visible";
-}
-
-function hideError() {
-    document.getElementById("error").style.visibility = "hidden";
 }
 
 function detectFormat(input) {
@@ -81,9 +65,238 @@ function detectFormat(input) {
         throw new Error("Couldn't guess input format.");
 }
 
-function parseInput(input, format) {
+/**
+ * Determine the cursor position inside of a text.
+ * @param {number} index Cursor position as index
+ * @param {string} str Text
+ * @returns {{line: number, ch: number}} Line number and character/column
+ */
+function determineCursorPosition(index, str) {
+    const substr = str.substring(0, index); // Get a substring from the start of the text to the current cursor position.
+    const line = (substr.match(/\n/g)||[]).length + 1; // Count the number of newlines and add 1 as we start from line 1.
+    const ch = substr.length - substr.lastIndexOf("\n") - 1; // Determine the number of characters from the start of the line.
+    return {
+        line,
+        ch
+    }
+}
+
+
+/*
+    Table parsing (determine row index, column index, and text range)
+*/
+
+const separatorRegex = /^\|?([\s\.]*:?[\-=\.]+[:\+]?[\s\.]*\|?)+\|?$/;
+const captionRegex = /^(\[.+\]){1,2}$/;
+
+/**
+ * Determine the column index inside of a table.
+ * @param {string} lineStr Line/row
+ * @param {number} ch Cursor position from the start of the line
+ * @returns {number} Column index
+ */
+function determineColumnIndex(lineStr, ch) {
+    let row = lineStr.substring(0, ch).trim();
+    if (row.startsWith("|"))
+        row = row.substring(1);
+    let colIndex = 0;
+    let escape = false;
+    for (const ch of row) {
+        if (ch == "|" && !escape) {
+            colIndex++;
+        } else if (ch == "\\") {
+            escape = !escape;
+        }
+    }
+    return colIndex;
+}
+
+/**
+ * Returns the range (line numbers and character numbers) of the table and the selected row/column at the cursor. If there is no table at the cursor, it returns null.
+ * @returns {{ range, row, column } | null}
+ */
+function getTableCursor() {
+    const cursor = getCursor();
+    let hasSeparator = false;
+
+    // Determine startLine:
+    let rowIndex = 0;
+    let startLine = cursor.line;
+    let rememberEmptyLine = false;
+    while (startLine > 0) {
+        let line = getLine(startLine).trim();
+
+        // Does line match criteria?
+        if (line.includes("|") || line.match(captionRegex)) {
+            if (line.match(separatorRegex))
+                hasSeparator = true;
+
+            if (!line.match(captionRegex))
+                rowIndex++;
+
+            startLine--; // Move up.
+            rememberEmptyLine = false;
+        // Ignore a single empty line:
+        } else if (line.trim() === "" && !rememberEmptyLine) {
+            startLine--; // Move up.
+            rememberEmptyLine = true;
+        // Break once a line doesn't match criteria:
+        } else {
+            if (rememberEmptyLine)
+                startLine++; // Move back...
+            break;
+        }
+    }
+    startLine++; // Move back...
+    rowIndex--;
+
+    if (hasSeparator)
+        rowIndex--;
+
+    // Determine endLine:
+    let endLine = cursor.line;
+    while (endLine <= lineCount()) {
+        let line = getLine(endLine).trim();
+
+        // Does line match criteria?
+        if (line.includes("|") || line.match(captionRegex)) {
+            if (line.match(separatorRegex))
+                hasSeparator = true;
+
+            endLine++; // Move down.
+            rememberEmptyLine = false;
+        // Ignore a single empty line:
+        } else if (line.trim() === "" && !rememberEmptyLine) {
+            endLine++; // Move down.
+            rememberEmptyLine = true;
+        // Break once a line doesn't match criteria:
+        } else {
+            if (rememberEmptyLine)
+                endLine--; // Move back...
+            break;
+        }
+    }
+    endLine--; // Move back...
+
+    if (hasSeparator && (endLine != startLine))
+        return {
+            "start": {
+                "line": startLine,
+                "ch": 0
+            },
+            "end": {
+                "line": endLine,
+                "ch": getLine(endLine).length
+            },
+            "row": rowIndex,
+            "column": determineColumnIndex(getLine(cursor.line), cursor.ch)
+        };
+    else
+        return null;
+}
+
+
+/*
+    UI Getter and Setter
+*/
+
+/**
+ * @returns {"mmd"|"gfm"|"html"|"csv"|"csv-semi"}
+ */
+function getInputFormat() {
+    const format = document.getElementById("input-format").value;
     if (format == "auto")
-        format = detectFormat(input);
+        return detectFormat(getInput());
+    return format;
+}
+
+function getInput() {
+    return document.getElementById("input").value;
+}
+
+function setInput(value) {
+    document.getElementById("input").value = value;
+}
+
+/**
+ * Get the line inside of textarea.
+ * @param {number} line 
+ * @returns {string}
+ */
+function getLine(line) {
+    return document.getElementById("input").value.split('\n')[line - 1];
+}
+
+function lineCount() {
+    return (document.getElementById("input").value.match(/\n/g)||[]).length + 1;
+}
+
+/**
+ * Get the cursor position inside of textarea.
+ * @param {number} line
+ */
+function getCursor() {
+    const textarea = document.getElementById("input");
+    return determineCursorPosition(textarea.selectionEnd, textarea.value);
+}
+
+/**
+ * Get the selection inside of textarea.
+ * @param {number} line
+ */
+function getSelection() {
+    const textarea = document.getElementById("input");
+    return {
+        start: determineCursorPosition(textarea.selectionStart, textarea.value),
+        end: determineCursorPosition(textarea.selectionEnd, textarea.value)
+    }
+}
+
+/**
+ * @returns {"preview"|"mmd-pretty"|"mmd-mini"|"gfm-pretty"|"gfm-mini"|"html-pretty"|"html-mini"|"csv"|"csv-semi"}
+ */
+function getOutputFormat() {
+    return document.getElementById("output-format").value;
+}
+
+function setOutputRaw(value) {
+    document.getElementById("output").innerHTML = value;
+}
+
+function setOutputPre(value) {
+    document.getElementById("output").innerHTML = `<pre style="text-align: left;">${escapeHTML(value)}</pre>`;
+}
+
+function setErrorOutput(value) {
+    const error = document.getElementById("error");
+    error.innerHTML = escapeHTML(value);
+    error.style.visibility = "visible";
+    document.getElementById("output").innerHTML = "";
+}
+
+function hideError() {
+    document.getElementById("error").style.visibility = "hidden";
+}
+
+
+/*
+    Use md-table-tools lib
+*/
+
+function formatInput(input, format) {
+    switch (format) {
+        case "mmd":
+            return mmdPrettyRenderer.render(mmdParser.parse(input));
+        case "gfm":
+            return gfmPrettyRenderer.render(gfmParser.parse(input));
+        case "html":
+            return htmlPrettyRenderer.render(htmlParser.parse(input));
+        default:
+            throw new Error(`Cannot format input of type "${format}"`);
+    }
+}
+
+function parseInput(input, format) {
     switch (format) {
         case "mmd":
             return mmdParser.parse(input);
@@ -126,9 +339,21 @@ function renderOutput(table, format) {
     }
 }
 
+
+/*
+    UI Event Handler
+*/
+
 function onChange() {
     try {
         const inputFormat = getInputFormat();
+
+        // Hide table tools depending on input format...
+        if (inputFormat == "mmd")
+            document.getElementById("tools").classList.remove("hide");
+        else
+            document.getElementById("tools").classList.add("hide");
+
         const outputFormat = getOutputFormat();
         const input = getInput();
         const table = parseInput(input, inputFormat);
@@ -139,14 +364,110 @@ function onChange() {
             setOutputPre(output);
         hideError();
     } catch (e) {
-        setOutputRaw("");
         setErrorOutput(e.toString());
-        //throw e;
+        document.getElementById("tools").classList.add("hide");
+        throw e;
     }
 }
 
+function onBtnFormat() {
+    try {
+        setInput(formatInput(getInput(), getInputFormat()));
+        hideError();
+    } catch (e) {
+        setErrorOutput(e.toString());
+        throw e;
+    }
+}
+
+function actionWrapper(callback) {
+    try {
+        const input = getInput();
+        const cursor = getTableCursor();
+        if (cursor == null) {
+            setErrorOutput("Couldn't determine cursor position in table.");
+            return;
+        }
+        const table = parseInput(input, "mmd");
+        callback(table, cursor);
+        setInput(mmdPrettyRenderer.render(table));
+    } catch (e) {
+        setErrorOutput(e.toString());
+        throw e;
+    }
+}
+
+function onBtnRowAddAbove() {
+    actionWrapper((table, cursor) => {
+        table.addRow(cursor.row);
+        table.update();
+        return table;
+    });
+}
+
+function onBtnRowAddBelow() {
+    actionWrapper((table, cursor) => {
+        table.addRow(cursor.row + 1);
+        table.update();
+        return table;
+    });
+}
+
+function onBtnRowDelete() {
+    actionWrapper((table, cursor) => {
+        table.removeRow(cursor.row);
+        table.update();
+        return table;
+    });
+}
+
+function onBtnColAddLeft() {
+    actionWrapper((table, cursor) => {
+        table.addColumn(cursor.column);
+        table.update();
+        return table;
+    });
+}
+
+function onBtnColAddRight() {
+    actionWrapper((table, cursor) => {
+        table.addColumn(cursor.column + 1);
+        table.update();
+        return table;
+    });
+}
+
+function onBtnColDelete() {
+    actionWrapper((table, cursor) => {
+        table.removeColumn(cursor.column);
+        table.update();
+        return table;
+    });
+}
+
+
+/*
+    Initialize web page
+*/
+
+// Register event handler
 document.getElementById("input").addEventListener("input", onChange);
 document.getElementById("input-format").addEventListener("change", onChange);
 document.getElementById("output-format").addEventListener("change", onChange);
+
+// Register event handler for table tool buttons
+document.getElementById("btn-row-add-above").addEventListener("click", onBtnRowAddAbove);
+document.getElementById("btn-row-add-below").addEventListener("click", onBtnRowAddBelow);
+document.getElementById("btn-row-delete").addEventListener("click", onBtnRowDelete);
+document.getElementById("btn-col-add-left").addEventListener("click", onBtnColAddLeft);
+document.getElementById("btn-col-add-right").addEventListener("click", onBtnColAddRight);
+document.getElementById("btn-col-delete").addEventListener("click", onBtnColDelete);
+document.getElementById("btn-format").addEventListener("click", onBtnFormat);
+
+// Init UI
 onChange();
 hideError();
+
+// Enable bootstrap tooltips
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
