@@ -10,7 +10,7 @@
     "license": "MIT",
     "scripts": {
         "start": "parcel",
-        "build": "parcel build"
+        "build": "rm -rv dist && parcel build --public-url ./"
     },
     "dependencies": {
         "@felisdiligens/md-table-tools": "file:lib/felisdiligens-md-table-tools-1.1.0.tgz"

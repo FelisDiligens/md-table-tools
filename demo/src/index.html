@@ -50,7 +50,7 @@
                                 <option value="csv-semi">CSV (;)</option>
                             </select>
                         </div>
-                        <div class="separator"></div>
+                        <div class="spacer"></div>
                         <div id="tools" class="d-flex flex-row justify-content-start align-items-center">
                             <span class="fs-6 label">Table tools:&nbsp;</span>
                             <button type="button" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="Add row above" id="btn-row-add-above">
@@ -62,6 +62,7 @@
                             <button type="button" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="Delete row" id="btn-row-delete">
                                 <img src="icons/table-delete-row.svg" class="svg-icon">
                             </button>
+                            <div class="separator"></div>
                             <button type="button" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="Add column left" id="btn-col-add-left">
                                 <img src="icons/table-col-before.svg" class="svg-icon">
                             </button>
@@ -71,11 +72,22 @@
                             <button type="button" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="Delete column" id="btn-col-delete">
                                 <img src="icons/table-delete-column.svg" class="svg-icon">
                             </button>
+                            <div class="separator"></div>
+                            <button type="button" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="Align left" id="btn-align-left">
+                                <img src="icons/align-left.svg" class="svg-icon">
+                            </button>
+                            <button type="button" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="Align center" id="btn-align-center">
+                                <img src="icons/align-center.svg" class="svg-icon">
+                            </button>
+                            <button type="button" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="Align right" id="btn-align-right">
+                                <img src="icons/align-right.svg" class="svg-icon">
+                            </button>
+                            <div class="separator"></div>
                             <button type="button" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="Format table" id="btn-format">
                                 <img src="icons/magic.svg" class="svg-icon">
                             </button>
                         </div>
-                        <div class="separator"></div>
+                        <div class="spacer"></div>
                         <textarea class="form-control" id="input">|             |          Grouping           ||
 First Header  | Second Header | Third Header |
  ------------ | :-----------: | -----------: |
@@ -103,7 +115,7 @@ And more      | With an escaped '\|'         ||
                                 <option value="csv-semi">CSV (;)</option>
                             </select>
                         </div>
-                        <div class="separator"></div>
+                        <div class="spacer"></div>
                         <div id="output"></div>
                         <div class="alert alert-danger" id="error" role="alert"></div>
                     </div>

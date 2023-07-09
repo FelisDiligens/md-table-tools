@@ -40,8 +40,16 @@ caption {
     Site style
 */
 
-div.separator {
+div.spacer {
     height: 10px;
+}
+
+div.separator {
+    width: 1px;
+    height: 32px;
+    background-color: gray;
+    margin-left: 4px;
+    margin-right: 8px;
 }
 
 textarea#input {

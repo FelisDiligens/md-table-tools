@@ -81,6 +81,33 @@ function determineCursorPosition(index, str) {
     }
 }
 
+/**
+ * The opposite of determineCursorPosition. Determine the cursor index inside of a text.
+ * @param {number} line Line number
+ * @param {number} ch Character/column
+ * @param {string} str Text
+ * @returns {number} index
+ */
+function determineCursorIndex(line, ch, str) {
+    // Very primitive way of determining it... just iterating over the string and counting.
+    let currentLine = 1;
+    let currentCh = 0;
+    let currentIndex = 0;
+    for (const c of str) {
+        if (currentLine == line && currentCh == ch) {
+            return currentIndex;
+        }
+        if (c == "\n") {
+            currentLine++;
+            currentCh = 0;
+        } else {
+            currentCh++;
+        }
+        currentIndex++;
+    }
+    return -1;
+}
+
 
 /*
     Table parsing (determine row index, column index, and text range)
@@ -113,7 +140,7 @@ function determineColumnIndex(lineStr, ch) {
 
 /**
  * Returns the range (line numbers and character numbers) of the table and the selected row/column at the cursor. If there is no table at the cursor, it returns null.
- * @returns {{ range, row, column } | null}
+ * @returns {{ start: { line: number, ch: number }, end: { line: number, ch: number }, row: number, column: number, line: number, ch: number } | null}
  */
 function getTableCursor() {
     const cursor = getCursor();
@@ -189,7 +216,9 @@ function getTableCursor() {
                 "ch": getLine(endLine).length
             },
             "row": rowIndex,
-            "column": determineColumnIndex(getLine(cursor.line), cursor.ch)
+            "column": determineColumnIndex(getLine(cursor.line), cursor.ch),
+            "line": cursor.line,
+            "ch": cursor.ch
         };
     else
         return null;
@@ -373,7 +402,7 @@ function onChange() {
 function onBtnFormat() {
     try {
         setInput(formatInput(getInput(), getInputFormat()));
-        hideError();
+        onChange();
     } catch (e) {
         setErrorOutput(e.toString());
         throw e;
@@ -382,15 +411,36 @@ function onBtnFormat() {
 
 function actionWrapper(callback) {
     try {
+        // Get stuff:
         const input = getInput();
+        const outputFormat = getOutputFormat();
         const cursor = getTableCursor();
         if (cursor == null) {
             setErrorOutput("Couldn't determine cursor position in table.");
             return;
         }
+
+        // Parse table:
         const table = parseInput(input, "mmd");
+
+        // Manipulate table:
         callback(table, cursor);
+
+        // Write rendered result back into input textarea:
         setInput(mmdPrettyRenderer.render(table));
+
+        // Render output:
+        const output = renderOutput(table, outputFormat);
+        if (outputFormat == "preview")
+            setOutputRaw(output);
+        else
+            setOutputPre(output);
+
+        // Restore textarea focus and cursor position:
+        const textarea = document.getElementById("input");
+        const newCursorIndex = determineCursorIndex(cursor.line, cursor.ch, textarea.value);
+        textarea.focus();
+        textarea.selectionEnd = newCursorIndex;
     } catch (e) {
         setErrorOutput(e.toString());
         throw e;
@@ -401,7 +451,6 @@ function onBtnRowAddAbove() {
     actionWrapper((table, cursor) => {
         table.addRow(cursor.row);
         table.update();
-        return table;
     });
 }
 
@@ -409,7 +458,6 @@ function onBtnRowAddBelow() {
     actionWrapper((table, cursor) => {
         table.addRow(cursor.row + 1);
         table.update();
-        return table;
     });
 }
 
@@ -417,7 +465,6 @@ function onBtnRowDelete() {
     actionWrapper((table, cursor) => {
         table.removeRow(cursor.row);
         table.update();
-        return table;
     });
 }
 
@@ -425,7 +472,6 @@ function onBtnColAddLeft() {
     actionWrapper((table, cursor) => {
         table.addColumn(cursor.column);
         table.update();
-        return table;
     });
 }
 
@@ -433,7 +479,6 @@ function onBtnColAddRight() {
     actionWrapper((table, cursor) => {
         table.addColumn(cursor.column + 1);
         table.update();
-        return table;
     });
 }
 
@@ -441,7 +486,27 @@ function onBtnColDelete() {
     actionWrapper((table, cursor) => {
         table.removeColumn(cursor.column);
         table.update();
-        return table;
+    });
+}
+
+function onBtnAlignLeft() {
+    actionWrapper((table, cursor) => {
+        const column = table.getColumn(cursor.column);
+        column.textAlign = column.textAlign == "left" ? "default" : "left";
+    });
+}
+
+function onBtnAlignCenter() {
+    actionWrapper((table, cursor) => {
+        const column = table.getColumn(cursor.column);
+        column.textAlign = column.textAlign == "center" ? "default" : "center";
+    });
+}
+
+function onBtnAlignRight() {
+    actionWrapper((table, cursor) => {
+        const column = table.getColumn(cursor.column);
+        column.textAlign = column.textAlign == "right" ? "default" : "right";
     });
 }
 
@@ -462,6 +527,9 @@ document.getElementById("btn-row-delete").addEventListener("click", onBtnRowDele
 document.getElementById("btn-col-add-left").addEventListener("click", onBtnColAddLeft);
 document.getElementById("btn-col-add-right").addEventListener("click", onBtnColAddRight);
 document.getElementById("btn-col-delete").addEventListener("click", onBtnColDelete);
+document.getElementById("btn-align-left").addEventListener("click", onBtnAlignLeft);
+document.getElementById("btn-align-center").addEventListener("click", onBtnAlignCenter);
+document.getElementById("btn-align-right").addEventListener("click", onBtnAlignRight);
 document.getElementById("btn-format").addEventListener("click", onBtnFormat);
 
 // Init UI
