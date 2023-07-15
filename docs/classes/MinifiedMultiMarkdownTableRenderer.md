@@ -37,7 +37,7 @@
 
 #### Defined in
 
-[tables/multiMarkdownTable.ts:253](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/multiMarkdownTable.ts#L253)
+[tables/multiMarkdownTable.ts:254](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/multiMarkdownTable.ts#L254)
 
 ## Properties
 
@@ -47,7 +47,7 @@
 
 #### Defined in
 
-[tables/multiMarkdownTable.ts:254](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/multiMarkdownTable.ts#L254)
+[tables/multiMarkdownTable.ts:255](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/multiMarkdownTable.ts#L255)
 
 ## Methods
 
@@ -71,7 +71,7 @@
 
 #### Defined in
 
-[tables/multiMarkdownTable.ts:256](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/multiMarkdownTable.ts#L256)
+[tables/multiMarkdownTable.ts:257](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/multiMarkdownTable.ts#L257)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[tables/multiMarkdownTable.ts:296](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/multiMarkdownTable.ts#L296)
+[tables/multiMarkdownTable.ts:297](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/multiMarkdownTable.ts#L297)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[tables/multiMarkdownTable.ts:333](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/multiMarkdownTable.ts#L333)
+[tables/multiMarkdownTable.ts:334](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/multiMarkdownTable.ts#L334)
 
 ___
 
@@ -132,4 +132,4 @@ ___
 
 #### Defined in
 
-[tables/multiMarkdownTable.ts:307](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/multiMarkdownTable.ts#L307)
+[tables/multiMarkdownTable.ts:308](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/multiMarkdownTable.ts#L308)

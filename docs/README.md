@@ -1,6 +1,8 @@
 @felisdiligens/md-table-tools / [Exports](modules.md)
 
-> ⚠️ Work in progress
+> **Warning**  
+> Work in progress. API may change in the future, bugs may rear their ugly head...  
+> Use with care! If in doubt, ask me. :)
 
 # MultiMarkdown table tools
 

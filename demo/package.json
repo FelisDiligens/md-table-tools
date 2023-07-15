@@ -12,11 +12,11 @@
         "start": "parcel",
         "build": "rm -rv dist && parcel build --public-url ./"
     },
-    "dependencies": {
-        "@felisdiligens/md-table-tools": "file:lib/felisdiligens-md-table-tools-1.1.0.tgz"
-    },
     "devDependencies": {
         "buffer": "^6.0.3",
         "parcel": "^2.9.3"
+    },
+    "dependencies": {
+        "@felisdiligens/md-table-tools": "file:lib/felisdiligens-md-table-tools-0.1.0.tgz"
     }
 }

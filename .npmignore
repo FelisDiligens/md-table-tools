@@ -1,0 +1,15 @@
+# .npmignore used when `npm pack` or `npm publish` is run.
+# https://zellwk.com/blog/ignoring-files-from-npm-package/
+.gitignore
+.git/
+.npm/
+.vscode/
+assets/
+demo/
+docs/
+node_modules/
+*.tgz
+
+# Ignore dev files:
+fixup.sh
+rollup.config.js

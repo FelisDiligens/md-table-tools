@@ -19,7 +19,7 @@ indicates the placement of the table caption
 
 #### Defined in
 
-[tables/table.ts:19](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L19)
+[tables/table.ts:19](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L19)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[tables/table.ts:18](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L18)
+[tables/table.ts:18](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L18)

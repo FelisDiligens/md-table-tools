@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[tables/csvTable.ts:91](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/csvTable.ts#L91)
+[tables/csvTable.ts:91](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/csvTable.ts#L91)
 
 ## Properties
 
@@ -50,7 +50,7 @@
 
 #### Defined in
 
-[tables/csvTable.ts:94](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/csvTable.ts#L94)
+[tables/csvTable.ts:94](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/csvTable.ts#L94)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[tables/csvTable.ts:95](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/csvTable.ts#L95)
+[tables/csvTable.ts:95](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/csvTable.ts#L95)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[tables/csvTable.ts:93](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/csvTable.ts#L93)
+[tables/csvTable.ts:93](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/csvTable.ts#L93)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[tables/csvTable.ts:92](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/csvTable.ts#L92)
+[tables/csvTable.ts:92](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/csvTable.ts#L92)
 
 ## Methods
 
@@ -104,4 +104,4 @@ ___
 
 #### Defined in
 
-[tables/csvTable.ts:97](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/csvTable.ts#L97)
+[tables/csvTable.ts:97](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/csvTable.ts#L97)

@@ -20,7 +20,7 @@ indicates how a cell is merged with a neighboring cell
 
 #### Defined in
 
-[tables/table.ts:11](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L11)
+[tables/table.ts:11](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L11)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:12](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L12)
+[tables/table.ts:12](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L12)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[tables/table.ts:13](https://github.com/FelisDiligens/md-table-tools/blob/e0dc98a/src/tables/table.ts#L13)
+[tables/table.ts:13](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L13)
