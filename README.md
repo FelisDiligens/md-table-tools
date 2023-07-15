@@ -4,6 +4,11 @@
 
 # MultiMarkdown table tools
 
+[![npm link](https://img.shields.io/badge/-npm-9b3030?style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@felisdiligens/md-table-tools)
+![npm downloads](https://img.shields.io/npm/dt/%40felisdiligens/md-table-tools?style=for-the-badge)
+![npm version](https://img.shields.io/npm/v/%40felisdiligens/md-table-tools?style=for-the-badge&label=Version)
+![MIT license](https://img.shields.io/github/license/felisdiligens/md-table-tools?style=for-the-badge)
+
 ![](assets/demo.png)
 > Screenshot of [web demo](https://felisdiligens.github.io/md-table-tools/demo/)
 
@@ -19,48 +24,16 @@
   - by changing the text alignment within a column
   - etc.
 
-## Module format
+## Module
 
 This project gets packaged as CommonJS and ES module. Types are generated as well.
 
-## MultiMarkdown Syntax
-
-This module mostly follows the MultiMarkdown specs: https://fletcher.github.io/MultiMarkdown-6/syntax/tables.html
-
-With a few exceptions:
-- You can merge cells vertically by writing `^^` into a cell.
-- You can use `\` to join rows together.
-
-### Differences to tables in GitHub-flavored Markdown (and similar variants)
-
-GitHub-flavored Markdown tables (and similar variants) are fully supported, with these additional features:
-
-- You can merge cells horizontally by adding additional pipes (`|`) at the end of the cell.
-- You can merge cells vertically by writing `^^` into a cell.
-- You can merge the row below by writing `\` at the end of a row.
-- You can add a caption above or below to the table. Captions can optionally have labels.
-- You can have a header with multiple rows.
-- You can omit the header.
-- You can divide the table into multiple sections by adding a single empty line in-between rows.
-
-## Development
-
-### Building
-
+To install, run
 ```bash
-$ git clone https://github.com/FelisDiligens/md-table-tools.git
-$ cd md-table-tools
-$ npm install
-$ npm run build
+npm i @felisdiligens/md-table-tools
 ```
 
-### Testing
-
-```bash
-$ npm run test
-```
-
-## Usage
+## Usage / Examples
 
 ### Web demo
 
@@ -115,7 +88,14 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
 */
 ```
 
-### Available classes
+### Projects
+
+See [my Joplin plugin](https://github.com/FelisDiligens/joplin-plugin-multimd-table-tools) as an example for usage.
+
+## Docs
+
+You can access the documentation here: [./docs/modules.md](/docs/modules.md).  
+Or click on one of the classes below:
 
 - All classes implementing the interface [`TableRenderer`](/docs/interfaces/TableRenderer.md):  
   You can always use the `TableRenderer.render(Table)` method to get a rendered string.
@@ -145,6 +125,42 @@ var htmlTable = htmlRenderer.render(intermediaryTable);
   - [`HTMLTableParserMode`](/docs/enums/HTMLTableParserMode.md)
   - [`CSVTableRendererMode`](/docs/enums/CSVTableRendererMode.md)
 
+## Development
+
+### Building
+
+```bash
+$ git clone https://github.com/FelisDiligens/md-table-tools.git
+$ cd md-table-tools
+$ npm install
+$ npm run build
+```
+
+### Testing
+
+```bash
+$ npm run test
+```
+
+## MultiMarkdown Syntax
+
+This module mostly follows the MultiMarkdown specs: https://fletcher.github.io/MultiMarkdown-6/syntax/tables.html
+
+With a few exceptions:
+- You can merge cells vertically by writing `^^` into a cell.
+- You can use `\` to join rows together.
+
+### Differences to tables in GitHub-flavored Markdown (and similar variants)
+
+GitHub-flavored Markdown tables (and similar variants) are fully supported, with these additional features:
+
+- You can merge cells horizontally by adding additional pipes (`|`) at the end of the cell.
+- You can merge cells vertically by writing `^^` into a cell.
+- You can merge the row below by writing `\` at the end of a row.
+- You can add a caption above or below to the table. Captions can optionally have labels.
+- You can have a header with multiple rows.
+- You can omit the header.
+- You can divide the table into multiple sections by adding a single empty line in-between rows.
 
 ## Built with...
 
