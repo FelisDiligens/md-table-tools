@@ -182,6 +182,22 @@ describe("MultiMarkdownTableParser", () => {
                 }).to.not.throw();
             });
 
+            it("should parse table caption label", () => {
+                const table = mmdParser.parse(dedent`
+                |             |          Grouping           ||
+                First Header  | Second Header | Third Header |
+                ------------ | :-----------: | -----------: |
+                Content       |          *Long Cell*        ||
+                Content       |   **Cell**    |         Cell |
+                [Prototype table caption][label2]
+                `);
+
+                expect(table.caption.label).to.equal("label2");
+                expect(table.caption.getLabel()).to.equal("label2");
+                expect(table.caption.text).to.equal("Prototype table caption");
+                expect(table.caption.position).to.equal(TableCaptionPosition.bottom);
+            });
+
             it("shouldn't fail to parse a row starting with a link", () => {
                 const table = mmdParser.parse(dedent`
                 Link|Foo|Bar
@@ -191,7 +207,7 @@ describe("MultiMarkdownTableParser", () => {
 
                 expect(table.afterTable).to.equal("");
                 expect(table.rowCount()).to.equal(2);
-            })
+            });
         });
 
         context("when parsing invalid tables", () => {

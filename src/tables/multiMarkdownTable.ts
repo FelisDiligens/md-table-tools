@@ -51,7 +51,8 @@ export class MultiMarkdownTableParser implements TableParser {
 
             // Check if we are no longer in the table:
             if (state != ParsingState.BeforeTable && state != ParsingState.AfterTable && !( // If not:
-                ((line.trim().endsWith("\\") || wasMultiline || line.replace(/\`[^\`]*\`/g, "").match(/[^|\\`]\|/g)) && !line.startsWith("[") && !line.endsWith("]")) || // row
+                ((line.trim().endsWith("\\") || wasMultiline || line.replace(/\`[^\`]*\`/g, "").match(/[^|\\`]\|/g)) /* && !line.startsWith("[") && !line.endsWith("]") */) || // row
+                                                                                                                     // ↑ What was I thinking?
                 (line.trim().match(captionRegex) && (state == ParsingState.TopCaption || parsedTable.caption == null)) || // valid caption
                 (line.trim() === "" && !startNewSection && state != ParsingState.Separator))) { // single empty line allowed (except after separator)
                 state = ParsingState.AfterTable;
