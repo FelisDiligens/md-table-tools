@@ -1,6 +1,6 @@
-import "mocha";
 import { expect } from "chai";
 import dedent from 'dedent-js'; // https://stackoverflow.com/questions/25924057/multiline-strings-that-dont-break-indentation
+import "mocha";
 import { MinifiedMultiMarkdownTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "../../tables/multiMarkdownTable.js";
 import { Table, TableCaption, TableCaptionPosition, TableCellMerge, TextAlignment } from "../../tables/table.js";
 
@@ -181,6 +181,17 @@ describe("MultiMarkdownTableParser", () => {
                     `);
                 }).to.not.throw();
             });
+
+            it("shouldn't fail to parse a row starting with a link", () => {
+                const table = mmdParser.parse(dedent`
+                Link|Foo|Bar
+                -|-|-
+                [Link](https://example.com)|Example|Baz
+                `);
+
+                expect(table.afterTable).to.equal("");
+                expect(table.rowCount()).to.equal(2);
+            })
         });
 
         context("when parsing invalid tables", () => {
