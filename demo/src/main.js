@@ -53,7 +53,7 @@ function detectFormat(input) {
     if (input.match(/<\s*[tT][aA][bB][lL][eE].*\s*>/) && input.match(/<\/\s*[tT][aA][bB][lL][eE]\s*>/))
         return "html";
     // Markdown separator row found?
-    else if (input.match(/\|?([\s\.]*:?[\-=\.]+[:\+]?[\s\.]*\|?)+\|?/))
+    else if (input.match(/^\|?([\s\.]*:?[\-=\.]+[:\+]?[\s\.]*\|?)+\|?$/m))
         return "mmd";
     // At least one comma found?
     else if (input.match(/(.*,)+.*/))
