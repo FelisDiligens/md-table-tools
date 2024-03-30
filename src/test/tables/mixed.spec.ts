@@ -224,5 +224,34 @@ describe("Mixed MultiMarkdown test", () => {
                 </tbody>
             </table>`);
         });
+
+        it("should support full-width characters multiline tables", () => {
+            let table = mmdParser.parse(dedent`
+            |   Markdown   | Rendered HTML |
+            |--------------|---------------|
+            |    *Italic*  | *Italic*      | \\
+            |              |               |
+            |    - Item 1  | - Item 1      | \\
+            |    - Item 2  | - Item 2      |
+            |    \`\`\`python | \`\`\`python       \\
+            |    .1 + .2   | .1 + .2         \\
+            |    \`\`\`       | \`\`\`           |
+            |    中文字        | 長度不一樣         |
+            `);
+
+            let prettyTable = mmdPrettyRenderer.render(table);
+
+            expect(prettyTable).to.equal(dedent`
+            | Markdown  | Rendered HTML |
+            |-----------|---------------|
+            | *Italic*  | *Italic*      | \\
+            |           |               |
+            | - Item 1  | - Item 1      | \\
+            | - Item 2  | - Item 2      |
+            | \`\`\`python | \`\`\`python     | \\
+            | .1 + .2   | .1 + .2       | \\
+            | \`\`\`       | \`\`\`           |
+            | 中文字    | 長度不一樣    |`);
+        });
     });
 });

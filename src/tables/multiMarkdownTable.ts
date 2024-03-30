@@ -1,6 +1,7 @@
 import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableRow, TextAlignment } from "./table.js";
 import { ParsingError, TableParser } from "./tableParser.js";
 import { TableRenderer } from "./tableRenderer.js";
+import stringWidth from "string-width";
 
 /*
     Specification: https://fletcher.github.io/MultiMarkdown-6/syntax/tables.html
@@ -476,16 +477,17 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
             return "";
 
         let text = cell.merged == TableCellMerge.above ? "^^" : cell.text.replace(/\r?\n/g, "<br>");
+        const textLength = stringWidth(text);
 
         switch (cell.getTextAlignment()) {
             case TextAlignment.center:
-                return `${" ".repeat(Math.max(0, Math.floor((cellWidth - text.length + colspan - 1) / 2)))} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - text.length - colspan + 1) / 2)))}`;
+                return `${" ".repeat(Math.max(0, Math.floor((cellWidth - textLength + colspan - 1) / 2)))} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - textLength - colspan + 1) / 2)))}`;
             case TextAlignment.right:
-                return `${" ".repeat(Math.max(0, cellWidth - text.length))} ${text} `;
+                return `${" ".repeat(Math.max(0, cellWidth - textLength))} ${text} `;
             case TextAlignment.left:
             case TextAlignment.default:
             default:
-                return ` ${text} ${" ".repeat(Math.max(0, cellWidth - text.length))}`;
+                return ` ${text} ${" ".repeat(Math.max(0, cellWidth - textLength))}`;
         }
     }
 
@@ -497,7 +499,7 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
             let width = 0;
             for (const cell of table.getCellsInColumn(column)) {
                 let colspan = cell.getColspan();
-                let textWidth = cell.merged == TableCellMerge.above ? 2 : cell.text.replace(/\r?\n/g, "<br>").length;
+                let textWidth = cell.merged == TableCellMerge.above ? 2 : stringWidth(cell.text.replace(/\r?\n/g, "<br>"));
                 if (colspan == 1) {
                     width = Math.max(textWidth, width);
                 } else {

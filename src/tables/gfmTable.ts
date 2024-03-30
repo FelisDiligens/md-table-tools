@@ -1,6 +1,7 @@
 import { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableColumn, TableRow, TextAlignment } from "./table.js";
 import { ParsingError, TableParser } from "./tableParser.js";
 import { TableRenderer } from "./tableRenderer.js";
+import stringWidth from "string-width";
 
 /*
     Specification: https://github.github.com/gfm/#tables-extension-
@@ -259,22 +260,26 @@ export class GitHubFlavoredMarkdownTableRenderer implements TableRenderer {
             return text;
         }
 
+        const textLength = stringWidth(text);
+
         switch (cell.getTextAlignment()) {
             case TextAlignment.center:
-                return `${" ".repeat(Math.max(0, Math.floor((cellWidth - text.length) / 2)))} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - text.length) / 2)))}`;
+                return `${" ".repeat(Math.max(0, Math.floor((cellWidth - textLength) / 2)))} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - textLength) / 2)))}`;
             case TextAlignment.right:
-                return `${" ".repeat(Math.max(0, cellWidth - text.length))} ${text} `;
+                return `${" ".repeat(Math.max(0, cellWidth - textLength))} ${text} `;
             case TextAlignment.left:
             case TextAlignment.default:
             default:
-                return ` ${text} ${" ".repeat(Math.max(0, cellWidth - text.length))}`;
+                return ` ${text} ${" ".repeat(Math.max(0, cellWidth - textLength))}`;
         }
     }
     
     private determineColumnWidth(table: Table, column: TableColumn): number {
         let width = 0;
-        for (const cell of table.getCellsInColumn(column))
-            width = Math.max(cell.text.replace(/\r?\n/g, "<br>").length, width);
+        for (const cell of table.getCellsInColumn(column)) {
+            const cellTextLength = stringWidth(cell.text.replace(/\r?\n/g, "<br>"));
+            width = Math.max(cellTextLength, width);
+        }
         return width;
     }
 
