@@ -3,7 +3,7 @@
     "compilerOptions": {
         "outDir": "./dist/",
         "noImplicitAny": true,
-        "module": "es6",
+        "module": "NodeNext",
         "target": "esnext",
         "allowJs": true,
         /*

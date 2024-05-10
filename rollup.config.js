@@ -16,6 +16,7 @@ export default [
                 file: `dist/cjs/${bundleBasename}.js`,
                 format: "cjs",
                 sourcemap: true,
+                interop: "auto",
             },
             {
                 file: `dist/mjs/${bundleBasename}.js`,
