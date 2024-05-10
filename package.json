@@ -1,6 +1,6 @@
 {
     "name": "@felisdiligens/md-table-tools",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "MultiMarkdown table tools",
     "type": "module",
     "main": "dist/cjs/bundle.js",

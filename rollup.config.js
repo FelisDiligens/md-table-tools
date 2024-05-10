@@ -5,7 +5,7 @@ import dts from "rollup-plugin-dts";
 
 const input = "src/index.ts";
 const bundleBasename = "bundle";
-const external = ["cheerio", "htmlparser2", "turndown"];
+const external = ["cheerio", "htmlparser2", "turndown", "string-width"];
 
 export default [
     {
