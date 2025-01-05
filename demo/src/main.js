@@ -12,6 +12,8 @@ const {
     PrettyMultiMarkdownTableRenderer,
     MinifiedMultiMarkdownTableRenderer,
     GitHubFlavoredMarkdownTableRenderer,
+    DokuWikiTableParser,
+    DokuWikiTableRenderer,
 } = require("@felisdiligens/md-table-tools");
 
 
@@ -22,6 +24,7 @@ const {
 const mmdParser = new MultiMarkdownTableParser();
 const gfmParser = new GitHubFlavoredMarkdownTableParser();
 const htmlParser = new HTMLTableParser();
+const dokuWikiParser = new DokuWikiTableParser();
 const csvParser = new CSVTableParser();
 const csvSemicolonParser = new CSVTableParser(";");
 
@@ -31,6 +34,7 @@ const gfmPrettyRenderer = new GitHubFlavoredMarkdownTableRenderer(true);
 const gfmMinifiedRenderer = new GitHubFlavoredMarkdownTableRenderer(false);
 const htmlPrettyRenderer = new HTMLTableRenderer(true);
 const htmlMinifiedRenderer = new HTMLTableRenderer(false);
+const dokuWikiRenderer = new DokuWikiTableRenderer();
 const csvRenderer = new CSVTableRenderer();
 const csvSemicolonRenderer = new CSVTableRenderer(";");
 
@@ -230,7 +234,7 @@ function getTableCursor() {
 */
 
 /**
- * @returns {"mmd"|"gfm"|"html"|"csv"|"csv-semi"}
+ * @returns {"mmd"|"gfm"|"html"|"dokuwiki"|"csv"|"csv-semi"}
  */
 function getInputFormat() {
     const format = document.getElementById("input-format").value;
@@ -282,7 +286,7 @@ function getSelection() {
 }
 
 /**
- * @returns {"preview"|"mmd-pretty"|"mmd-mini"|"gfm-pretty"|"gfm-mini"|"html-pretty"|"html-mini"|"csv"|"csv-semi"}
+ * @returns {"preview"|"mmd-pretty"|"mmd-mini"|"gfm-pretty"|"gfm-mini"|"html-pretty"|"html-mini"|"dokuwiki"|"csv"|"csv-semi"}
  */
 function getOutputFormat() {
     return document.getElementById("output-format").value;
@@ -320,6 +324,8 @@ function formatInput(input, format) {
             return gfmPrettyRenderer.render(gfmParser.parse(input));
         case "html":
             return htmlPrettyRenderer.render(htmlParser.parse(input));
+        case "dokuwiki":
+            return dokuWikiRenderer.render(dokuWikiParser.parse(input));
         default:
             throw new Error(`Cannot format input of type "${format}"`);
     }
@@ -333,6 +339,8 @@ function parseInput(input, format) {
             return gfmParser.parse(input);
         case "html":
             return htmlParser.parse(input);
+        case "dokuwiki":
+            return dokuWikiParser.parse(input);
         case "csv":
             return csvParser.parse(input);
         case "csv-semi":
@@ -359,6 +367,8 @@ function renderOutput(table, format) {
             return gfmPrettyRenderer.render(table);
         case "gfm-mini":
             return gfmMinifiedRenderer.render(table);
+        case "dokuwiki":
+            return dokuWikiRenderer.render(table);
         case "csv":
             return csvRenderer.render(table);
         case "csv-semi":
