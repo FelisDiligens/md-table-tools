@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[tables/table.ts:114](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L114)
+[tables/table.ts:114](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L114)
 
 ## Properties
 
@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[tables/table.ts:112](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L112)
+[tables/table.ts:112](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L112)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:115](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L115)
+[tables/table.ts:115](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L115)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:116](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L116)
+[tables/table.ts:116](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L116)
 
 ___
 
@@ -81,7 +81,7 @@ Only pertains to MultiMarkdown multiline feature. Ignored by other parsers/rende
 
 #### Defined in
 
-[tables/table.ts:118](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L118)
+[tables/table.ts:118](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L118)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:119](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L119)
+[tables/table.ts:119](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L119)
 
 ## Methods
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:129](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L129)
+[tables/table.ts:129](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L129)
 
 ___
 
@@ -125,7 +125,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:133](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L133)
+[tables/table.ts:133](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L133)
 
 ___
 
@@ -145,4 +145,4 @@ ___
 
 #### Defined in
 
-[tables/table.ts:123](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L123)
+[tables/table.ts:123](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L123)

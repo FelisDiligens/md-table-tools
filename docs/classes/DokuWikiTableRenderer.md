@@ -50,7 +50,7 @@ These features are not supported:
 
 #### Defined in
 
-tables/dokuWikiTable.ts:250
+[tables/dokuWikiTable.ts:250](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L250)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-tables/dokuWikiTable.ts:151
+[tables/dokuWikiTable.ts:151](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L151)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-tables/dokuWikiTable.ts:191
+[tables/dokuWikiTable.ts:191](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L191)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-tables/dokuWikiTable.ts:226
+[tables/dokuWikiTable.ts:226](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L226)
 
 ___
 
@@ -139,4 +139,4 @@ ___
 
 #### Defined in
 
-tables/dokuWikiTable.ts:203
+[tables/dokuWikiTable.ts:203](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L203)

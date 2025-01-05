@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[tables/table.ts:52](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L52)
+[tables/table.ts:52](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L52)
 
 ## Properties
 
@@ -50,7 +50,7 @@
 
 #### Defined in
 
-[tables/table.ts:49](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L49)
+[tables/table.ts:49](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L49)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:50](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L50)
+[tables/table.ts:50](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L50)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:48](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L48)
+[tables/table.ts:48](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L48)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:47](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L47)
+[tables/table.ts:47](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L47)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:46](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L46)
+[tables/table.ts:46](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L46)
 
 ## Methods
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:72](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L72)
+[tables/table.ts:72](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L72)
 
 ___
 
@@ -118,7 +118,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:91](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L91)
+[tables/table.ts:91](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L91)
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:64](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L64)
+[tables/table.ts:64](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L64)
 
 ___
 
@@ -146,7 +146,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:60](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L60)
+[tables/table.ts:60](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L60)
 
 ___
 
@@ -166,4 +166,4 @@ ___
 
 #### Defined in
 
-[tables/table.ts:68](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/table.ts#L68)
+[tables/table.ts:68](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L68)

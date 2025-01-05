@@ -51,4 +51,4 @@ These features are not supported:
 
 #### Defined in
 
-tables/dokuWikiTable.ts:35
+[tables/dokuWikiTable.ts:35](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L35)

@@ -44,4 +44,4 @@
 
 #### Defined in
 
-[tables/multiMarkdownTable.ts:24](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/multiMarkdownTable.ts#L24)
+[tables/multiMarkdownTable.ts:25](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/multiMarkdownTable.ts#L25)

@@ -35,4 +35,4 @@
 
 #### Defined in
 
-[tables/tableRenderer.ts:4](https://github.com/FelisDiligens/md-table-tools/blob/3acc47d/src/tables/tableRenderer.ts#L4)
+[tables/tableRenderer.ts:4](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/tableRenderer.ts#L4)

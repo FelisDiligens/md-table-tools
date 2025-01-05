@@ -22,7 +22,7 @@ uses the HTML code (`Cheerio.html()`) and converts to Markdown using Turndown if
 
 #### Defined in
 
-[tables/htmlTable.ts:126](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/htmlTable.ts#L126)
+[tables/htmlTable.ts:126](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/htmlTable.ts#L126)
 
 ___
 
@@ -34,7 +34,7 @@ uses the HTML code (`Cheerio.html()`) without any converting
 
 #### Defined in
 
-[tables/htmlTable.ts:124](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/htmlTable.ts#L124)
+[tables/htmlTable.ts:124](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/htmlTable.ts#L124)
 
 ___
 
@@ -46,4 +46,4 @@ uses only text (`Cheerio.text()`)
 
 #### Defined in
 
-[tables/htmlTable.ts:122](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/htmlTable.ts#L122)
+[tables/htmlTable.ts:122](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/htmlTable.ts#L122)
