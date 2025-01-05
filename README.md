@@ -14,8 +14,8 @@
 
 ## Features
 
-- Parsing MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables into intermediary
-- Converting intermediary back to MultiMarkdown, GitHub-flavored Markdown, HTML, or CSV tables
+- Parsing MultiMarkdown, GitHub-flavored Markdown, HTML, DokuWiki, or CSV tables into intermediary
+- Converting intermediary back to MultiMarkdown, GitHub-flavored Markdown, HTML, DokuWiki, or CSV tables
 - Formatting or minifying MultiMarkdown or GFM tables
 - Manipulating parsed/intermediary tables (⚠️ *possibly buggy, please run `Table.update()` after making any changes*), e.g.
   - by adding, deleting, or moving rows/columns
@@ -104,12 +104,14 @@ Or click on one of the classes below:
   - [`GitHubFlavoredMarkdownTableRenderer`](/docs/classes/GitHubFlavoredMarkdownTableRenderer.md)
   - [`HTMLTableRenderer`](/docs/classes/HTMLTableRenderer.md)
   - [`CSVTableRenderer`](/docs/classes/CSVTableRenderer.md)
+  - [`DokuWikiTableRenderer`](/docs/classes/DokuWikiTableRenderer.md)
 - All classes implementing the interface [`TableParser`](/docs/interfaces/TableParser.md):  
   You can always use the `TableParser.parse(string)` method to get an intermediary `Table` object.
   - [`MultiMarkdownTableParser`](/docs/classes/MultiMarkdownTableParser.md)
   - [`GitHubFlavoredMarkdownTableParser`](/docs/classes/GitHubFlavoredMarkdownTableParser.md)
   - [`HTMLTableParser`](/docs/classes/HTMLTableParser.md)
   - [`CSVTableParser`](/docs/classes/CSVTableParser.md)
+  - [`DokuWikiTableParser`](/docs/classes/DokuWikiTableParser.md)
 - Intermediary classes:  
   You can access rows, columns, cells, and the caption from the `Table` parent class.  
   Use these to manipulate the table. Don't forget to run `Table.update()` method afterwards!
@@ -161,6 +163,29 @@ GitHub-flavored Markdown tables (and similar variants) are fully supported, with
 - You can have a header with multiple rows.
 - You can omit the header.
 - You can divide the table into multiple sections by adding a single empty line in-between rows.
+
+### Differences to tables in DokuWiki
+
+- You can use `^^` instead of `:::` to merge cells vertically.
+- You can merge the row below by writing `\` at the end of a row.
+- You can add a caption above or below to the table. Captions can optionally have labels.
+- You can divide the table into multiple sections by adding a single empty line in-between rows.
+- You **cannot** mix header cells (`<th>`) and ordinary cells (`<td>`) in a single row.
+- You **cannot** independently align cells (only the whole column).
+
+## Caveats
+
+### DokuWiki tables
+Not all features of DokuWiki's tables are implemented due to the way the intermediary data is laid out (the library focuses on MultiMarkdown's feature set).
+
+These features are not supported by the parser:
+- Vertical table headers
+- Mixed table rows (`^` header cells and `|` normal cells in the same row)
+- Independent (from column) cell alignment (left, center, right)
+
+These features are not supported by the renderer:
+- Table captions
+- Multiline rows
 
 ## Built with...
 

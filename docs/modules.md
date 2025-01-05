@@ -16,6 +16,8 @@
 
 - [CSVTableParser](classes/CSVTableParser.md)
 - [CSVTableRenderer](classes/CSVTableRenderer.md)
+- [DokuWikiTableParser](classes/DokuWikiTableParser.md)
+- [DokuWikiTableRenderer](classes/DokuWikiTableRenderer.md)
 - [GitHubFlavoredMarkdownTableParser](classes/GitHubFlavoredMarkdownTableParser.md)
 - [GitHubFlavoredMarkdownTableRenderer](classes/GitHubFlavoredMarkdownTableRenderer.md)
 - [HTMLTableParser](classes/HTMLTableParser.md)

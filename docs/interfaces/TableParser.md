@@ -5,6 +5,7 @@
 ## Implemented by
 
 - [`CSVTableParser`](../classes/CSVTableParser.md)
+- [`DokuWikiTableParser`](../classes/DokuWikiTableParser.md)
 - [`GitHubFlavoredMarkdownTableParser`](../classes/GitHubFlavoredMarkdownTableParser.md)
 - [`HTMLTableParser`](../classes/HTMLTableParser.md)
 - [`MultiMarkdownTableParser`](../classes/MultiMarkdownTableParser.md)
@@ -33,4 +34,4 @@
 
 #### Defined in
 
-[tables/tableParser.ts:13](https://github.com/FelisDiligens/md-table-tools/blob/7054713/src/tables/tableParser.ts#L13)
+[tables/tableParser.ts:13](https://github.com/FelisDiligens/md-table-tools/blob/3acc47d/src/tables/tableParser.ts#L13)

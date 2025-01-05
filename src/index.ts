@@ -2,6 +2,7 @@ export { CSVTableParser, CSVTableRenderer, CSVTableRendererMode } from "./tables
 export { GitHubFlavoredMarkdownTableParser, GitHubFlavoredMarkdownTableRenderer } from "./tables/gfmTable.js";
 export { HTMLTableParser, HTMLTableParserMode, HTMLTableRenderer } from "./tables/htmlTable.js";
 export { MinifiedMultiMarkdownTableRenderer, MultiMarkdownTableParser, PrettyMultiMarkdownTableRenderer } from "./tables/multiMarkdownTable.js";
+export { DokuWikiTableParser, DokuWikiTableRenderer } from "./tables/dokuWikiTable.js";
 export { Table, TableCaption, TableCaptionPosition, TableCell, TableCellMerge, TableColumn, TableRow, TextAlignment } from "./tables/table.js";
 export { TableParser } from "./tables/tableParser.js";
 export { TableRenderer } from "./tables/tableRenderer.js";
