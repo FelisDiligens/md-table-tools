@@ -17,6 +17,6 @@
         "parcel": "^2.9.3"
     },
     "dependencies": {
-        "@felisdiligens/md-table-tools": "file:lib/felisdiligens-md-table-tools-0.1.4.tgz"
+        "@felisdiligens/md-table-tools": "file:lib/felisdiligens-md-table-tools-0.2.0.tgz"
     }
 }

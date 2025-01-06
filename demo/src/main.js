@@ -59,6 +59,9 @@ function detectFormat(input) {
     // Markdown separator row found?
     else if (input.match(/^\|?([\s\.]*:?[\-=\.]+[:\+]?[\s\.]*\|?)+\|?$/m))
         return "mmd";
+    // All rows start with `^` or `|`?
+    else if (!input.split("\n").find((line) => line.trim() != "" && !line.trim().startsWith("^") && !line.trim().startsWith("|")))
+        return "dokuwiki"
     // At least one comma found?
     else if (input.match(/(.*,)+.*/))
         return "csv";
@@ -368,6 +371,7 @@ function renderOutput(table, format) {
         case "gfm-mini":
             return gfmMinifiedRenderer.render(table);
         case "dokuwiki":
+            table.mergeMultilineRows();
             return dokuWikiRenderer.render(table);
         case "csv":
             return csvRenderer.render(table);
