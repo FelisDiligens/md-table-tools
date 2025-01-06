@@ -17,7 +17,7 @@
         "prepublish": "npm run build",
         "build": "rollup --config && bash ./fixup.sh",
         "test": "ts-mocha -n loader=ts-node/esm -p tsconfig.json src/**/*.spec.ts",
-        "demo": "ts-node --esm --project tsconfig.json src/demo.ts",
+        "demo": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/demo.ts",
         "docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts && cp -rfv assets docs"
     },
     "keywords": [
