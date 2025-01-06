@@ -21,7 +21,7 @@ indicates how text is aligned in a column
 
 #### Defined in
 
-[tables/table.ts:4](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L4)
+[tables/table.ts:4](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L4)
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:6](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L6)
+[tables/table.ts:6](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L6)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:3](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L3)
+[tables/table.ts:3](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L3)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-[tables/table.ts:5](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L5)
+[tables/table.ts:5](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L5)

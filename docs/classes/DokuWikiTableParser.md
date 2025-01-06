@@ -2,13 +2,6 @@
 
 # Class: DokuWikiTableParser
 
-Not all features of DokuWiki's tables are implemented due to the way the intermediary data is laid out (the library focuses on MultiMarkdown's feature set).
-
-These features are not supported:
-- Vertical table headers
-- Mixed table rows (`^` header cells and `|` normal cells in the same row)
-- Independent (from column) cell alignment (left, center, right)
-
 ## Implements
 
 - [`TableParser`](../interfaces/TableParser.md)
@@ -19,6 +12,10 @@ These features are not supported:
 
 - [constructor](DokuWikiTableParser.md#constructor)
 
+### Properties
+
+- [convertMarkup](DokuWikiTableParser.md#convertmarkup)
+
 ### Methods
 
 - [parse](DokuWikiTableParser.md#parse)
@@ -27,7 +24,29 @@ These features are not supported:
 
 ### constructor
 
-• **new DokuWikiTableParser**()
+• **new DokuWikiTableParser**(`convertMarkup?`)
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `convertMarkup` | `boolean` | `true` | If true, converts DokuWiki syntax to Markdown syntax |
+
+#### Defined in
+
+[tables/dokuWikiTable.ts:103](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L103)
+
+## Properties
+
+### convertMarkup
+
+• **convertMarkup**: `boolean` = `true`
+
+If true, converts DokuWiki syntax to Markdown syntax
+
+#### Defined in
+
+[tables/dokuWikiTable.ts:105](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L105)
 
 ## Methods
 
@@ -51,4 +70,4 @@ These features are not supported:
 
 #### Defined in
 
-[tables/dokuWikiTable.ts:35](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L35)
+[tables/dokuWikiTable.ts:108](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L108)

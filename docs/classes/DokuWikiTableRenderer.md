@@ -2,12 +2,6 @@
 
 # Class: DokuWikiTableRenderer
 
-Not all features are implemented because some features from MultiMarkdown are missing in DokuWiki's syntax (afaik):
-
-These features are not supported:
-- Table captions
-- Multiline rows
-
 ## Implements
 
 - [`TableRenderer`](../interfaces/TableRenderer.md)
@@ -18,6 +12,10 @@ These features are not supported:
 
 - [constructor](DokuWikiTableRenderer.md#constructor)
 
+### Properties
+
+- [convertMarkup](DokuWikiTableRenderer.md#convertmarkup)
+
 ### Methods
 
 - [determineColumnWidths](DokuWikiTableRenderer.md#determinecolumnwidths)
@@ -25,12 +23,35 @@ These features are not supported:
 - [renderCaption](DokuWikiTableRenderer.md#rendercaption)
 - [renderCell](DokuWikiTableRenderer.md#rendercell)
 - [renderRow](DokuWikiTableRenderer.md#renderrow)
+- [renderText](DokuWikiTableRenderer.md#rendertext)
 
 ## Constructors
 
 ### constructor
 
-• **new DokuWikiTableRenderer**()
+• **new DokuWikiTableRenderer**(`convertMarkup?`)
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `convertMarkup` | `boolean` | `true` | If true, converts Markdown syntax to DokuWiki syntax |
+
+#### Defined in
+
+[tables/dokuWikiTable.ts:235](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L235)
+
+## Properties
+
+### convertMarkup
+
+• **convertMarkup**: `boolean` = `true`
+
+If true, converts Markdown syntax to DokuWiki syntax
+
+#### Defined in
+
+[tables/dokuWikiTable.ts:237](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L237)
 
 ## Methods
 
@@ -50,7 +71,7 @@ These features are not supported:
 
 #### Defined in
 
-[tables/dokuWikiTable.ts:250](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L250)
+[tables/dokuWikiTable.ts:339](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L339)
 
 ___
 
@@ -74,7 +95,7 @@ ___
 
 #### Defined in
 
-[tables/dokuWikiTable.ts:151](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L151)
+[tables/dokuWikiTable.ts:240](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L240)
 
 ___
 
@@ -94,7 +115,7 @@ ___
 
 #### Defined in
 
-[tables/dokuWikiTable.ts:191](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L191)
+[tables/dokuWikiTable.ts:272](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L272)
 
 ___
 
@@ -116,13 +137,13 @@ ___
 
 #### Defined in
 
-[tables/dokuWikiTable.ts:226](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L226)
+[tables/dokuWikiTable.ts:308](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L308)
 
 ___
 
 ### renderRow
 
-▸ `Private` **renderRow**(`table`, `row`, `isHeader`, `columnWidths`): `string`
+▸ `Private` **renderRow**(`table`, `row`, `columnWidths`): `string`
 
 #### Parameters
 
@@ -130,7 +151,6 @@ ___
 | :------ | :------ |
 | `table` | [`Table`](Table.md) |
 | `row` | [`TableRow`](TableRow.md) |
-| `isHeader` | `boolean` |
 | `columnWidths` | `number`[] |
 
 #### Returns
@@ -139,4 +159,24 @@ ___
 
 #### Defined in
 
-[tables/dokuWikiTable.ts:203](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/dokuWikiTable.ts#L203)
+[tables/dokuWikiTable.ts:284](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L284)
+
+___
+
+### renderText
+
+▸ `Private` **renderText**(`text`): `string`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `text` | `string` |
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[tables/dokuWikiTable.ts:335](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/dokuWikiTable.ts#L335)

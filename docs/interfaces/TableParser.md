@@ -34,4 +34,4 @@
 
 #### Defined in
 
-[tables/tableParser.ts:13](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/tableParser.ts#L13)
+[tables/tableParser.ts:13](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/tableParser.ts#L13)

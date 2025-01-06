@@ -38,7 +38,7 @@
 
 #### Defined in
 
-[tables/csvTable.ts:14](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/csvTable.ts#L14)
+[tables/csvTable.ts:14](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/csvTable.ts#L14)
 
 ## Properties
 
@@ -48,7 +48,7 @@
 
 #### Defined in
 
-[tables/csvTable.ts:17](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/csvTable.ts#L17)
+[tables/csvTable.ts:17](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/csvTable.ts#L17)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[tables/csvTable.ts:16](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/csvTable.ts#L16)
+[tables/csvTable.ts:16](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/csvTable.ts#L16)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[tables/csvTable.ts:15](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/csvTable.ts#L15)
+[tables/csvTable.ts:15](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/csvTable.ts#L15)
 
 ## Methods
 
@@ -92,4 +92,4 @@ ___
 
 #### Defined in
 
-[tables/csvTable.ts:19](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/csvTable.ts#L19)
+[tables/csvTable.ts:19](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/csvTable.ts#L19)

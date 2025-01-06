@@ -175,20 +175,6 @@ GitHub-flavored Markdown tables (and similar variants) are fully supported, with
 - You **cannot** mix header cells (`<th>`) and ordinary cells (`<td>`) in a single row.
 - You **cannot** independently align cells (only the whole column).
 
-## Caveats
-
-### DokuWiki tables
-Not all features of DokuWiki's tables are implemented due to the way the intermediary data is laid out (the library focuses on MultiMarkdown's feature set).
-
-These features are not supported by the parser:
-- Vertical table headers
-- Mixed table rows (`^` header cells and `|` normal cells in the same row)
-- Independent (from column) cell alignment (left, center, right)
-
-These features are not supported by the renderer:
-- Table captions
-- Multiline rows
-
 ## Built with...
 
 - written in [TypeScript](https://www.typescriptlang.org/)

@@ -11,10 +11,12 @@
 ### Properties
 
 - [column](TableCell.md#column)
+- [isHeader](TableCell.md#isheader)
 - [merged](TableCell.md#merged)
 - [row](TableCell.md#row)
 - [table](TableCell.md#table)
 - [text](TableCell.md#text)
+- [textAlign](TableCell.md#textalign)
 
 ### Methods
 
@@ -40,7 +42,7 @@
 
 #### Defined in
 
-[tables/table.ts:52](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L52)
+[tables/table.ts:54](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L54)
 
 ## Properties
 
@@ -50,7 +52,17 @@
 
 #### Defined in
 
-[tables/table.ts:49](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L49)
+[tables/table.ts:49](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L49)
+
+___
+
+### isHeader
+
+• **isHeader**: `boolean`
+
+#### Defined in
+
+[tables/table.ts:51](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L51)
 
 ___
 
@@ -60,7 +72,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:50](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L50)
+[tables/table.ts:50](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L50)
 
 ___
 
@@ -70,7 +82,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:48](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L48)
+[tables/table.ts:48](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L48)
 
 ___
 
@@ -80,7 +92,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:47](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L47)
+[tables/table.ts:47](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L47)
 
 ___
 
@@ -90,7 +102,17 @@ ___
 
 #### Defined in
 
-[tables/table.ts:46](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L46)
+[tables/table.ts:46](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L46)
+
+___
+
+### textAlign
+
+• **textAlign**: [`TextAlignment`](../enums/TextAlignment.md)
+
+#### Defined in
+
+[tables/table.ts:52](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L52)
 
 ## Methods
 
@@ -104,7 +126,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:72](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L72)
+[tables/table.ts:78](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L78)
 
 ___
 
@@ -118,7 +140,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:91](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L91)
+[tables/table.ts:97](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L97)
 
 ___
 
@@ -132,7 +154,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:64](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L64)
+[tables/table.ts:68](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L68)
 
 ___
 
@@ -146,7 +168,7 @@ ___
 
 #### Defined in
 
-[tables/table.ts:60](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L60)
+[tables/table.ts:64](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L64)
 
 ___
 
@@ -166,4 +188,4 @@ ___
 
 #### Defined in
 
-[tables/table.ts:68](https://github.com/FelisDiligens/md-table-tools/blob/c0688b5/src/tables/table.ts#L68)
+[tables/table.ts:74](https://github.com/FelisDiligens/md-table-tools/blob/0a55b82/src/tables/table.ts#L74)
