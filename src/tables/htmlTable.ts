@@ -275,11 +275,16 @@ export class HTMLTableParser implements TableParser {
                 let textAlign = cssToTextAlign($cell);
                 let wrappable = $cell.hasClass("extend");
                 textAlign = textAlign != TextAlignment.default ? textAlign : defaultTextAlign;
-                allCellsAreTH = allCellsAreTH && $cell.prop("tagName").toLowerCase() == "th";
+                let cellIsHeader = $cell.prop("tagName").toLowerCase() == "th";
+                allCellsAreTH = allCellsAreTH && cellIsHeader;
 
                 let cell = new TableCell(table, row, column);
                 cell.setText(cellContent);
-                column.textAlign = textAlign;
+                cell.textAlign = textAlign;
+                cell.isHeader = cellIsHeader;
+                if (column.textAlign == TextAlignment.default) {
+                    column.textAlign = textAlign;
+                }
                 column.wrappable = wrappable;
                 table.addCell(cell);
 

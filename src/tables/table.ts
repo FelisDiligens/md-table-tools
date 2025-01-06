@@ -48,6 +48,8 @@ export class TableCell {
     public row: TableRow;
     public column: TableColumn;
     public merged: TableCellMerge;
+    public isHeader: boolean;
+    public textAlign: TextAlignment;
 
     public constructor(table: Table, row: TableRow, column: TableColumn) {
         this.text = "";
@@ -55,13 +57,17 @@ export class TableCell {
         this.row = row;
         this.column = column;
         this.merged = TableCellMerge.none;
+        this.isHeader = false;
+        this.textAlign = TextAlignment.default;
     }
 
     public isHeaderCell(): boolean {
-        return this.row.isHeader;
+        return this.row.isHeader || this.isHeader;
     }
 
     public getTextAlignment(): TextAlignment {
+        if (this.textAlign != TextAlignment.default)
+            return this.textAlign;
         return this.column.textAlign;
     }
 

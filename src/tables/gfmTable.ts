@@ -262,7 +262,7 @@ export class GitHubFlavoredMarkdownTableRenderer implements TableRenderer {
 
         const textLength = stringWidth(text);
 
-        switch (cell.getTextAlignment()) {
+        switch (cell.column.textAlign) {
             case TextAlignment.center:
                 return `${" ".repeat(Math.max(0, Math.floor((cellWidth - textLength) / 2)))} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - textLength) / 2)))}`;
             case TextAlignment.right:

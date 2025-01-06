@@ -479,7 +479,7 @@ export class PrettyMultiMarkdownTableRenderer implements TableRenderer {
         let text = cell.merged == TableCellMerge.above ? "^^" : cell.text.replace(/\r?\n/g, "<br>");
         const textLength = stringWidth(text);
 
-        switch (cell.getTextAlignment()) {
+        switch (cell.column.textAlign) {
             case TextAlignment.center:
                 return `${" ".repeat(Math.max(0, Math.floor((cellWidth - textLength + colspan - 1) / 2)))} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - textLength - colspan + 1) / 2)))}`;
             case TextAlignment.right:

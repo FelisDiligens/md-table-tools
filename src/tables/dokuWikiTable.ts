@@ -15,6 +15,82 @@ import stringWidth from "string-width";
     Syntax: https://www.dokuwiki.org/wiki:syntax#tables
 */
 
+function dokuWikiToMarkdown(markup: string): string {
+    // Image:
+    markup = markup.replace(/{{([^\|]*?)\|?([^\|]*?)}}/g, "![$2]($1)");
+
+    // Links:
+    markup = markup.replace(/\[\[([^\|]*?)\|?([^\|]*?)\]\]/g, "[$2]($1)");
+
+    // Block code:
+    markup = markup.replace(/<code\s+?([a-zA-Z0-9]*?)>\n(.*?)<\/code>/gs, "```$1\n$2```");
+
+    // Inline code / monospaced text:
+    markup = markup.replace(/''(.*?)''/g, "`$1`");
+
+    // Oblique:
+    markup = markup.replace(/\/\/\*\*(.*?)\*\*\/\//g, "***$1***");
+    markup = markup.replace(/\*\*\/\/(.*?)\/\/\*\*/g, "***$1***");
+
+    // Italic:
+    markup = markup.replace(/\/\/(.*?)\/\//g, "*$1*");
+
+    // Underlined:
+    markup = markup.replace(/__(.*?)__/g, "<u>$1</u>");
+
+    // Newlines:
+    markup = markup.replace(/\\\\ /g, "\n");
+
+    return markup;
+}
+
+function markdownToDokuWiki(markup: string): string {
+    // Image:
+    markup = markup.replace(/!\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "{{$2|$1}}");
+
+    // Links:
+    markup = markup.replace(/\[([^\[\]]+)\]\(([^\(\)]+)\)/g, "[[$2|$1]]");
+
+    // Block code:
+    markup = markup.replace(/```([a-zA-Z0-9]*?)\n(.*?)\n```/gs, "<code $1>\n$2\n</code>");
+
+    // Inline code / monospaced text:
+    markup = markup.replace(/`(.*?)`/g, "''$1''");
+
+    // Strikethrough:
+    markup = markup.replace(/~~(.*?)~~/g, "<del>$1</del>");
+
+    // Oblique:
+    markup = markup.replace(/___(.*?)___/g, "//**$1**//");
+    markup = markup.replace(/\*\*\*(.*?)\*\*\*/g, "//**$1**//");
+
+    // Bold:
+    markup = markup.replace(/__(.*?)__/g, "**$1**");
+
+    // Italic:
+    markup = markup.replace(/_(.*?)_/g, "//$1//");
+    markup = markup.replace(/\*(.*?)\*/g, "//$1//");
+
+    // Underlined:
+    markup = markup.replace(/<ins>(.*?)<\/ins>/g, "__$1__");
+    markup = markup.replace(/<u>(.*?)<\/u>/g, "__$1__");
+
+    // Superscript:
+    markup = markup.replace(/\^(.*?)\^/g, "<sup>$1</sup>");
+
+    // Subscript:
+    markup = markup.replace(/~(.*?)~/g, "<sub>$1</sub>");
+
+    // Escaped characters:
+    markup = markup.replace(/\\([#\.\|\*_\s`\[\]\-])/g, "$1");
+
+    // Newlines:
+    markup = markup.replace(/<br\s?\/?>/g, "\\\\ ");
+    markup = markup.replace(/\r?\n/g, "\\\\ ");
+
+    return markup;
+}
+
 const rowRegex = /^[\|\^](.+)[\|\^]$/;
 
 enum ParsingState {
@@ -23,15 +99,12 @@ enum ParsingState {
     AfterTable,
 }
 
-/**
- * Not all features of DokuWiki's tables are implemented due to the way the intermediary data is laid out (the library focuses on MultiMarkdown's feature set).
- *
- * These features are not supported:
- * - Vertical table headers
- * - Mixed table rows (`^` header cells and `|` normal cells in the same row)
- * - Independent (from column) cell alignment (left, center, right)
- */
 export class DokuWikiTableParser implements TableParser {
+    public constructor(
+        /** If true, converts DokuWiki syntax to Markdown syntax */
+        public convertMarkup: boolean = true
+    ) {}
+
     parse(table: string): Table {
         let parsedTable = new Table();
         let state = ParsingState.BeforeTable;
@@ -64,11 +137,6 @@ export class DokuWikiTableParser implements TableParser {
                 let tableRow = new TableRow();
                 parsedTable.addRow(-1, tableRow);
 
-                // Very cheaply "detect" header row:
-                if (line.includes("^")) {
-                    tableRow.isHeader = true;
-                }
-
                 // Parse each character:
                 let cellContent = "";
                 let colIndex = 0;
@@ -76,6 +144,8 @@ export class DokuWikiTableParser implements TableParser {
                 let leftHasSpaces = false;
                 let rightHasSpaces = false;
                 let foundCellContent = false;
+                let cellIsHeader = line.trim()[0] == "^";
+                let rowIsHeader = line.trim()[0] == "^";
                 for (let char of line.trim().substring(1, line.length)) {
                     if (char == "|" || char == "^") {
                         let tableColumn = parsedTable.getColumn(colIndex);
@@ -87,14 +157,23 @@ export class DokuWikiTableParser implements TableParser {
                             rightHasSpaces = true;
                         }
 
-                        if (tableColumn.textAlign == TextAlignment.default) {
-                            if (leftHasSpaces && rightHasSpaces) {
+                        cell.isHeader = cellIsHeader;
+
+                        if (leftHasSpaces && rightHasSpaces) {
+                            if (tableColumn.textAlign == TextAlignment.default) {
                                 tableColumn.textAlign = TextAlignment.center;
-                            } else if (leftHasSpaces) {
+                            }
+                            cell.textAlign = TextAlignment.center;
+                        } else if (leftHasSpaces) {
+                            if (tableColumn.textAlign == TextAlignment.default) {
                                 tableColumn.textAlign = TextAlignment.right;
-                            } else if (rightHasSpaces) {
+                            }
+                            cell.textAlign = TextAlignment.right;
+                        } else if (rightHasSpaces) {
+                            if (tableColumn.textAlign == TextAlignment.default) {
                                 tableColumn.textAlign = TextAlignment.left;
                             }
+                            cell.textAlign = TextAlignment.left;
                         }
 
                         if (cellContent.trim() == ":::") {
@@ -102,11 +181,21 @@ export class DokuWikiTableParser implements TableParser {
                         } else if (cellContent === "") {
                             cell.merged = TableCellMerge.left;
                         } else {
-                            cell.setText(cellContent.trim().replace(/\\\\ /g, "\n"));
+                            cellContent = this.convertMarkup
+                                ? dokuWikiToMarkdown(cellContent.trim())
+                                : cellContent.trim();
+                            cell.setText(cellContent);
                         }
 
                         cellContent = "";
                         colIndex++;
+
+                        if (char == "|") {
+                            cellIsHeader = false;
+                            rowIsHeader = false;
+                        } else if (char == "^") {
+                            cellIsHeader = true;
+                        }
 
                         spaces = 0;
                         leftHasSpaces = false;
@@ -130,6 +219,8 @@ export class DokuWikiTableParser implements TableParser {
                     let cell = new TableCell(parsedTable, tableRow, parsedTable.getColumn(colIndex));
                     parsedTable.addCell(cell);
                 }
+
+                tableRow.isHeader = rowIsHeader;
             }
         }
 
@@ -140,17 +231,14 @@ export class DokuWikiTableParser implements TableParser {
     }
 }
 
-/**
- * Not all features are implemented because some features from MultiMarkdown are missing in DokuWiki's syntax (afaik):
- *
- * These features are not supported:
- * - Table captions
- * - Multiline rows
- */
 export class DokuWikiTableRenderer implements TableRenderer {
+    public constructor(
+        /** If true, converts Markdown syntax to DokuWiki syntax */
+        public convertMarkup: boolean = true
+    ) {}
+
     render(table: Table): string {
-        const headerRows = table.getHeaderRows();
-        const normalRows = table.getNormalRows();
+        const rows = table.getRows();
         const columnWidths = this.determineColumnWidths(table);
 
         let result: string[] = [];
@@ -164,16 +252,9 @@ export class DokuWikiTableRenderer implements TableRenderer {
             result.push(this.renderCaption(table.caption));
         }
 
-        // Header:
-        if (headerRows.length > 0) {
-            for (const row of headerRows) {
-                result.push(this.renderRow(table, row, true, columnWidths));
-            }
-        }
-
         // Rows:
-        for (const row of normalRows) {
-            result.push(this.renderRow(table, row, false, columnWidths));
+        for (const row of rows) {
+            result.push(this.renderRow(table, row, columnWidths));
         }
 
         // DokuWiki has no table caption -- insert "caption" (if position is bottom):
@@ -200,9 +281,10 @@ export class DokuWikiTableRenderer implements TableRenderer {
         return result;
     }
 
-    private renderRow(table: Table, row: TableRow, isHeader: boolean, columnWidths: number[]): string {
+    private renderRow(table: Table, row: TableRow, columnWidths: number[]): string {
         let result: string[] = [];
 
+        let lastCellIsHeader = false;
         table.getCellsInRow(row).forEach((cell, i) => {
             let colspan = cell.getColspan();
             let cellWidth = columnWidths[i];
@@ -212,39 +294,46 @@ export class DokuWikiTableRenderer implements TableRenderer {
                 }
                 cellWidth += colspan * 2 - 2;
             }
+            lastCellIsHeader = cell.isHeaderCell();
             result.push(this.renderCell(cell, colspan, cellWidth));
         });
 
-        // "Table rows have to start and end with a | for normal rows or a ^ for headers."
-        if (isHeader) {
-            return `^${result.join("^")}^`;
+        if (lastCellIsHeader) {
+            return `${result.join("")}^`;
         } else {
-            return `|${result.join("|")}|`;
+            return `${result.join("")}|`;
         }
     }
 
     private renderCell(cell: TableCell, colspan: number = 1, cellWidth: number = -1): string {
+        let isHeader = cell.isHeaderCell();
+        let separator = isHeader ? "^" : "|";
+
         if (cell.merged == TableCellMerge.left) {
-            return "";
+            return separator;
         }
 
         // `:::` => merge cell above
         // `\\ ` => insert a newline
-        let text = cell.merged == TableCellMerge.above ? ":::" : cell.text.replace(/\r?\n/g, "\\\\ ");
+        let text = cell.merged == TableCellMerge.above ? ":::" : this.renderText(cell.text);
         const textLength = stringWidth(text);
 
         switch (cell.getTextAlignment()) {
             case TextAlignment.center:
-                return `${" ".repeat(
+                return `${separator}${" ".repeat(
                     Math.max(0, Math.floor((cellWidth - textLength + colspan - 1) / 2))
                 )} ${text} ${" ".repeat(Math.max(0, Math.ceil((cellWidth - textLength - colspan + 1) / 2)))}`;
             case TextAlignment.right:
-                return `${" ".repeat(Math.max(0, cellWidth - textLength))} ${text} `;
+                return `${separator}${" ".repeat(Math.max(0, cellWidth - textLength))} ${text} `;
             case TextAlignment.left:
             case TextAlignment.default:
             default:
-                return ` ${text} ${" ".repeat(Math.max(0, cellWidth - textLength))}`;
+                return `${separator} ${text} ${" ".repeat(Math.max(0, cellWidth - textLength))}`;
         }
+    }
+
+    private renderText(text: string) {
+        return this.convertMarkup ? markdownToDokuWiki(text) : text;
     }
 
     private determineColumnWidths(table: Table): number[] {
@@ -255,8 +344,7 @@ export class DokuWikiTableRenderer implements TableRenderer {
             let colWidth = 0;
             for (const cell of table.getCellsInColumn(column)) {
                 let colspan = cell.getColspan();
-                let cellWidth =
-                    cell.merged == TableCellMerge.above ? 3 : stringWidth(cell.text.replace(/\r?\n/g, "\\\\ "));
+                let cellWidth = cell.merged == TableCellMerge.above ? 3 : stringWidth(this.renderText(cell.text));
 
                 // Is alignment spacing needed?
                 switch (cell.getTextAlignment()) {
